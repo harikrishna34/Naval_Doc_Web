@@ -1,15 +1,17 @@
 
 import './App.css'
+import LoginSignup from './auth/login';
 
 function App() {
   
   return (
     <>
-      <div className="App">
-        Lets Start Coding
-      </div>
+
+          <LoginSignup> 
+          </LoginSignup>
+      
     </>
   )
 }
 
-export default App
+export default App;
