@@ -1,15 +1,14 @@
+import LayoutWrapper from "./components/layout/layoutWrapper";
 
-import './App.css'
-
-function App() {
-  
+const App = () => {
   return (
-    <>
-      <div className="App">
-        Lets Start Coding
-      </div>
-    </>
-  )
-}
+    <div>
+      <LayoutWrapper pageTitle="Dashboard">
+        <h1>Welcome to the Dashboard</h1>
+        <p>This is a sample dashboard layout.</p>
+      </LayoutWrapper>
+    </div>
+  );
+};
 
-export default App
+export default App;

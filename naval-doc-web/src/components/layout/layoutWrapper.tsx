@@ -1,19 +1,57 @@
-import React from 'react';
-import Header from './header';
-import Footer from './footer';
+import { Layout } from "antd";
+import StudentAppHeader from "./header";
+import StudentAppSidebar from "./sidebar";
+
+
+const { Content, Footer } = Layout;
 
 interface LayoutWrapperProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
+  pageTitle: string;
 }
 
-const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children }) => {
-    return (
-        <div className="layout-wrapper">
-            <Header />
-            <main>{children}</main>
-            <Footer />
-        </div>
-    );
+const LayoutWrapper = ({ children, pageTitle }: LayoutWrapperProps) => {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <Layout
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        overflowX: "hidden",
+        background: "white",
+      }}
+    >
+      <StudentAppSidebar />
+      <Layout>
+        <StudentAppHeader title={pageTitle} />
+        <Content
+          style={{
+            padding: "20px",
+            background: "white",
+            overflow: "auto",
+            flex: 1,
+          }}
+        >
+          {children}
+        </Content>
+        <Footer
+          style={{
+            textAlign: "center",
+            background: "#fff",
+            borderTop: "1px solid #e8e8e8",
+            padding: "12px 0",
+            fontSize: "14px",
+            color: "#666",
+          }}
+        >
+          © {currentYear} Borigam Institution. All rights reserved. | Powered by{" "}
+          {""}
+          <strong>XTS</strong>
+        </Footer>
+      </Layout>
+    </Layout>
+  );
 };
 
 export default LayoutWrapper;
