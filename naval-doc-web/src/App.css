@@ -40,3 +40,33 @@
 .read-the-docs {
   color: #888;
 }
+.login-container {
+  height: 100vh;
+}
+
+.login-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+  padding: 2rem;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 300px;
+}
+
+.login-right {
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-logo {
+  max-width: 100%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
