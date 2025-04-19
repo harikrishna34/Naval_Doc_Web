@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
 
-const StudentAppSidebar = () => {
+const AdminSidebar = () => {
   //   const navigate = useNavigate();
   //   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,7 +56,7 @@ const StudentAppSidebar = () => {
       trigger={null}
       className="custom-sidebar"
       style={{
-        backgroundColor: "#010080",
+        background: "white",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -73,19 +73,12 @@ const StudentAppSidebar = () => {
             display: "flex",
             justifyContent: "flex-end",
             padding: "16px 16px 8px",
-            borderBottom: "1px solid rgb(194, 98, 98)",
-            // borderBottom: "1px solid #f0f0f0",
+            borderBottom: "1px solid #f0f0f0",
           }}
         >
           <Button
             type="text"
-            icon={
-              collapsed ? (
-                <MenuUnfoldOutlined style={{ color: "white" }} />
-              ) : (
-                <MenuFoldOutlined style={{ color: "white" }} />
-              )
-            }
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={toggleSidebar}
             style={{
               width: 32,
@@ -102,60 +95,30 @@ const StudentAppSidebar = () => {
           <Menu
             mode="inline"
             theme="light"
-            className="custom-menu"
-            style={{
-              background: "transparent",
-              paddingTop: "10px"
-            }}
             inlineCollapsed={collapsed}
             selectedKeys={[getSelectedKey()]} // Set the active menu item
             items={[
               {
                 key: "home",
-                icon: (
-                  <HomeOutlined style={{ fontSize: "20px", color: "black" }} />
-                ),
+                icon: <HomeOutlined style={{ fontSize: "20px" }} />,
                 label: "Dashboard",
-                style: {
-                  color: "black",
-                },
-                onClick: () => navigate("/dashboard"),
               },
               {
                 key: "view_all_items",
-                icon: (
-                  <ShoppingCartOutlined
-                    style={{ fontSize: "20px", color: "white" }}
-                  />
-                ),
-                style: {
-                  color: "white",
-                },
+                icon: <ShoppingCartOutlined style={{ fontSize: "20px" }} />,
                 label: "View All Items",
                 onClick: () => navigate("/view-all-items"),
               },
               {
                 key: "finance_management",
-                icon: (
-                  <BankOutlined style={{ fontSize: "20px", color: "white" }} />
-                ),
-                style: {
-                  color: "white",
-                },
+                icon: <BankOutlined style={{ fontSize: "20px" }} />,
                 label: "Finance Management",
                 onClick: () => navigate("/finance-management"),
               },
               {
                 key: "inventory_management",
-                icon: (
-                  <DatabaseOutlined
-                    style={{ fontSize: "20px", color: "white" }}
-                  />
-                ),
+                icon: <DatabaseOutlined style={{ fontSize: "20px" }} />,
                 label: "Inventory Management",
-                style: {
-                  color: "white",
-                },
                 onClick: () => navigate("/inventory-management"),
               },
             ]}
@@ -177,7 +140,6 @@ const StudentAppSidebar = () => {
           icon={<LogoutOutlined style={{ fontSize: "16px" }} />}
           onClick={handleLogout}
           style={{
-            color: "white",
             width: "100%",
             height: "48px",
             display: "flex",
@@ -202,4 +164,4 @@ const StudentAppSidebar = () => {
   );
 };
 
-export default StudentAppSidebar;
+export default AdminSidebar;

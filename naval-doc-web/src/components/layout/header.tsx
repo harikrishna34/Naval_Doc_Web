@@ -38,9 +38,9 @@ interface UserProfile {
   change_password: boolean;
 }
 
-const StudentAppHeader = ({
+const AdminHeader = ({
   title,
-  subtitle = "INSTITUTION",
+  subtitle = "WELFARE CANTEEN",
 }: AppHeaderProps) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [userProfile] = useState<UserProfile | null>(null);
@@ -193,4 +193,4 @@ const StudentAppHeader = ({
   );
 };
 
-export default StudentAppHeader;
+export default AdminHeader;

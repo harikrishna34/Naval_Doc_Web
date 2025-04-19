@@ -1,10 +1,8 @@
 import { Layout } from "antd";
-import AdminsHeader from "./header";
-import StudentAppSidebar from "./sidebar";
-import UserHeader from "../userLayouts/header";
-const { Content, Footer } = Layout;
+import SuperAdminHeader from "./header";
+import SuperAdminSidebar from "./sidebar";
 
-import StyledHeader from "../userLayouts/styleHeader";
+const { Content, Footer } = Layout;
 
 interface LayoutWrapperProps {
   children: React.ReactNode;
@@ -23,12 +21,9 @@ const LayoutWrapper = ({ children, pageTitle }: LayoutWrapperProps) => {
         background: "white",
       }}
     >
-      <StudentAppSidebar />
+      <SuperAdminSidebar />
       <Layout>
-        {/* <AdminsHeader title={pageTitle} /> */}
-      {/* <UserHeader title={pageTitle}/> */}
-      <StyledHeader/>
-
+        <SuperAdminHeader title={pageTitle} />
         <Content
           style={{
             padding: "20px",
