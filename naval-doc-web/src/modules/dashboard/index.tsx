@@ -1,48 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import { Layout, Input, Row, Col} from "antd";
-// import {
-//   SearchOutlined,
-// } from "@ant-design/icons";
-// import { HeaderProps } from "../../modules/dashboard/types";
-// import { headerStyles } from "../../modules/dashboard/styles";
-// import CanteenSelector from "./canteenSelector";
-// import CategoryFilters from "./categoryFilters";
-
-// const UserDashboard: React.FC<HeaderProps> = ({
-//   canteenOptions = [],
-//   categories = ["All", "Today Special", "Tiffins", "Veg", "Non-Veg"],
-// }) => {
-//   const [selectedCanteen, setSelectedCanteen] = useState<string | null>(null);
-
-//   return (
-//     <>
-//       <div style={headerStyles.subHeader}>
-//         <Row gutter={[16, 16]} align="middle">
-//           <Col xs={24} sm={24} md={12} lg={10}>
-//             <Input
-//               size="large"
-//               placeholder="Search..."
-//               prefix={<SearchOutlined />}
-//               style={headerStyles.searchInput}
-//             />
-//           </Col>
-//           <Col xs={24} sm={24} md={12} lg={14}>
-//             <CanteenSelector
-//               options={canteenOptions}
-//               selectedCanteen={selectedCanteen}
-//               onSelect={setSelectedCanteen}
-//             />
-//           </Col>
-//         </Row>
-//       </div>
-
-//       <CategoryFilters categories={categories} />
-//     </>
-//   );
-// };
-
-// export default UserDashboard;
-
 import React, { useState } from "react";
 import { Layout, Input, Row, Col, Card, Typography, Empty } from "antd";
 import { SearchOutlined, InboxOutlined } from "@ant-design/icons";
@@ -50,6 +5,7 @@ import { HeaderProps, FoodItem } from "./types";
 import { headerStyles } from "../../modules/dashboard/styles";
 import CanteenSelector from "./canteenSelector";
 import CategoryFilters from "./categoryFilters";
+import CanteenDetail from "../canteens/canteenDetail";
 
 const { Meta } = Card;
 const { Text } = Typography;
@@ -135,40 +91,57 @@ const UserDashboard: React.FC<HeaderProps> = ({
     </div>
   );
 
+  // Custom styles for the search and selector layout
+  const searchFieldStyle = {
+    ...headerStyles.searchInput,
+    width: "100%",
+  };
+
+  const canteenSelectorStyle = {
+    width: "100%",
+  };
+
   return (
     <>
       <div style={headerStyles.subHeader}>
         <Row gutter={[16, 16]} align="middle">
-          <Col xs={24} sm={24} md={12} lg={10}>
+          <Col xs={24} sm={24} md={12} lg={12}>
             <Input
               size="large"
               placeholder="Search food items..."
               prefix={<SearchOutlined />}
-              style={headerStyles.searchInput}
+              style={searchFieldStyle}
               onChange={(e) => setSearchQuery(e.target.value)}
               value={searchQuery}
             />
           </Col>
-          <Col xs={24} sm={24} md={12} lg={14}>
-            <CanteenSelector
-              options={canteenOptions}
-              selectedCanteen={selectedCanteen}
-              onSelect={setSelectedCanteen}
-            />
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <CanteenSelector
+                options={canteenOptions}
+                selectedCanteen={selectedCanteen}
+                onSelect={setSelectedCanteen}
+                style={canteenSelectorStyle}
+              />
+            </div>
           </Col>
         </Row>
       </div>
 
-      <CategoryFilters
-        categories={categories}
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-      />
+      {!selectedCanteen && (
+        <CategoryFilters
+          categories={categories}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+        />
+      )}
 
       <div style={headerStyles.foodGrid}>
-        {filteredItems.length > 0 ? (
+        {selectedCanteen ? (
+          <CanteenDetail canteenId={selectedCanteen} />
+        ) : (
           <Row gutter={[16, 16]}>
-            {filteredItems.map((item: FoodItem) => (
+            {filteredItems?.map((item: FoodItem) => (
               <Col xs={24} sm={12} md={8} lg={6} key={item.id}>
                 <Card
                   hoverable
@@ -195,9 +168,8 @@ const UserDashboard: React.FC<HeaderProps> = ({
               </Col>
             ))}
           </Row>
-        ) : (
-          renderNoItems()
         )}
+        {filteredItems.length === 0 && renderNoItems()}
       </div>
     </>
   );

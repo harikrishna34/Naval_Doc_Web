@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Layout,
-  Input,
   Button,
-  Dropdown,
-  Space,
   Avatar,
   Typography,
   Badge,
@@ -14,29 +11,24 @@ import {
   Drawer,
 } from "antd";
 import {
-  SearchOutlined,
   ShoppingCartOutlined,
   WalletOutlined,
   BellOutlined,
   QuestionCircleOutlined,
   UserOutlined,
-  DownOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
-import { HeaderProps } from "../../modules/dashboard/types";
-import { headerStyles } from "../../modules/dashboard/styles";
-import CanteenSelector from "../../modules/dashboard/canteenSelector";
-import CategoryFilters from "../../modules/dashboard/categoryFilters";
 
 const { Header } = Layout;
 const { Text } = Typography;
 
+interface HeaderProps {
+  brandName?: string;
+}
+
 const StyledHeader: React.FC<HeaderProps> = ({
   brandName = "Well Fair canteen",
-  canteenOptions = [],
-  categories = ["All", "Today Special", "Tiffins", "Veg", "Non-Veg"],
 }) => {
-  const [selectedCanteen, setSelectedCanteen] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
 
@@ -89,7 +81,9 @@ const StyledHeader: React.FC<HeaderProps> = ({
       type="text"
       icon={<MenuOutlined />}
       onClick={() => setDrawerVisible(true)}
-      style={headerStyles.mobileMenuButton}
+      style={{
+        color: "white",
+      }}
     />
   );
 
@@ -97,7 +91,11 @@ const StyledHeader: React.FC<HeaderProps> = ({
     <Menu
       mode="horizontal"
       items={menuItems}
-      style={headerStyles.menu}
+      style={{
+        background: "transparent",
+        border: "none",
+        color: "white",
+      }}
       theme="dark"
       selectable={false}
     />
@@ -105,12 +103,33 @@ const StyledHeader: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <Header style={headerStyles.header}>
-        <Row align="middle" style={headerStyles.headerRow}>
+      <Header
+        className="site-header"
+        style={{
+          background: "#3F51B5",
+          padding: "0 16px",
+          height: "64px",
+          position: "sticky",
+          top: 0,
+          zIndex: 999,
+          width: "100%",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+        }}
+      >
+        <Row align="middle" style={{ height: "100%" }}>
           <Col xs={6} sm={6} md={5} lg={4}>
-            <div style={headerStyles.logoContainer}>
-              {/* <Logo /> */}
-              <div style={headerStyles.logo}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  background: "white",
+                  borderRadius: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Typography.Text
                   strong
                   style={{ color: "#1a237e", fontSize: "18px" }}
@@ -118,56 +137,44 @@ const StyledHeader: React.FC<HeaderProps> = ({
                   W
                 </Typography.Text>
               </div>
-              {!isMobile && (
-                <Typography.Title level={4} style={headerStyles.brandTitle}>
-                  {brandName}
-                </Typography.Title>
-              )}
             </div>
           </Col>
 
           <Col xs={0} sm={0} md={12} lg={14}>
-            <div style={headerStyles.centerContent}>
-              <Text style={headerStyles.brandTitleCentered}>{brandName}</Text>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <Text style={{ color: "white", fontSize: "20px", fontWeight: "bold" }}>
+                {brandName}
+              </Text>
             </div>
           </Col>
 
           <Col xs={18} sm={18} md={7} lg={6}>
-            <div style={headerStyles.rightContainer}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: "16px",
+              }}
+            >
               {isMobile ? renderMobileMenu() : renderDesktopMenu()}
               <Avatar
                 size="large"
-                icon={<UserOutlined style={headerStyles.avatarIcon} />}
-                style={headerStyles.avatar}
+                icon={<UserOutlined style={{ color: "#3F51B5" }} />}
+                style={{ background: "white" }}
               />
             </div>
           </Col>
         </Row>
       </Header>
 
-      {/* <div style={headerStyles.subHeader}>
-        <Row gutter={[16, 16]} align="middle">
-          <Col xs={24} sm={24} md={12} lg={10}>
-            <Input
-              size="large"
-              placeholder="Search..."
-              prefix={<SearchOutlined />}
-              style={headerStyles.searchInput}
-            />
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={14}>
-            <CanteenSelector
-              options={canteenOptions}
-              selectedCanteen={selectedCanteen}
-              onSelect={setSelectedCanteen}
-            />
-          </Col>
-        </Row>
-      </div>
-
-      <CategoryFilters categories={categories} /> */}
-
-      {/* Mobile Menu Drawer */}
       <Drawer
         title="Menu"
         placement="right"
@@ -178,7 +185,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
         <Menu
           mode="vertical"
           items={menuItems}
-          style={headerStyles.drawerMenu}
+          style={{ border: "none" }}
         />
       </Drawer>
     </>

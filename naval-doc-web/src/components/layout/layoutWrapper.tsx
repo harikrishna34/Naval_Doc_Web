@@ -1,58 +1,40 @@
-import { Layout } from "antd";
-import AdminsHeader from "./header";
-import StudentAppSidebar from "./sidebar";
-import UserHeader from "../userLayouts/header";
-const { Content, Footer } = Layout;
+import React, { useState } from 'react';
+import { Layout } from 'antd';
+import { Outlet } from 'react-router-dom';
+import StudentAppSidebar from './sidebar';
+import Footer from './footer';
+import StyledHeader from '../userLayouts/styleHeader';
 
-import StyledHeader from "../userLayouts/styleHeader";
+const { Content } = Layout;
 
-interface LayoutWrapperProps {
-  children: React.ReactNode;
-  pageTitle: string;
+interface AppLayoutProps {
+  pageTitle?: string;
 }
 
-const LayoutWrapper = ({ children, pageTitle }: LayoutWrapperProps) => {
-  const currentYear = new Date().getFullYear();
+const LayoutWrapper: React.FC<AppLayoutProps> = ({ pageTitle = 'Dashboard' }) => {
+  const [collapsed, setCollapsed] = useState(true);
+
+  const handleToggleSidebar = (collapsed: boolean) => {
+    setCollapsed(collapsed);
+  };
 
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        overflowX: "hidden",
-        background: "white",
-      }}
-    >
-      <StudentAppSidebar />
-      <Layout>
-        {/* <AdminsHeader title={pageTitle} /> */}
-      {/* <UserHeader title={pageTitle}/> */}
-      <StyledHeader/>
-
-        <Content
-          style={{
-            padding: "20px",
-            background: "white",
-            overflow: "auto",
-            flex: 1,
-          }}
-        >
-          {children}
+    <Layout className="app-layout">
+      <StudentAppSidebar collapsed={collapsed} onCollapsedChange={handleToggleSidebar} />
+      <Layout 
+        className={`site-layout ${collapsed ? 'collapsed' : ''}`}
+        style={{ 
+          marginLeft: collapsed ? '50px' : '187px',
+          transition: 'all 0.2s ease-in-out',
+          marginTop: "-10px",
+          marginRight: "-8px"
+        }}
+      >
+        <StyledHeader />
+        <Content className="site-content">
+          <Outlet />
         </Content>
-        <Footer
-          style={{
-            textAlign: "center",
-            background: "#fff",
-            borderTop: "1px solid #e8e8e8",
-            padding: "12px 0",
-            fontSize: "14px",
-            color: "#666",
-          }}
-        >
-          © {currentYear} Borigam Institution. All rights reserved. | Powered by{" "}
-          {""}
-          <strong>XTS</strong>
-        </Footer>
+        <Footer />
       </Layout>
     </Layout>
   );

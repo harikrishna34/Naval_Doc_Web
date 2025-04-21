@@ -1,4 +1,4 @@
-import { Layout, Menu, Button } from "antd";
+import { Layout, Menu, Button, Modal } from "antd";
 import {
   HomeOutlined,
   LogoutOutlined,
@@ -8,18 +8,21 @@ import {
   DatabaseOutlined,
   BankOutlined,
 } from "@ant-design/icons";
-// import { useNavigate, useLocation } from "react-router-dom";
-import { Modal } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
 
-const StudentAppSidebar = () => {
-  //   const navigate = useNavigate();
-  //   const location = useLocation();
+interface StudentAppSidebarProps {
+  collapsed: boolean;
+  onCollapsedChange: (collapsed: boolean) => void;
+}
+
+const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
+  collapsed,
+  onCollapsedChange,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,7 +33,9 @@ const StudentAppSidebar = () => {
   const handleOk = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userData");
-    // navigate("/");
+    setIsModalOpen(false);
+    // Redirect to login page if needed
+    // navigate("/login");
   };
 
   const handleCancel = () => {
@@ -38,12 +43,15 @@ const StudentAppSidebar = () => {
   };
 
   const toggleSidebar = () => {
-    setCollapsed(!collapsed);
+    onCollapsedChange(!collapsed);
   };
 
-  // Determine the selected key based on current route
   const getSelectedKey = () => {
-    // if (path.includes("/dashboard")) return "home";
+    const path = location.pathname;
+    if (path.includes("dashboard")) return "home";
+    if (path.includes("view-all-items")) return "view_all_items";
+    if (path.includes("finance-management")) return "finance_management";
+    if (path.includes("inventory-management")) return "inventory_management";
     return "home";
   };
 
@@ -60,30 +68,38 @@ const StudentAppSidebar = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        height: "120vh",
-        position: "relative",
+        height: "100vh",
+        position: "fixed",
+        left: 0,
+        top: 0,
+        bottom: 0,
+        zIndex: 1000,
         borderRight: "1px solid #f0f0f0",
         boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+        overflow: "hidden",
       }}
     >
       <div style={{ width: "100%" }}>
-        {/* Collapse Button */}
         <div
           style={{
             display: "flex",
             justifyContent: "flex-end",
-            padding: "16px 16px 8px",
-            borderBottom: "1px solid rgb(194, 98, 98)",
-            // borderBottom: "1px solid #f0f0f0",
+            padding: "16px 16px 16px",
+            // borderBottom: "1px solid rgb(194, 98, 98)",
+            borderBottom: "1px solid rgb(222 222 224 / 21%)",
           }}
         >
           <Button
             type="text"
             icon={
               collapsed ? (
-                <MenuUnfoldOutlined style={{ color: "white" }} />
+                <MenuUnfoldOutlined
+                  style={{ color: "white", fontSize: "25px" }}
+                />
               ) : (
-                <MenuFoldOutlined style={{ color: "white" }} />
+                <MenuFoldOutlined
+                  style={{ color: "white", fontSize: "25px" }}
+                />
               )
             }
             onClick={toggleSidebar}
@@ -97,7 +113,6 @@ const StudentAppSidebar = () => {
           />
         </div>
 
-        {/* Menu Items with bottom padding */}
         <div style={{ paddingBottom: "20px" }}>
           <Menu
             mode="inline"
@@ -105,10 +120,12 @@ const StudentAppSidebar = () => {
             className="custom-menu"
             style={{
               background: "transparent",
-              paddingTop: "10px"
+              paddingTop: "10px",
+              paddingLeft:"5px",
+              paddingRight:"5px"
             }}
             inlineCollapsed={collapsed}
-            selectedKeys={[getSelectedKey()]} // Set the active menu item
+            selectedKeys={[getSelectedKey()]}
             items={[
               {
                 key: "home",
@@ -163,7 +180,6 @@ const StudentAppSidebar = () => {
         </div>
       </div>
 
-      {/* Logout Button - fixed at the bottom with margin */}
       <div
         style={{
           padding: "16px",

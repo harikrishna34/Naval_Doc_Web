@@ -123,4 +123,9 @@ export const headerStyles: Record<string, CSSProperties> = {
     color: '#bfbfbf',
     marginBottom: '16px',
   },
+  removeCanteenButton: {
+    position: 'absolute',
+    top: '3px',
+    right: '21px',
+  }
 };
