@@ -1,14 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LayoutWrapper from "./components/layout/layoutWrapper";
 import ItemsDashboard from "./modules/items/dashboard";
-import Login from "./auth/login";
-import UserDashboard from "./modules/dashboard";
 import FinanceDB from "./modules/finance/dashboard";
 import InventoryDB from "./modules/inventory/dashboard";
-import PersonalDetailsForm from "./modules/profile";
-import CanteenSelection from "./modules/profile/canteenprocess";
-
-import "./App.css";
+import UserDashboard from "./modules/dashboard";
+import Login from "./auth/login";
 
 const App = () => {
   return (
