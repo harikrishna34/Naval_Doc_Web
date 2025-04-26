@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row, Switch } from "antd";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 // import wordTekLogo from "../assets/images/logo.png";
 
 type Language = "en" | "hi";
@@ -36,7 +35,6 @@ const LoginScreen: React.FC = () => {
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [language, setLanguage] = useState<Language>("en");
-  const navigate = useNavigate();
 
   const API_URL_SEND = "http://localhost:3002/api/login";
   const API_URL_VERIFY = "http://localhost:3002/api/verifyOtp";
@@ -93,7 +91,6 @@ const LoginScreen: React.FC = () => {
         const token = response.data.token;
 
         localStorage.setItem("Token", token);
-        navigate("/dashboard");
         alert("Login successful!");
       } else {
         alert("Invalid OTP or verification failed.");

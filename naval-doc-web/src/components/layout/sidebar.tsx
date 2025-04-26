@@ -35,7 +35,7 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
     localStorage.removeItem("userData");
     setIsModalOpen(false);
     // Redirect to login page if needed
-    navigate("/");
+    // navigate("/login");
   };
 
   const handleCancel = () => {
