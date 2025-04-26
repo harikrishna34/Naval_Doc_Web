@@ -8,10 +8,14 @@ import {
   Button,
   Row,
   Col,
-  Space,
   Typography,
+  Upload,
+  message,
 } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import WorldtekLogo from "../../components/common/worldTekLogo";
+import { canteenService } from "../../auth/apiService";
+import dayjs, { Dayjs } from "dayjs";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -20,30 +24,58 @@ interface AddCanteenModalProps {
   isOpen: boolean;
   onCancel: () => void;
   onSubmit: (values: any) => void;
+  onSuccess: () => void;
 }
 
 const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
   isOpen,
   onCancel,
   onSubmit,
+  onSuccess,
 }) => {
   const [form] = Form.useForm();
-  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fileList, setFileList] = useState<any[]>([]);
 
-  const handleOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        onSubmit(values);
-        form.resetFields();
-      })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
-      });
-  };
+  const handleOk = async () => {
+    try {
+      setLoading(true);
+      const values = await form.validateFields();
+      // Create a FormData object for the API request
+      const formData = new FormData();
+      formData.append("canteenName", values.canteenName.trim());
+      formData.append("canteenCode", values.canteenCode.trim());
+      formData.append("adminFirstName", values.firstName.trim());
+      formData.append("adminLastName", values.lastName.trim());
+      formData.append("adminEmail", values.emailId.trim());
+      formData.append("adminMobile", values.mobileNumber.trim());
+      // Format date if needed
+      if (values.dob) {
+        formData.append("adminDob", values.dob.format("YYYY-MM-DD"));
+      }
+      // Add gender
+      if (values.gender) {
+        formData.append("adminGender", values.gender);
+      }
+      // Add canteen image if provided
+      if (fileList.length > 0 && fileList[0].originFileObj) {
+        formData.append("canteenImage", fileList[0].originFileObj);
+      }
+      // Call the API to create a new canteen
+      await canteenService.createCanteen(formData);
 
-  const handleSendOTP = () => {
-    setShowOtpInput(true);
+      message.success("Canteen added successfully!");
+      form.resetFields();
+      setFileList([]);
+      onSubmit(values);
+      onSuccess(); // Refresh the canteen list
+      onCancel(); // Close modal
+    } catch (error) {
+      console.error("Failed to add canteen:", error);
+      message.error("Failed to add canteen. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formItemStyle = {
@@ -53,6 +85,51 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
   const inputStyle = {
     width: "100%",
     height: "40px",
+  };
+
+  const handleFileChange = ({ fileList }: any) => {
+    setFileList(fileList);
+  };
+
+  // Custom validation for file upload
+  const validateFileUpload = () => {
+    if (fileList.length === 0) {
+      return Promise.reject("Please upload a canteen image");
+    }
+
+    const file = fileList[0]?.originFileObj;
+    if (file) {
+      const isImage = file.type.startsWith("image/");
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isImage) {
+        return Promise.reject("You can only upload image files!");
+      }
+      if (!isLt2M) {
+        return Promise.reject("Image must be smaller than 2MB!");
+      }
+    }
+
+    return Promise.resolve();
+  };
+
+  // Custom validator for canteen code format (e.g., alphanumeric)
+  const validateCanteenCode = (_: any, value: string) => {
+    if (!value) {
+      return Promise.reject("Please enter canteen code");
+    }
+
+    const pattern = /^[A-Za-z0-9]+$/;
+    if (!pattern.test(value)) {
+      return Promise.reject("Canteen code must be alphanumeric only");
+    }
+
+    return Promise.resolve();
+  };
+
+  // Disallow future dates for DOB
+  const disableFutureDate = (current: Dayjs) => {
+    return current && current.isAfter(dayjs());
   };
 
   return (
@@ -72,7 +149,21 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
             <Form.Item
               name="canteenName"
               label="Canteen Name"
-              rules={[{ required: true, message: "Please enter canteen name" }]}
+              rules={[
+                { required: true, message: "Please enter canteen name" },
+                {
+                  min: 3,
+                  message: "Canteen name must be at least 3 characters",
+                },
+                {
+                  max: 50,
+                  message: "Canteen name cannot exceed 50 characters",
+                },
+                {
+                  whitespace: true,
+                  message: "Canteen name cannot be empty spaces",
+                },
+              ]}
               style={formItemStyle}
             >
               <Input placeholder="Enter Canteen name" style={inputStyle} />
@@ -82,7 +173,10 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
             <Form.Item
               name="canteenCode"
               label="Canteen CODE"
-              rules={[{ required: true, message: "Please enter canteen code" }]}
+              rules={[
+                { required: true, message: "Please enter canteen code" },
+                { validator: validateCanteenCode },
+              ]}
               style={formItemStyle}
             >
               <Input placeholder="Enter Canteen Code" style={inputStyle} />
@@ -95,7 +189,19 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
             <Form.Item
               name="firstName"
               label="First Name"
-              rules={[{ required: true, message: "Please enter first name" }]}
+              rules={[
+                { required: true, message: "Please enter first name" },
+                { min: 2, message: "First name must be at least 2 characters" },
+                { max: 30, message: "First name cannot exceed 30 characters" },
+                {
+                  pattern: /^[A-Za-z\s]+$/,
+                  message: "First name should contain only letters",
+                },
+                {
+                  whitespace: true,
+                  message: "First name cannot be empty spaces",
+                },
+              ]}
               style={formItemStyle}
             >
               <Input placeholder="Enter First Name" style={inputStyle} />
@@ -105,7 +211,19 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
             <Form.Item
               name="lastName"
               label="Last Name"
-              rules={[{ required: true, message: "Please enter last name" }]}
+              rules={[
+                { required: true, message: "Please enter last name" },
+                { min: 2, message: "Last name must be at least 2 characters" },
+                { max: 30, message: "Last name cannot exceed 30 characters" },
+                {
+                  pattern: /^[A-Za-z\s]+$/,
+                  message: "Last name should contain only letters",
+                },
+                {
+                  whitespace: true,
+                  message: "Last name cannot be empty spaces",
+                },
+              ]}
               style={formItemStyle}
             >
               <Input placeholder="Enter Last Name" style={inputStyle} />
@@ -120,6 +238,17 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               label="DOB"
               rules={[
                 { required: true, message: "Please select date of birth" },
+                // {
+                //   validator: (_, value) => {
+                //     if (!value) return Promise.resolve();
+
+                //     const age = moment().diff(value, 'years');
+                //     if (age < 18) {
+                //       return Promise.reject('Admin must be at least 18 years old');
+                //     }
+                //     return Promise.resolve();
+                //   }
+                // }
               ]}
               style={formItemStyle}
             >
@@ -127,6 +256,7 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
                 placeholder="DD/MM/YYYY"
                 style={inputStyle}
                 format="DD/MM/YYYY"
+                disabledDate={disableFutureDate}
               />
             </Form.Item>
           </Col>
@@ -157,6 +287,17 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
                   pattern: /^[0-9]{10}$/,
                   message: "Please enter a valid 10-digit mobile number",
                 },
+                {
+                  validator: (_, value) => {
+                    if (!value) return Promise.resolve();
+                    if (!/^[6-9]\d{9}$/.test(value)) {
+                      return Promise.reject(
+                        "Mobile number must start with 6, 7, 8, or 9"
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
               ]}
               style={formItemStyle}
             >
@@ -170,6 +311,7 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               rules={[
                 { required: true, message: "Please enter email ID" },
                 { type: "email", message: "Please enter a valid email" },
+                { max: 50, message: "Email cannot exceed 50 characters" },
               ]}
               style={formItemStyle}
             >
@@ -178,7 +320,8 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
           </Col>
         </Row>
 
-        <Row gutter={24}>
+        {/* Aadhaar Card section is now commented out as requested */}
+        {/* <Row gutter={24}>
           <Col xs={24}>
             <Form.Item
               name="aadhaarCardNumber"
@@ -219,9 +362,10 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               </Input.Group>
             </Form.Item>
           </Col>
-        </Row>
+        </Row> */}
 
-        {showOtpInput && (
+        {/* OTP input section is also effectively inactive since we've removed the trigger */}
+        {/* {showOtpInput && (
           <Row style={{ marginBottom: "24px" }}>
             <Col span={24}>
               <Form.Item
@@ -248,7 +392,43 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               </Form.Item>
             </Col>
           </Row>
-        )}
+        )} */}
+
+        <Row gutter={24}>
+          <Col xs={24}>
+            <Form.Item
+              name="canteenImage"
+              label="Canteen Image"
+              rules={[
+                { required: true, message: "Please upload canteen image" },
+                { validator: validateFileUpload },
+              ]}
+            >
+              <Upload
+                listType="picture"
+                maxCount={1}
+                fileList={fileList}
+                onChange={handleFileChange}
+                beforeUpload={(file) => {
+                  const isImage = file.type.startsWith("image/");
+                  if (!isImage) {
+                    message.error("You can only upload image files!");
+                  }
+                  const isLt2M = file.size / 1024 / 1024 < 2;
+                  if (!isLt2M) {
+                    message.error("Image must be smaller than 2MB!");
+                  }
+                  return false; // Prevent auto upload
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Upload Canteen Image</Button>
+                <Text type="secondary" style={{ marginLeft: 8 }}>
+                  Supported formats: JPG, PNG. Max size: 2MB
+                </Text>
+              </Upload>
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Row justify="center" style={{ marginTop: "24px" }}>
           <Col xs={24} sm={12} md={8}>
@@ -256,6 +436,7 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               type="primary"
               block
               onClick={handleOk}
+              loading={loading}
               style={{ height: "40px" }}
             >
               Confirm

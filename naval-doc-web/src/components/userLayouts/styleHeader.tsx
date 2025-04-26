@@ -104,7 +104,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
         gap: "24px",
       }}
     >
-      <div
+      {/* <div
         style={{
           display: "flex",
           alignItems: "center",
@@ -120,9 +120,9 @@ const StyledHeader: React.FC<HeaderProps> = ({
           />
         </Badge>
         <span>Cart</span>
-      </div>
+      </div> */}
 
-      <div
+      {/* <div
         style={{
           display: "flex",
           alignItems: "center",
@@ -134,7 +134,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
       >
         <WalletOutlined style={{ fontSize: "25px", color: "ghostwhite" }} />
         <span>Wallet</span>
-      </div>
+      </div> */}
 
       <Popover
         content={
