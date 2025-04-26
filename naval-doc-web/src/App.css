@@ -41,160 +41,246 @@
   color: #888;
 }
 /* login styles ---------------- */
-/* Main container styles */
-
-html, body, #root {
-  margin: 0;
-  padding-bottom: 0px;
-  width: 100%;
-}
 .login-container {
   height: 100vh;
-  width: 100%;
   margin: 0;
-  padding: 0;
-  display: flex;
+  border-color: #2c2cc2;
 }
 
-/* This disables scrolling and removes the scrollbar */
-/* html, body {
-  overflow: hidden;
-  height: 100%;
-} */
-
-/* Left side styles */
-.login-left {
-  background-color: #f0f2f5;
+.form-column {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
-  width: 50%;
+  background-color: #ffffff;
+  margin-bottom: 20px;
 }
-Input{
-  height: 50px;
-  width: 50px;
-}
-.login-form-container {
-  width: 100%;
+
+.form-container {
+  width: 400px;
   display: flex;
-  justify-content: center;
+  height: 510px;
+  position: relative;
+  margin-top: 20px;
+  border-color: #1e1e9b;
 }
 
 .login-form-box {
-  width: 100%;
-  max-width: 500px;
-  padding: 40px;
-  background: white;
+  padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(67, 60, 172, 0.1);
+  border-color: #010080;
+  border: 4px solid #2825b6;
 }
 
-.login-title {
-  color: #000;
-  margin-bottom: 20px !important;
-  text-align: center;
-}
-
-/* Right side styles */
-.login-right {
-  background-color: #083968;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50%;
-}
-
-.login-logo {
-  width: 300px;
-  height: auto;
-}
-
-/* Form element styles */
-.input-label {
-  color: #000;
-  font-size: 18px;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.phone-input,
-.otp-input {
-  margin-top: 10px;
-  width: 100%;
-}
-
-.send-otp-btn {
-  padding: 0;
-  margin-top: 5px;
-}
-
-.login-btn {
-  width: 200px;
-  margin-top: 10px;
-}
-
-/* Language toggle styles */
 .language-toggle {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  top: -40px;
+  right: 0;
+}
+
+.language-toggle button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.language-toggle button:hover {
+  background-color: #350f9b;
+}
+/* Add these styles to your existing LoginScreen.css */
+
+.language-toggle {
   display: flex;
   align-items: center;
-  background: white;
-  padding: 5px 10px;
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  gap: 8px;
 }
 
-.language-toggle span {
-  font-weight: 500;
-  margin: 0 8px;
-  color: #666;
+.language-toggle .ant-switch {
+  background-color: #d9d9d9;
 }
 
-.active-language {
-  color: #1890ff !important;
-  font-weight: 600 !important;
-}
-
-.ant-switch {
+.language-toggle .ant-switch-checked {
   background-color: #1890ff;
 }
 
-.ant-switch-checked {
-  background-color: #52c41a;
+.language-toggle .ant-switch-handle::before {
+  background-color: #fff;
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
-  .login-left,
-  .login-right {
-    width: 100%;
-    height: auto;
-  }
-  
-  .login-form-box {
-    width: 90%;
-    padding: 20px;
-  }
-  
-  .login-logo {
-    width: 200px;
-    margin: 20px 0;
-  }
-  
-  .login-container {
-    flex-direction: column;
-  }
-  
-  .login-right {
-    order: -1;
-    padding: 20px 0;
-  }
+
+.language-label {
+  font-size: 14px;
+  color: #555;
 }
 
+.login-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:#010080;
+}
+
+.login-logo {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+.login-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.otp-button {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  background-color: #1890ff; /* Ant Design primary color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+  right:0;
+  
+}
+.otp-box {
+  margin-top: 15px;
+}
+
+.otp-input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+.resend-otp-button {
+  background: none;
+  border: none;
+  color: #1890ff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+}
+.resend-otp-button:hover {
+  color: #40a9ff;
+}
+
+.otp-box {
+  margin-top: 20px;
+  padding: 15px;
+  border: 2px solid #eaeef3;
+  border-radius: 10px;
+  background-color: #f0f8ff;
+}
+
+.otp-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.otp-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+}
+.otp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.otp-button:hover {
+  background-color: #40a9ff;
+}
+
+.otp-button:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+
+.login-button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #52c41a; /* Ant Design success color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #73d13d;
+}
+
+.login-button:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+
+/* Add to your existing LoginScreen.css */
+
+.company-name {
+  font-size: 1.5rem;
+  height: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+  margin-left: 0.3rem;
+}
+
+.company-logo {
+  height: 190px; /* Adjust size as needed */
+  width: 500%;
+  align-items:center;
+}
+
+.footer-text {
+  display: flex;
+  align-items:center;
+  color: #080808;
+  font-size: 15px;
+  height: auto;
+}
 
 /* login styles ---------------- */
 
