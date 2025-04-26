@@ -1,0 +1,181 @@
+// apiService.ts
+import axios from "axios";
+
+// Base URL for API requests
+const BASE_URL = "http://localhost:3002/api";
+
+// Get token from localStorage or wherever you store it
+const getToken = () => {
+  return localStorage.getItem("Token") || "";
+};
+console.log(getToken(), "tokennn");
+
+// Create axios instance with default configurations
+const apiClient = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add request interceptor to add auth token for each request
+apiClient.interceptors.request.use(
+  (config) => {
+    config.headers.Authorization = `${getToken()}`;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Canteen API services
+export const canteenService = {
+  // Fetch all canteens
+  getAllCanteens: async () => {
+    try {
+      const response = await apiClient.get("/canteen/getAllCanteens");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching canteens:", error);
+      throw error;
+    }
+  },
+
+  // Create a new canteen
+  createCanteen: async (canteenData: FormData) => {
+    try {
+      const response = await apiClient.post(
+        "/canteen/createCanteen",
+        canteenData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error creating canteen:", error);
+      throw error;
+    }
+  },
+
+  // Get single canteen by ID
+  getCanteenById: async (canteenId: number) => {
+    try {
+      const response = await apiClient.get(`/canteen/${canteenId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching canteen with ID ${canteenId}:`, error);
+      throw error;
+    }
+  },
+
+  // Update canteen
+  updateCanteen: async (canteenId: number, canteenData: FormData) => {
+    try {
+      const response = await apiClient.put(
+        `/canteen/${canteenId}`,
+        canteenData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating canteen with ID ${canteenId}:`, error);
+      throw error;
+    }
+  },
+
+  // Delete canteen
+  deleteCanteen: async (canteenId: number) => {
+    try {
+      const response = await apiClient.delete(`/canteen/${canteenId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting canteen with ID ${canteenId}:`, error);
+      throw error;
+    }
+  },
+};
+
+// Item API services
+export const itemService = {
+  // Create a new item
+  createItem: async (itemData: FormData) => {
+    try {
+      const response = await apiClient.post("/item/createItem", itemData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error creating item:", error);
+      throw error;
+    }
+  },
+
+  // Get all items
+  getAllItems: async () => {
+    try {
+      const response = await apiClient.get("/item/getItems");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching items:", error);
+      throw error;
+    }
+  },
+
+  // Get single item by ID
+  getItemById: async (itemId: number) => {
+    try {
+      const response = await apiClient.get(`/item/${itemId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching item with ID ${itemId}:`, error);
+      throw error;
+    }
+  },
+
+  // Update item
+  updateItem: async (itemId: number, itemData: FormData) => {
+    try {
+      const response = await apiClient.put(`/item/${itemId}`, itemData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating item with ID ${itemId}:`, error);
+      throw error;
+    }
+  },
+
+  // Delete item
+  deleteItem: async (itemId: number) => {
+    try {
+      const response = await apiClient.delete(`/item/${itemId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting item with ID ${itemId}:`, error);
+      throw error;
+    }
+  },
+
+  // Get items by canteen ID
+  getItemsByCanteen: async (canteenId: number) => {
+    try {
+      const response = await apiClient.get(`/item/byCanteen/${canteenId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching items for canteen ID ${canteenId}:`, error);
+      throw error;
+    }
+  },
+};
