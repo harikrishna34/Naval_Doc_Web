@@ -9,7 +9,6 @@ import InventoryDB from "./modules/inventory/dashboard";
 import ItemsDashboard from "./modules/items/dashboard";
 import Menu from "./modules/menu/menu";
 import Profile from "./modules/profile/profile";
-import AddCanteen from "./modules/superAdmin/addCanteen";
 import Wallet from "./modules/wallet/wallet";
 // import UserDashboard from "./modules/dashboard";
 import Billing from "./modules/billing";
