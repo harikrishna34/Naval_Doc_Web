@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
 import { Col, Row, Switch } from "antd";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 // import wordTekLogo from "../assets/images/logo.png";
 
 type Language = "en" | "hi";
@@ -35,6 +36,7 @@ const LoginScreen: React.FC = () => {
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [language, setLanguage] = useState<Language>("en");
+  const navigate = useNavigate()
 
   const API_URL_SEND = "http://localhost:3002/api/login";
   const API_URL_VERIFY = "http://localhost:3002/api/verifyOtp";
@@ -86,15 +88,14 @@ const LoginScreen: React.FC = () => {
         mobile: mobileNumber,
         otp: otp,
       });
+      console.log(response,"res");
+      
 
-      if (
-        response.status === 200 &&
-        response.data.message === "OTP verified successfully"
-      ) {
+      if (response.status === 200 && response.data.message === "OTP verified successfully") {        
         const token = response.data.token;
-
         localStorage.setItem("Token", token);
-        alert("Login successful!");
+        navigate("/dashboard");
+        // alert("Login successful!");
       } else {
         alert("Invalid OTP or verification failed.");
       }
@@ -131,9 +132,7 @@ const LoginScreen: React.FC = () => {
                 id="mobile"
                 value={mobileNumber}
                 onChange={(e) =>
-                  setMobileNumber(
-                    e.target.value.replace(/\D/g, "").slice(0, 10)
-                  )
+                  setMobileNumber(e.target.value.replace(/\D/g, "").slice(0, 10))
                 }
                 placeholder={
                   language === "en" ? "e.g. 9876543210" : "जैसे 9876543210"
