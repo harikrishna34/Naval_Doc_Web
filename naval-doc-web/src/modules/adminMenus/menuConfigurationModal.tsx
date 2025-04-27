@@ -1,0 +1,276 @@
+import React, { useState, useEffect } from "react";
+import {
+  Form,
+  TimePicker,
+  Select,
+  Button,
+  Typography,
+  Modal,
+  Spin,
+  Alert,
+  Divider,
+  Card,
+  Row,
+  Col,
+} from "antd";
+import { ClockCircleOutlined } from "@ant-design/icons";
+import { menuConfigService } from "../../auth/apiService";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
+
+const { Title, Text } = Typography;
+const { Option } = Select;
+
+interface MenuConfiguration {
+  id?: number;
+  name: string;
+  defaultStartTime: string;
+  defaultEndTime: string;
+  status?: string;
+}
+
+interface MenuConfigurationModalProps {
+  onClose: () => void;
+  onSuccess: () => void;
+  visible: boolean;
+}
+
+const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
+  onClose,
+  onSuccess,
+  visible,
+}) => {
+  const [menuConfigurations, setMenuConfigurations] = useState<
+    MenuConfiguration[]
+  >([]);
+  const [name, setName] = useState<string>("");
+  const [startTime, setStartTime] = useState<string>("08:00 AM");
+  const [endTime, setEndTime] = useState<string>("10:00 AM");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [configsLoading, setConfigsLoading] = useState<boolean>(true);
+
+  // Format time from string to dayjs object for TimePicker
+  const formatTimeToDateObj = (timeString: string) => {
+    return dayjs(timeString, "hh:mm A");
+  };
+
+  // Format time from TimePicker to string format
+  const formatTimeToString = (time: dayjs.Dayjs | null) => {
+    if (!time) return "";
+    return time.format("hh:mm A");
+  };
+
+  useEffect(() => {
+    const loadMenuConfigurations = async () => {
+      setConfigsLoading(true);
+      try {
+        const configs = await menuConfigService.getAllMenuConfigurations();
+        setMenuConfigurations(configs?.data || []);
+      } catch (err) {
+        console.error("Failed to load configurations:", err);
+      } finally {
+        setConfigsLoading(false);
+      }
+    };
+
+    if (visible) {
+      loadMenuConfigurations();
+    }
+  }, [visible]);
+
+  const handleSubmit = async () => {
+    if (!name) {
+      setError("Please select a menu type");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await menuConfigService.createMenuConfiguration({
+        name,
+        defaultStartTime: startTime,
+        defaultEndTime: endTime,
+      });
+      onSuccess();
+    } catch (err) {
+      setError("Failed to create menu configuration. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Modal
+      title="Menu Configuration"
+      open={visible}
+      onCancel={onClose}
+      footer={null}
+      width={850}
+      destroyOnClose
+      style={{ top: 64 }}
+      maskStyle={{ backdropFilter: "blur(2px)" }}
+    >
+      <div style={{ marginBottom: "20px" }}>
+        <Title level={5} style={{ marginBottom: "12px" }}>
+          Existing Configurations
+        </Title>
+        {configsLoading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "16px",
+            }}
+          >
+            <Spin size="small" />
+          </div>
+        ) : menuConfigurations.length > 0 ? (
+          <div style={{ maxHeight: "140px", overflowY: "auto" }}>
+            <Row gutter={[8, 8]} style={{ marginLeft: 0, marginRight: 0 }}>
+              {menuConfigurations.map((config) => (
+                <Col xs={12} sm={6} key={config.id}>
+                  <Card
+                    size="small"
+                    style={{
+                      backgroundColor: "#f5f5f5",
+                      borderRadius: "4px",
+                      height: "100%",
+                    }}
+                    bodyStyle={{ padding: "10px" }}
+                  >
+                    <div style={{ fontWeight: 500 }}>{config.name}</div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: "4px",
+                      }}
+                    >
+                      <ClockCircleOutlined
+                        style={{
+                          fontSize: "12px",
+                          marginRight: "4px",
+                          color: "#8c8c8c",
+                        }}
+                      />
+                      <Text type="secondary" style={{ fontSize: "12px" }}>
+                        {dayjs
+                          .unix(Number(config.defaultStartTime))
+                          .format("HH:mm")}{" "}
+                        -{" "}
+                        {dayjs
+                          .unix(Number(config.defaultEndTime))
+                          .format("HH:mm")}
+                      </Text>
+                    </div>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </div>
+        ) : (
+          <Text type="secondary" style={{ display: "block", padding: "8px 0" }}>
+            No configurations found
+          </Text>
+        )}
+      </div>
+
+      <Divider style={{ margin: "12px 0" }} />
+
+      <Form layout="vertical">
+        <Form.Item
+          label={
+            <span style={{ color: "#000" }}>
+              <span style={{ color: "#ff4d4f", marginRight: "4px" }}>*</span>
+              Menu Type
+            </span>
+          }
+          style={{ marginBottom: "16px" }}
+        >
+          <Select
+            value={name || undefined}
+            onChange={setName}
+            placeholder="Select menu type"
+            style={{ width: "100%" }}
+          >
+            <Option value="Breakfast">Breakfast</Option>
+            <Option value="Lunch">Lunch</Option>
+            <Option value="Snack">Snack</Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label={
+            <span style={{ color: "#000" }}>
+              <span style={{ color: "#ff4d4f", marginRight: "4px" }}>*</span>
+              Default Start Time
+            </span>
+          }
+          style={{ marginBottom: "16px" }}
+        >
+          <TimePicker
+            use12Hours
+            format="h:mm A"
+            value={formatTimeToDateObj(startTime)}
+            onChange={(time) => setStartTime(formatTimeToString(time))}
+            style={{ width: "100%" }}
+            placeholder="08:00 AM"
+            allowClear={false}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label={
+            <span style={{ color: "#000" }}>
+              <span style={{ color: "#ff4d4f", marginRight: "4px" }}>*</span>
+              Default End Time
+            </span>
+          }
+          style={{ marginBottom: "16px" }}
+        >
+          <TimePicker
+            use12Hours
+            format="h:mm A"
+            value={formatTimeToDateObj(endTime)}
+            onChange={(time) => setEndTime(formatTimeToString(time))}
+            style={{ width: "100%" }}
+            placeholder="10:00 AM"
+            allowClear={false}
+          />
+        </Form.Item>
+
+        {error && (
+          <Alert
+            message={error}
+            type="error"
+            style={{ marginBottom: "16px" }}
+            showIcon
+          />
+        )}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "8px",
+            marginTop: "24px",
+          }}
+        >
+          <Button onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
+          <Button type="primary" onClick={handleSubmit} loading={loading}>
+            Create Configuration
+          </Button>
+        </div>
+      </Form>
+    </Modal>
+  );
+};
+
+export default MenuConfigurationModal;

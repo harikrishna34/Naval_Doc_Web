@@ -13,6 +13,7 @@ import {
 import { PlusOutlined } from "@ant-design/icons";
 import AddCanteenModal from "./addCanteenModal";
 import { canteenService } from "../../auth/apiService";
+import WorldtekLogo from "../../components/common/worldTekLogo";
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -114,7 +115,6 @@ const CanteenList: React.FC = () => {
     <Layout>
       <Content
         style={{
-          padding: "20px",
           maxWidth: "100%",
           marginLeft: "25px",
           marginRight: "25px",
@@ -124,11 +124,11 @@ const CanteenList: React.FC = () => {
           level={2}
           style={{
             textAlign: "left",
-            marginBottom: "45px",
+            marginBottom: "30px",
             marginTop: "-5px",
           }}
         >
-          Canteens
+          Canteens Management
         </Title>
 
         {loading ? (
@@ -146,6 +146,39 @@ const CanteenList: React.FC = () => {
           <EmptyState />
         ) : (
           <Row gutter={[16, 16]}>
+             <Col xs={24} sm={12} md={8} lg={6}>
+              <Card
+                hoverable
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  border: "1px dashed #d9d9d9",
+                  backgroundColor: "#fafafa",
+                  cursor: "pointer",
+                }}
+                bodyStyle={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
+                  width: "100%",
+                  padding: "30px",
+                }}
+                onClick={handleAddCanteen}
+              >
+                <div style={{ marginBottom: "8px" }}>
+                  <PlusOutlined
+                    style={{ fontSize: "32px", color: "#52c41a" }}
+                  />
+                </div>
+                <Typography.Text strong>Add New Canteen</Typography.Text>
+              </Card>
+            </Col>
             {canteens.map((canteen) => (
               <Col xs={24} sm={12} md={8} lg={6} key={canteen.id}>
                 <Card
@@ -182,40 +215,6 @@ const CanteenList: React.FC = () => {
                 </Card>
               </Col>
             ))}
-
-            <Col xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                style={{
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  border: "1px dashed #d9d9d9",
-                  backgroundColor: "#fafafa",
-                  cursor: "pointer",
-                }}
-                bodyStyle={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "100%",
-                  width: "100%",
-                  padding: "30px",
-                }}
-                onClick={handleAddCanteen}
-              >
-                <div style={{ marginBottom: "8px" }}>
-                  <PlusOutlined
-                    style={{ fontSize: "32px", color: "#52c41a" }}
-                  />
-                </div>
-                <Typography.Text strong>Add New Canteen</Typography.Text>
-              </Card>
-            </Col>
           </Row>
         )}
 
@@ -224,7 +223,7 @@ const CanteenList: React.FC = () => {
           isOpen={isModalOpen}
           onCancel={handleCancelModal}
           onSubmit={handleSubmitCanteen}
-          onSuccess={fetchCanteens} // Refresh canteen list after successful addition
+          onSuccess={fetchCanteens}
         />
       </Content>
     </Layout>

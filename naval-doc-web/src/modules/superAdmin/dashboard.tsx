@@ -1,141 +1,128 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { Row, Col, Card, Typography, Space } from "antd";
+import canteenImg from "../../assets/images/canteens.jpg";
+import menuImage from "../../assets/images/menu.jpg";
+import ordersImage from "../../assets/images/orders.jpg";
+import itemsImage from "../../assets/images/items.jpg";
+import WorldtekLogo from "../../components/common/worldTekLogo";
 
-const DashboardContainer = styled.div`
-  padding: 40px;
-  font-family: Arial, sans-serif;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-`;
-
-const AddButton = styled.button`
-  background-color: rgb(85, 204, 89);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 1000px;
-  font-weight: bold;
-  &:hover {
-    background-color: #45a049;
-  }
-`;
-
-const StatsContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
-`;
-
-const StatCard = styled.div`
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  padding: 20px;
-  width: 48%;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.3s;
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
-const StatTitle = styled.h2`
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 10px;
-`;
-
-const StatValue = styled.p`
-  font-size: 24px;
-  font-weight: bold;
-  color: #4caf50;
-`;
-
-const FeaturesContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-`;
-
-const FeatureCard = styled.div`
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  padding: 50px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.3s;
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
-const FeatureImage = styled.img`
-  width: 80px;
-  height: 80px;
-  margin-bottom: 10px;
-`;
-
-const FeatureTitle = styled.h3`
-  font-size: 16px;
-  color: #333;
-`;
+const { Title, Text } = Typography;
 
 const SuperAdminDashboard: React.FC = () => {
-  // Placeholder images - replace with your actual image paths
-  const canteenImage = "https://via.placeholder.com/80";
-  const menuImage = "https://via.placeholder.com/80";
-  const ordersImage = "https://via.placeholder.com/80";
-  const inventoriesImage = "https://via.placeholder.com/80";
   const navigate = useNavigate();
 
   const handleCardClick = (cardName: string) => {
     if (cardName === "Canteens") {
       navigate("/canteens-list");
+    } else if (cardName === "Items") {
+      navigate("/items-list");
+    } else if (cardName === "Menu") {
+      navigate("/menus-list");
+    } else if (cardName === "Orders") {
+      navigate("/orders-list");
     }
   };
 
-  return (
-    <DashboardContainer>
-      <StatsContainer>
-        <StatCard onClick={() => handleCardClick("Total Orders")}>
-          <StatTitle>TOTAL ORDERS</StatTitle>
-          <StatValue>1000</StatValue>
-        </StatCard>
-        <StatCard onClick={() => handleCardClick("Revenue")}>
-          <StatTitle>REVENUE</StatTitle>
-          <StatValue>10,000</StatValue>
-        </StatCard>
-      </StatsContainer>
+  const statCards = [
+    { title: "TOTAL ORDERS", value: "1000" },
+    { title: "REVENUE", value: "10,000" },
+  ];
 
-      <FeaturesContainer>
-        <FeatureCard onClick={() => handleCardClick("Canteens")}>
-          <FeatureImage src={canteenImage} alt="Canteens" />
-          <FeatureTitle>Canteens</FeatureTitle>
-        </FeatureCard>
-        <FeatureCard onClick={() => handleCardClick("Menu")}>
-          <FeatureImage src={menuImage} alt="Menu" />
-          <FeatureTitle>Menu</FeatureTitle>
-        </FeatureCard>
-        <FeatureCard onClick={() => handleCardClick("Orders")}>
-          <FeatureImage src={ordersImage} alt="Orders" />
-          <FeatureTitle>Orders</FeatureTitle>
-        </FeatureCard>
-        <FeatureCard onClick={() => handleCardClick("Inventories")}>
-          <FeatureImage src={inventoriesImage} alt="Inventories" />
-          <FeatureTitle>Inventories</FeatureTitle>
-        </FeatureCard>
-      </FeaturesContainer>
-    </DashboardContainer>
+  const featureCards = [
+    { title: "Canteens", image: canteenImg },
+    { title: "Menu", image: menuImage },
+    { title: "Orders", image: ordersImage },
+    { title: "Items", image: itemsImage },
+  ];
+
+  return (
+    <div>
+      <div style={{ padding: "20px" }}>
+        {/* Stats Section */}
+        <Row gutter={[16, 16]} style={{ marginBottom: "30px" }}>
+          {statCards.map((stat, index) => (
+            <Col xs={24} sm={12} key={index}>
+              <Card
+                hoverable
+                style={{
+                  textAlign: "center",
+                  borderRadius: "10px",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  height: "100%",
+                }}
+                onClick={() => handleCardClick(stat.title)}
+              >
+                <Title level={4} style={{ margin: 0, color: "#333" }}>
+                  {stat.title}
+                </Title>
+                
+                <Text
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: "bold",
+                    color: "#4caf50",
+                  }}
+                >
+                  {stat.value}
+                </Text>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+
+        {/* Feature Cards Section */}
+        <Row gutter={[16, 16]}>
+          {featureCards.map((feature, index) => (
+            <Col xs={24} sm={12} md={6} key={index}>
+              <Space
+                direction="vertical"
+                style={{ width: "100%", textAlign: "center" }}
+              >
+                <Card
+                  hoverable
+                  style={{
+                    borderRadius: "10px",
+                    padding: 0,
+                    overflow: "hidden",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                    height: "288px",
+                  }}
+                  bodyStyle={{ padding: 0 }}
+                  cover={
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "100%",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <img
+                        alt={feature.title}
+                        src={feature.image}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  }
+                  onClick={() => handleCardClick(feature.title)}
+                />
+                <Title
+                  level={5}
+                  style={{ margin: "8px 0 0", textAlign: "center" }}
+                >
+                  {feature.title}
+                </Title>
+              </Space>
+            </Col>
+          ))}
+        </Row>
+      </div>
+      <WorldtekLogo />
+    </div>
   );
 };
 

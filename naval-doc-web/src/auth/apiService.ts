@@ -179,3 +179,94 @@ export const itemService = {
     }
   },
 };
+
+// Menu API services
+export const menuService = {
+  // Create menu with items
+  createMenuWithItems: async (menuData: {
+    menuConfigurationId: number;
+    canteenId: number;
+    description: string;
+    items: Array<{
+      itemId: number;
+      minQuantity: number;
+      maxQuantity: number;
+    }>;
+  }) => {
+    try {
+      const response = await apiClient.post("/menu/createMenuWithItems", menuData);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating menu with items:", error);
+      throw error;
+    }
+  },
+  
+  // Get all menus
+  getAllMenus: async () => {
+    try {
+      const response = await apiClient.get("/menu/getAllMenus");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching menus:", error);
+      throw error;
+    }
+  },
+  
+  // Get menu by ID
+  getMenuById: async (menuId: number) => {
+    try {
+      const response = await apiClient.get(`/menu/${menuId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching menu with ID ${menuId}:`, error);
+      throw error;
+    }
+  },
+  
+  // Update menu
+  updateMenu: async (menuId: number, menuData: any) => {
+    try {
+      const response = await apiClient.put(`/menu/${menuId}`, menuData);
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating menu with ID ${menuId}:`, error);
+      throw error;
+    }
+  },
+  
+  // Delete menu
+  deleteMenu: async (menuId: number) => {
+    try {
+      const response = await apiClient.delete(`/menu/${menuId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting menu with ID ${menuId}:`, error);
+      throw error;
+    }
+  }
+};
+
+// Menu Configuration API services
+export const menuConfigService = {
+  // Create a new menu configuration
+  createMenuConfiguration: async (menuConfigurationData: any) => {
+    try {
+      const response = await apiClient.post("/menuconfig/createMenuConfiguration", menuConfigurationData);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating menu configuration:", error);
+      throw error;
+    }
+  },
+  // Get all menu configurations
+  getAllMenuConfigurations: async () => {
+    try {
+      const response = await apiClient.get("/menuconfig/getAllMenuConfigurations");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching menu configurations:", error);
+      throw error;
+    }
+  }
+};
