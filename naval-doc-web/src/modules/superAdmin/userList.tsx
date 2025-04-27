@@ -22,7 +22,7 @@ const users: User[] = Array.from({ length: 10 }, (_, i) => ({
   phone: `012345678${i}`,
   canteenName: `Canteen ${i + 1}`,
   canteenCode: `C00${i + 1}`,
-  aadharCard: `XXXX-XXXX-XXXX-${i}${i}`,
+  aadharCard: `XXXX-XXXX-XXXX`,
   addedBy: `Admin ${i + 1}`,
   photo: "https://via.placeholder.com/150", // Placeholder image
 }));
@@ -75,7 +75,7 @@ function UsersList() {
                 src={UserImage}
                 style={{
                   width: "100%",
-                  height: 100,
+                  height: 150,
                   objectFit: "cover",
                 }}
               />
