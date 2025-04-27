@@ -1,41 +1,40 @@
 import React from 'react';
 import { Typography, Space } from 'antd';
+import Logo from "../../assets/images/logo.png";
 
 const WorldtekLogo: React.FC = () => {
   return (
-    <div style={{ textAlign: 'center', marginTop: '30px', marginBottom: '20px' }}>
+    <div style={{ textAlign: 'center', marginTop: '30px', marginBottom: '0px' }}>
       <Space align="center">
-        <Typography.Text style={{ color: '#333', fontSize: '14px', fontWeight: 400 }}>
+        <Typography.Text style={{ color: '#333', fontSize: '15px', fontWeight: 400 ,marginTop: '50px',
+ }}>
           powered by
         </Typography.Text>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ 
-            width: '30px',
-            height: '30px',
-            borderRadius: '50%',
-            background: 'white',
-            border: '2px solid #FF6B00',
+            width: '120px',
+            height: '50px',
+            marginTop: '30px',
+            marginBottom: '25px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            overflow: 'hidden',         // Important to make image fit inside circle
             position: 'relative'
           }}>
-            <div style={{
-              color: '#FF6B00',
-              fontSize: '18px',
-              fontWeight: 'bold',
-              fontFamily: 'Arial, sans-serif',
-              lineHeight: 1
-            }}>w</div>
+            <img 
+              src={Logo} 
+              alt="logo"
+              style={{
+                width: '100%',
+                marginTop: '30px',
+                marginLeft: '32px',
+                marginRight: '35px',
+                height: '420%',
+                objectFit: 'cover'
+              }}
+            />
           </div>
-          <Typography.Text style={{ 
-            color: '#333', 
-            fontSize: '14px', 
-            fontWeight: 500,
-            marginLeft: '5px'
-          }}>
-            worldtek
-          </Typography.Text>
         </div>
       </Space>
     </div>

@@ -4,7 +4,9 @@
   /* padding: 2rem; */
   text-align: center;
 }
-
+body{
+  margin:0px;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -43,24 +45,23 @@
 /* login styles ---------------- */
 .login-container {
   height: 100vh;
-  margin: 0;
-  border-color: #2c2cc2;
+  border-color: #2c2cc2; 
 }
+
 
 .form-column {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-  margin-bottom: 20px;
+  
 }
 
 .form-container {
   width: 400px;
   display: flex;
-  height: 510px;
   position: relative;
-  margin-top: 20px;
+  margin-top: 60px;
   border-color: #1e1e9b;
 }
 
@@ -137,6 +138,7 @@
 .login-title {
   font-size: 2rem;
   margin-bottom: 2rem;
+
   color: #333;
   text-align: center;
 }
@@ -152,7 +154,7 @@
 }
 
 .input-group input {
-  width: 100%;
+  width: 90%;
   padding: 0.8rem;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -176,14 +178,12 @@
 .otp-box {
   margin-top: 15px;
 }
-
 .otp-input {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
   font-size: 16px;
 }
-
 .resend-otp-button {
   background: none;
   border: none;
@@ -195,10 +195,8 @@
 .resend-otp-button:hover {
   color: #40a9ff;
 }
-
 .otp-box {
   margin-top: 20px;
-  padding: 15px;
   border: 2px solid #eaeef3;
   border-radius: 10px;
   background-color: #f0f8ff;
@@ -207,12 +205,12 @@
 .otp-label {
   display: block;
   font-weight: 500;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   color: #333;
 }
 
 .otp-input {
-  width: 100%;
+  width: 80%;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #aaa;
