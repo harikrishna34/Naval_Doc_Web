@@ -31,7 +31,7 @@ interface HeaderProps {
 }
 
 const StyledHeader: React.FC<HeaderProps> = ({
-  brandName = "Well Fair canteen",
+  brandName = "Industrial NDY",
   navigate,
 }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -232,9 +232,9 @@ const StyledHeader: React.FC<HeaderProps> = ({
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
-                cursor: "pointer",
+                // cursor: "pointer",
               }}
-              onClick={() => handleNavigation("/")}
+              // onClick={() => handleNavigation("/")}
             >
               <div
                 style={{
@@ -255,9 +255,10 @@ const StyledHeader: React.FC<HeaderProps> = ({
                 justifyContent: "center",
                 alignItems: "center",
                 height: "100%",
-                cursor: "pointer",
+                marginLeft:"7rem"
+                // cursor: "pointer",
               }}
-              onClick={() => handleNavigation("/")}
+              // onClick={() => handleNavigation("/")}
             >
               <Text
                 style={{ color: "white", fontSize: "30px", fontWeight: "bold" }}

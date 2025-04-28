@@ -197,6 +197,7 @@ const CanteenList: React.FC = () => {
                         <h5 style={{ marginBottom: 0, marginTop: 0 }}>
                           Code: {canteen.code}
                         </h5>
+                        <Button>Go to Canteen Dashboard</Button>
                       </>
                     }
                     style={{ textAlign: "center", fontSize: "23px" }}

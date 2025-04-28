@@ -1,15 +1,17 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Card, Typography, Space } from "antd";
-import canteenImg from "../../assets/images/canteens.jpg";
 import menuImage from "../../assets/images/menu.jpg";
 import ordersImage from "../../assets/images/orders.jpg";
 import itemsImage from "../../assets/images/items.jpg";
-
+import { Card, Col, Row, Space, Typography } from "antd";
 const { Title, Text } = Typography;
 
-const SuperAdminDashboard: React.FC = () => {
+const canteenAdminDB = () => {
   const navigate = useNavigate();
+  const featureCards = [
+    { title: "Menu", image: menuImage },
+    { title: "Orders", image: ordersImage },
+    { title: "Users", image: itemsImage },
+  ];
 
   const handleCardClick = (cardName: string) => {
     if (cardName === "Canteens") {
@@ -18,59 +20,14 @@ const SuperAdminDashboard: React.FC = () => {
       navigate("/items-list");
     } else if (cardName === "Menu") {
       navigate("/menus-list");
-    } else if (cardName === "Orders") {
-      navigate("/orders-list");
+    } else if (cardName === "Users") {
+      navigate("/users-list");
     }
   };
 
-  const statCards = [
-    { title: "TOTAL ORDERS", value: "1000" },
-    { title: "REVENUE", value: "10,000" },
-  ];
-
-  const featureCards = [
-    { title: "Canteens", image: canteenImg },
-    { title: "Menu", image: menuImage },
-    { title: "Orders", image: ordersImage },
-    { title: "Items", image: itemsImage },
-  ];
-
   return (
     <div>
-      <div style={{ padding: "20px",paddingBottom: 0 }}>
-        {/* Stats Section */}
-        <Row gutter={[16, 16]} style={{ marginBottom: "30px" }}>
-          {statCards.map((stat, index) => (
-            <Col xs={24} sm={12} key={index}>
-              <Card
-                hoverable
-                style={{
-                  textAlign: "center",
-                  borderRadius: "10px",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                  height: "100%",
-                }}
-                onClick={() => handleCardClick(stat.title)}
-              >
-                <Title level={4} style={{ margin: 0, color: "#333" }}>
-                  {stat.title}
-                </Title>
-                
-                <Text
-                  style={{
-                    fontSize: "24px",
-                    fontWeight: "bold",
-                    color: "#4caf50",
-                  }}
-                >
-                  {stat.value}
-                </Text>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-
-        {/* Feature Cards Section */}
+      <div style={{ padding: "20px", paddingBottom: 0 }}>
         <Row gutter={[16, 16]}>
           {featureCards.map((feature, index) => (
             <Col xs={24} sm={12} md={6} key={index}>
@@ -124,4 +81,4 @@ const SuperAdminDashboard: React.FC = () => {
   );
 };
 
-export default SuperAdminDashboard;
+export default canteenAdminDB;

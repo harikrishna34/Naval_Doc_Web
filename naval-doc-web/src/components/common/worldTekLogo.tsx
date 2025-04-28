@@ -5,7 +5,7 @@ import Logo from "../../assets/images/logo.png";
 const WorldtekLogo: React.FC = () => {
   return (
     <div
-      style={{ textAlign: "center", marginTop: "30px", marginBottom: "0px" }}
+      style={{ textAlign: "center", marginTop: "27px", marginBottom: "0px" }}
     >
       <Space align="center">
         <div style={{ marginTop: "10px" }}>

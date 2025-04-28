@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout } from "antd";
 import WorldtekLogo from "../common/worldTekLogo";
-
+import FooterLogo from "../../assets/images/footerLogo.png";
 const { Footer: AntFooter } = Layout;
 
 const Footer: React.FC = () => {
@@ -19,13 +19,25 @@ const Footer: React.FC = () => {
           padding: "12px 0",
           fontSize: "14px",
           color: "#666",
+          display:"flex",
+          alignItems:"center",
+          justifyContent:'center'
         }}
       >
-        © {currentYear} Navel Docyard. All rights reserved. | Powered by{" "}
-        <strong>XTS</strong>
+        <div>
+          © {currentYear} Navel Docyard. All rights reserved. | Powered by{" "}
+        </div>
+
+        <img
+          src={FooterLogo}
+          alt="logo"
+          style={{ width: "75px", height: "35px", objectFit:"cover" }}
+        />
       </AntFooter>
     </div>
   );
 };
-
+{
+  /* <strong>WorldTek</strong> */
+}
 export default Footer;

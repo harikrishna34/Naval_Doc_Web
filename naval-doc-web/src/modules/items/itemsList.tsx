@@ -40,6 +40,13 @@ interface ItemProps {
   status: string;
 }
 
+const getImageSrc = (base64String: string) => {
+  if (base64String.startsWith('data:image')) {
+    return base64String;
+  }
+  return `data:image/png;base64,${base64String}`;
+};
+
 const ItemsList: React.FC = () => {
   // State variables
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -65,7 +72,12 @@ const ItemsList: React.FC = () => {
         // Transform API data to match our component's expected format
         const formattedItems = response.data.map((item: any) => {
           // Handle image properly - check if it's a Buffer object
+          console.log(item, "item");
+          let image = getImageSrc(item.image);
+          console.log(image, "image");
+          
           let imageUrl = "/api/placeholder/250/150"; // Default placeholder
+
 
           if (item.image) {
             if (
