@@ -1,10 +1,12 @@
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px; */
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   text-align: center;
 }
-
+body{
+  /* margin:0px; */
+}
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -40,33 +42,455 @@
 .read-the-docs {
   color: #888;
 }
+/* login styles ---------------- */
 .login-container {
   height: 100vh;
+  border-color: #2c2cc2; 
 }
 
-.login-left {
+
+.form-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  
+}
+
+.form-container {
+  width: 400px;
+  display: flex;
+  position: relative;
+  margin-top: 60px;
+  border-color: #1e1e9b;
+}
+
+.login-form-box {
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(67, 60, 172, 0.1);
+  border-color: #010080;
+  border: 4px solid #2825b6;
+}
+
+.language-toggle {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  top: -40px;
+  right: 0;
+}
+
+.language-toggle button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.language-toggle button:hover {
+  background-color: #350f9b;
+}
+/* Add these styles to your existing LoginScreen.css */
+
+.language-toggle {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: #f0f2f5;
-  padding: 2rem;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  gap: 8px;
 }
 
-.login-form {
-  width: 100%;
-  max-width: 300px;
+.language-toggle .ant-switch {
+  background-color: #d9d9d9;
+}
+
+.language-toggle .ant-switch-checked {
+  background-color: #1890ff;
+}
+
+.language-toggle .ant-switch-handle::before {
+  background-color: #fff;
+}
+
+
+.language-label {
+  font-size: 14px;
+  color: #555;
 }
 
 .login-right {
-  background-color: #fff;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:#010080;
+}
+
+.login-logo {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+.login-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+
+  color: #333;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.input-group input {
+  width: 90%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.otp-button {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  background-color: #1890ff; /* Ant Design primary color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+  right:0;
+  
+}
+.otp-box {
+  margin-top: 15px;
+}
+.otp-input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  font-size: 16px;
+}
+.resend-otp-button {
+  background: none;
+  border: none;
+  color: #1890ff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+}
+.resend-otp-button:hover {
+  color: #40a9ff;
+}
+.otp-box {
+  margin-top: 20px;
+  border: 2px solid #eaeef3;
+  border-radius: 10px;
+  background-color: #f0f8ff;
+}
+
+.otp-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.otp-input {
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+}
+.otp-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.login-logo {
-  max-width: 100%;
-  max-height: 80%;
-  object-fit: contain;
+.otp-button:hover {
+  background-color: #40a9ff;
 }
+
+.otp-button:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+
+.login-button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #52c41a; /* Ant Design success color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #73d13d;
+}
+
+.login-button:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+
+/* Add to your existing LoginScreen.css */
+
+.company-name {
+  font-size: 1.5rem;
+  height: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+  margin-left: 0.3rem;
+}
+
+.company-logo {
+  height: 190px; /* Adjust size as needed */
+  width: 500%;
+  align-items:center;
+}
+
+.footer-text {
+  display: flex;
+  align-items:center;
+  color: #080808;
+  font-size: 15px;
+  height: auto;
+}
+
+/* login styles ---------------- */
+
+
+/* ----------------------- */
+
+.simple-header {
+  background: #ff5722;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 64px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  height: 36px;
+  margin-right: 8px;
+}
+
+.logo-icon img {
+  height: 100%;
+}
+
+.logo-text {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-item {
+  display: flex;
+  align-items: center;
+}
+
+.header-link {
+  color: white;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.header-link:hover {
+  color: #f0f0f0;
+}
+
+.app-button {
+  background: white;
+  border-radius: 8px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  height: 36px;
+}
+
+.user-avatar {
+  background: #555;
+  cursor: pointer;
+}
+
+/* Simple responsive adjustments */
+@media (max-width: 768px) {
+  .header-right {
+    gap: 10px;
+  }
+
+  .logo-text {
+    display: none;
+  }
+}
+
+/* all components */
+
+/* canteen selection styles */
+
+.canteen-page-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.canteen-selection-container {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
+.logo-container {
+  width: 50%;
+  background-color: #001982; /* Navy blue color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+  .canteen-page-container {
+    flex-direction: column;
+  }
+
+  .canteen-selection-container,
+  .logo-container {
+    width: 100%;
+    height: 50vh;
+  }
+}
+
+.selection-card {
+  width: 350px;
+  padding: 30px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.selection-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.canteen-option {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 12px 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 16px;
+}
+
+.canteen-option:hover {
+  border-color: #1890ff;
+}
+
+.canteen-option.selected {
+  border-color: #1890ff;
+  background-color: #e6f7ff;
+}
+
+.continue-button {
+  background-color: #1a4b94;
+  color: white;
+  font-size: 16px;
+  height: 45px;
+  border: none;
+  margin-top: 10px;
+}
+
+.continue-button:hover,
+.continue-button:focus {
+  background-color: #0e3b7e;
+  color: white;
+}
+
+/* Overriding antd button styles */
+.continue-button.ant-btn-primary[disabled] {
+  background-color: #1a4b94;
+  opacity: 0.7;
+  color: white;
+}
+
+.item-card-meta{
+  .ant-card-body {
+    padding: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .selection-card {
+    width: 90%;
+    max-width: 350px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

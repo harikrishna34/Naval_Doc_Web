@@ -1,0 +1,453 @@
+import React, { useState } from "react";
+import {
+  Modal,
+  Form,
+  Input,
+  DatePicker,
+  Select,
+  Button,
+  Row,
+  Col,
+  Typography,
+  Upload,
+  message,
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import WorldtekLogo from "../../components/common/worldTekLogo";
+import { canteenService } from "../../auth/apiService";
+import dayjs, { Dayjs } from "dayjs";
+
+const { Option } = Select;
+const { Text } = Typography;
+
+interface AddCanteenModalProps {
+  isOpen: boolean;
+  onCancel: () => void;
+  onSubmit: (values: any) => void;
+  onSuccess: () => void;
+}
+
+const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
+  isOpen,
+  onCancel,
+  onSubmit,
+  onSuccess,
+}) => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [fileList, setFileList] = useState<any[]>([]);
+
+  const handleOk = async () => {
+    try {
+      setLoading(true);
+      const values = await form.validateFields();
+      // Create a FormData object for the API request
+      const formData = new FormData();
+      formData.append("canteenName", values.canteenName.trim());
+      formData.append("canteenCode", values.canteenCode.trim());
+      formData.append("adminFirstName", values.firstName.trim());
+      formData.append("adminLastName", values.lastName.trim());
+      formData.append("adminEmail", values.emailId.trim());
+      formData.append("adminMobile", values.mobileNumber.trim());
+      // Format date if needed
+      if (values.dob) {
+        formData.append("adminDob", values.dob.format("YYYY-MM-DD"));
+      }
+      // Add gender
+      if (values.gender) {
+        formData.append("adminGender", values.gender);
+      }
+      // Add canteen image if provided
+      if (fileList.length > 0 && fileList[0].originFileObj) {
+        formData.append("canteenImage", fileList[0].originFileObj);
+      }
+      // Call the API to create a new canteen
+      await canteenService.createCanteen(formData);
+
+      message.success("Canteen added successfully!");
+      form.resetFields();
+      setFileList([]);
+      onSubmit(values);
+      onSuccess(); // Refresh the canteen list
+      onCancel(); // Close modal
+    } catch (error) {
+      console.error("Failed to add canteen:", error);
+      message.error("Failed to add canteen. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formItemStyle = {
+    marginBottom: "16px",
+  };
+
+  const inputStyle = {
+    width: "100%",
+    height: "40px",
+  };
+
+  const handleFileChange = ({ fileList }: any) => {
+    setFileList(fileList);
+  };
+
+  // Custom validation for file upload
+  const validateFileUpload = () => {
+    if (fileList.length === 0) {
+      return Promise.reject("Please upload a canteen image");
+    }
+
+    const file = fileList[0]?.originFileObj;
+    if (file) {
+      const isImage = file.type.startsWith("image/");
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isImage) {
+        return Promise.reject("You can only upload image files!");
+      }
+      if (!isLt2M) {
+        return Promise.reject("Image must be smaller than 2MB!");
+      }
+    }
+
+    return Promise.resolve();
+  };
+
+  // Custom validator for canteen code format (e.g., alphanumeric)
+  const validateCanteenCode = (_: any, value: string) => {
+    if (!value) {
+      return Promise.reject("Please enter canteen code");
+    }
+
+    const pattern = /^[A-Za-z0-9]+$/;
+    if (!pattern.test(value)) {
+      return Promise.reject("Canteen code must be alphanumeric only");
+    }
+
+    return Promise.resolve();
+  };
+
+  // Disallow future dates for DOB
+  const disableFutureDate = (current: Dayjs) => {
+    return current && current.isAfter(dayjs());
+  };
+
+  return (
+    <Modal
+      className="add-canteen-modal"
+      title="Add Canteen"
+      open={isOpen}
+      onCancel={onCancel}
+      width={920}
+      centered
+      footer={null}
+      bodyStyle={{ maxHeight: "75vh", overflowY: "auto", padding: "24px" }}
+    >
+      <Form form={form} layout="vertical" name="add_canteen_form">
+        <Row gutter={24}>
+          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
+            <Form.Item
+              name="canteenName"
+              label="Canteen Name"
+              rules={[
+                { required: true, message: "Please enter canteen name" },
+                {
+                  min: 3,
+                  message: "Canteen name must be at least 3 characters",
+                },
+                {
+                  max: 50,
+                  message: "Canteen name cannot exceed 50 characters",
+                },
+                {
+                  whitespace: true,
+                  message: "Canteen name cannot be empty spaces",
+                },
+              ]}
+              style={formItemStyle}
+            >
+              <Input placeholder="Enter Canteen name" style={inputStyle} />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
+            <Form.Item
+              name="canteenCode"
+              label="Canteen CODE"
+              rules={[
+                { required: true, message: "Please enter canteen code" },
+                { validator: validateCanteenCode },
+              ]}
+              style={formItemStyle}
+            >
+              <Input placeholder="Enter Canteen Code" style={inputStyle} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={24}>
+          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
+            <Form.Item
+              name="firstName"
+              label="First Name"
+              rules={[
+                { required: true, message: "Please enter first name" },
+                { min: 2, message: "First name must be at least 2 characters" },
+                { max: 30, message: "First name cannot exceed 30 characters" },
+                {
+                  pattern: /^[A-Za-z\s]+$/,
+                  message: "First name should contain only letters",
+                },
+                {
+                  whitespace: true,
+                  message: "First name cannot be empty spaces",
+                },
+              ]}
+              style={formItemStyle}
+            >
+              <Input placeholder="Enter First Name" style={inputStyle} />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
+            <Form.Item
+              name="lastName"
+              label="Last Name"
+              rules={[
+                { required: true, message: "Please enter last name" },
+                { min: 2, message: "Last name must be at least 2 characters" },
+                { max: 30, message: "Last name cannot exceed 30 characters" },
+                {
+                  pattern: /^[A-Za-z\s]+$/,
+                  message: "Last name should contain only letters",
+                },
+                {
+                  whitespace: true,
+                  message: "Last name cannot be empty spaces",
+                },
+              ]}
+              style={formItemStyle}
+            >
+              <Input placeholder="Enter Last Name" style={inputStyle} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={24}>
+          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
+            <Form.Item
+              name="dob"
+              label="DOB"
+              rules={[
+                { required: true, message: "Please select date of birth" },
+                // {
+                //   validator: (_, value) => {
+                //     if (!value) return Promise.resolve();
+
+                //     const age = moment().diff(value, 'years');
+                //     if (age < 18) {
+                //       return Promise.reject('Admin must be at least 18 years old');
+                //     }
+                //     return Promise.resolve();
+                //   }
+                // }
+              ]}
+              style={formItemStyle}
+            >
+              <DatePicker
+                placeholder="DD/MM/YYYY"
+                style={inputStyle}
+                format="DD/MM/YYYY"
+                disabledDate={disableFutureDate}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
+            <Form.Item
+              name="gender"
+              label="Gender"
+              rules={[{ required: true, message: "Please select gender" }]}
+              style={formItemStyle}
+            >
+              <Select placeholder="Select Gender" style={inputStyle}>
+                <Option value="male">Male</Option>
+                <Option value="female">Female</Option>
+                <Option value="other">Other</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={24}>
+          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
+            <Form.Item
+              name="mobileNumber"
+              label="Mobile Number"
+              rules={[
+                { required: true, message: "Please enter mobile number" },
+                {
+                  pattern: /^[0-9]{10}$/,
+                  message: "Please enter a valid 10-digit mobile number",
+                },
+                {
+                  validator: (_, value) => {
+                    if (!value) return Promise.resolve();
+                    if (!/^[6-9]\d{9}$/.test(value)) {
+                      return Promise.reject(
+                        "Mobile number must start with 6, 7, 8, or 9"
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+              style={formItemStyle}
+            >
+              <Input placeholder="Enter Mobile Number" style={inputStyle} />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
+            <Form.Item
+              name="emailId"
+              label="Email ID"
+              rules={[
+                { required: true, message: "Please enter email ID" },
+                { type: "email", message: "Please enter a valid email" },
+                { max: 50, message: "Email cannot exceed 50 characters" },
+              ]}
+              style={formItemStyle}
+            >
+              <Input placeholder="Enter Email ID" style={inputStyle} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        {/* Aadhaar Card section is now commented out as requested */}
+        {/* <Row gutter={24}>
+          <Col xs={24}>
+            <Form.Item
+              name="aadhaarCardNumber"
+              label="Aadhaar Card Number"
+              rules={[
+                { required: true, message: "Please enter Aadhaar Card Number" },
+                {
+                  pattern: /^[0-9]{12}$/,
+                  message: "Please enter a valid 12-digit Aadhaar number",
+                },
+              ]}
+              style={formItemStyle}
+            >
+              <Input.Group compact>
+                <Input
+                  placeholder="Enter Aadhaar Card Number"
+                  style={{
+                    width: "48.5%",
+                    height: "40px",
+                    borderRadius: "5px",
+                  }}
+                />
+                <Button
+                  type="link"
+                  onClick={handleSendOTP}
+                  style={{
+                    width: "80px",
+                    height: "40px",
+                    color: "#1890ff",
+                    padding: "0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  Send OTP
+                </Button>
+              </Input.Group>
+            </Form.Item>
+          </Col>
+        </Row> */}
+
+        {/* OTP input section is also effectively inactive since we've removed the trigger */}
+        {/* {showOtpInput && (
+          <Row style={{ marginBottom: "24px" }}>
+            <Col span={24}>
+              <Form.Item
+                name="otp"
+                label="Enter OTP"
+                rules={[{ required: true, message: "Please enter OTP" }]}
+              >
+                <Row justify="center" gutter={16}>
+                  {[0, 1, 2, 3, 4, 5].map((index) => (
+                    <Col key={index}>
+                      <Input
+                        maxLength={1}
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          textAlign: "center",
+                          fontSize: "20px",
+                          marginRight: index < 5 ? "8px" : "0",
+                        }}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              </Form.Item>
+            </Col>
+          </Row>
+        )} */}
+
+        <Row gutter={24}>
+          <Col xs={24}>
+            <Form.Item
+              name="canteenImage"
+              label="Canteen Image"
+              rules={[
+                { required: true, message: "Please upload canteen image" },
+                { validator: validateFileUpload },
+              ]}
+            >
+              <Upload
+                listType="picture"
+                maxCount={1}
+                fileList={fileList}
+                onChange={handleFileChange}
+                beforeUpload={(file) => {
+                  const isImage = file.type.startsWith("image/");
+                  if (!isImage) {
+                    message.error("You can only upload image files!");
+                  }
+                  const isLt2M = file.size / 1024 / 1024 < 2;
+                  if (!isLt2M) {
+                    message.error("Image must be smaller than 2MB!");
+                  }
+                  return false; // Prevent auto upload
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Upload Canteen Image</Button>
+                <Text type="secondary" style={{ marginLeft: 8 }}>
+                  Supported formats: JPG, PNG. Max size: 2MB
+                </Text>
+              </Upload>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row justify="center" style={{ marginTop: "24px" }}>
+          <Col xs={24} sm={12} md={8}>
+            <Button
+              type="primary"
+              block
+              onClick={handleOk}
+              loading={loading}
+              style={{ height: "40px" }}
+            >
+              Confirm
+            </Button>
+          </Col>
+        </Row>
+
+        <WorldtekLogo />
+      </Form>
+    </Modal>
+  );
+};
+
+export default AddCanteenModal;

@@ -1,54 +1,55 @@
+import React, { useState } from "react";
 import { Layout } from "antd";
-import StudentAppHeader from "./header";
+import { Outlet } from "react-router-dom";
 import StudentAppSidebar from "./sidebar";
+import Footer from "./footer";
+import StyledHeader from "../userLayouts/styleHeader";
 
+const { Content } = Layout;
 
-const { Content, Footer } = Layout;
-
-interface LayoutWrapperProps {
-  children: React.ReactNode;
-  pageTitle: string;
+interface AppLayoutProps {
+  pageTitle?: string;
 }
 
-const LayoutWrapper = ({ children, pageTitle }: LayoutWrapperProps) => {
-  const currentYear = new Date().getFullYear();
+const LayoutWrapper: React.FC<AppLayoutProps> = ({
+  pageTitle = "Dashboard",
+}) => {
+  const [collapsed, setCollapsed] = useState(true);
+
+  const handleToggleSidebar = (collapsed: boolean) => {
+    setCollapsed(collapsed);
+  };
 
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        overflowX: "hidden",
-        background: "white",
-      }}
-    >
-      <StudentAppSidebar />
-      <Layout>
-        <StudentAppHeader title={pageTitle} />
+    <Layout className="app-layout">
+      <StudentAppSidebar
+        collapsed={collapsed}
+        onCollapsedChange={handleToggleSidebar}
+      />
+      <Layout
+        className={`site-layout ${collapsed ? "collapsed" : ""} ${pageTitle}`}
+        style={{
+          marginLeft: collapsed ? "50px" : "187px",
+          transition: "all 0.2s ease-in-out",
+          marginTop: "-10px",
+          marginRight: "-8px",
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "98vh",
+        }}
+      >
+        <StyledHeader />
         <Content
+          className="site-content"
           style={{
+            flex: "1 0 auto",
             padding: "20px",
-            background: "white",
             overflow: "auto",
-            flex: 1,
           }}
         >
-          {children}
+          <Outlet />
         </Content>
-        <Footer
-          style={{
-            textAlign: "center",
-            background: "#fff",
-            borderTop: "1px solid #e8e8e8",
-            padding: "12px 0",
-            fontSize: "14px",
-            color: "#666",
-          }}
-        >
-          © {currentYear} Borigam Institution. All rights reserved. | Powered by{" "}
-          {""}
-          <strong>XTS</strong>
-        </Footer>
+        <Footer />
       </Layout>
     </Layout>
   );
