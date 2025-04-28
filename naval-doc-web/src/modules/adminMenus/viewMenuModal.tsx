@@ -37,6 +37,8 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
     useState<MenuConfiguration | null>(null);
   const [canteen, setCanteen] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  console.log(menu, "menu");
+  
 
   useEffect(() => {
     if (visible && menu) {

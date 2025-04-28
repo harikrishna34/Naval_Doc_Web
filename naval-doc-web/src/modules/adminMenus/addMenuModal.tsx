@@ -15,6 +15,7 @@ import {
   Col,
   Typography,
 } from "antd";
+import Swal from "sweetalert2";
 import dayjs from "dayjs";
 import { Item, MenuConfiguration, CreateMenuPayload } from "./types";
 import {
@@ -28,6 +29,7 @@ interface AddMenuModalProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
+  existingMenuTypes: any
 }
 
 const { Option } = Select;
@@ -38,24 +40,25 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   visible,
   onCancel,
   onSuccess,
+  existingMenuTypes
 }) => {
   const [form] = Form.useForm();
   const [items, setItems] = useState<Item[]>([]);
   const [menuConfigurations, setMenuConfigurations] = useState<
     MenuConfiguration[]
   >([]);
-  const [canteens, setCanteens] = useState<any[]>([]); // Added canteens state
+  const [canteens, setCanteens] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [loadingItems, setLoadingItems] = useState<boolean>(false);
   const [loadingConfigs, setLoadingConfigs] = useState<boolean>(false);
-  const [loadingCanteens, setLoadingCanteens] = useState<boolean>(false); // Added loading state for canteens
+  const [loadingCanteens, setLoadingCanteens] = useState<boolean>(false); 
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     if (visible) {
       fetchItems();
       fetchMenuConfigurations();
-      fetchCanteens(); // Added fetch canteens call
+      fetchCanteens();
     }
   }, [visible]);
 
@@ -89,16 +92,12 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     }
   };
 
-  // Added function to fetch canteens
   const fetchCanteens = async () => {
     try {
       setLoadingCanteens(true);
       const response = await canteenService.getAllCanteens();
-      console.log(response, "canteens-res");
-
       if (response && response.data) {
         setCanteens(response.data);
-        // Set default canteen if available
         if (response.data.length > 0) {
           form.setFieldsValue({ canteenId: response.data[0].id });
         }
@@ -123,8 +122,20 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     try {
       await form.validateFields();
       const values = form.getFieldsValue();
+      const selectedConfigId = values?.menuType;
+      const selectedConfig = menuConfigurations.find(
+        config => config.id === selectedConfigId
+      );
+      if (selectedConfig?.name && existingMenuTypes.includes(selectedConfig?.name)) {
+        await Swal.fire({
+          icon: "error",
+          title: "Menu Type Exists",
+          text: `A menu with the type "${selectedConfig.name}" already exists. Please choose a different menu type.`,
+          confirmButtonColor: '#d33'
+        });
+        return;
+      }
 
-      // Format the items with min and max quantities
       const menuItems = selectedItems.map((itemId) => {
         return {
           itemId,
@@ -194,7 +205,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           Submit
         </Button>,
       ]}
-      bodyStyle={{ padding: "24px", maxHeight: "80vh", overflow: "auto" }}
+      styles={{body:{maxHeight: "80vh", overflow: "auto", padding: "24px"}}}
     >
       <Form
         form={form}
@@ -205,7 +216,6 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           endDate: dayjs().add(1, "day"),
         }}
       >
-        {/* Description and Canteen Selection in same row */}
         <Row gutter={16}>
           <Col span={16}>
             <Form.Item
@@ -239,7 +249,6 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           </Col>
         </Row>
 
-        {/* Date fields and Meal Type in one row */}
         <Row gutter={16}>
           <Col span={8}>
             <Form.Item
@@ -295,7 +304,6 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
               <Spin />
             </div>
           ) : (
-            // <div style={{ maxHeight: "400px", overflow: "auto", marginTop: "16px" }}>
             <div style={{ maxHeight: "400px", marginTop: "16px" }}>
               <Row gutter={[16, 16]}>
                 {items.map((item) => (
@@ -310,7 +318,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                           ? "#e6f7ff"
                           : "#fff",
                       }}
-                      bodyStyle={{ padding: "16px" }}
+                      styles={{body: {padding:"16px"}}}
                     >
                       <div
                         style={{ display: "flex", alignItems: "flex-start" }}

@@ -33,7 +33,7 @@ import tiffinImage from "../../assets/images/menu_tiffin.avif";
 import snacksImage from "../../assets/images/menu_snacks.jpg";
 import BackHeader from "../../components/common/backHeader";
 
-const { Title, Paragraph, Text } = Typography;
+const { Paragraph, Text } = Typography;
 
 const MenuList: React.FC = () => {
   const [menus, setMenus] = useState<Menu[]>([]);
@@ -44,17 +44,29 @@ const MenuList: React.FC = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [existingMenuTypes, setExistingMenuTypes] = useState<string[] | any>(
+    []
+  );
 
   useEffect(() => {
     fetchMenus();
   }, []);
 
+  useEffect(() => {
+    if (menus && menus.length > 0) {
+      const menuTypes = menus
+        .filter((menu) => menu.menuConfiguration && menu.menuConfiguration.name)
+        .map((menu) => menu?.menuConfiguration?.name);
+      setExistingMenuTypes(menuTypes);
+    } else {
+      setExistingMenuTypes([]);
+    }
+  }, [menus]);
+
   const fetchMenus = async () => {
     try {
       setLoading(true);
       const response = await menuService.getAllMenus();
-      console.log(response, "menus-res");
-
       if (response && response?.data) {
         setMenus(response.data);
       }
@@ -120,15 +132,8 @@ const MenuList: React.FC = () => {
     message.success("Menu updated successfully");
   };
 
-  // Helper function to format timestamps to readable dates
   const formatDate = (timestamp: number) => {
     return dayjs(timestamp * 1000).format("MMM D, YYYY");
-  };
-
-  // Helper function to get the base64 image source
-  const getImageSource = (base64String: string) => {
-    if (!base64String) return "https://via.placeholder.com/300x200";
-    return `data:image/jpeg;base64,${base64String}`;
   };
 
   if (loading) {
@@ -147,7 +152,7 @@ const MenuList: React.FC = () => {
   }
 
   return (
-    <div style={{ padding: "2px" }}>
+    <div style={{ padding: "10px" }}>
       <div
         style={{
           display: "flex",
@@ -172,7 +177,6 @@ const MenuList: React.FC = () => {
       </div>
 
       <Row gutter={[24, 24]}>
-        {/* Add Menu Card */}
         <Col xs={24} sm={12} lg={8} xl={6}>
           <Card
             hoverable
@@ -185,14 +189,16 @@ const MenuList: React.FC = () => {
               cursor: "pointer",
               border: "1px dashed #d9d9d9",
             }}
-            bodyStyle={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-              width: "100%",
-              padding: "48px 24px",
+            styles={{
+              body: {
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+                padding: "48px 24px",
+              },
             }}
             onClick={handleAddMenu}
           >
@@ -228,7 +234,7 @@ const MenuList: React.FC = () => {
                   />
                 </div>
               }
-              bodyStyle={{ padding: "16px" }}
+              styles={{body: { padding: "16px" }}}
             >
               <div>
                 <ClockCircleOutlined style={{ marginRight: "8px" }} />
@@ -290,6 +296,7 @@ const MenuList: React.FC = () => {
         visible={isAddModalVisible}
         onCancel={handleAddModalCancel}
         onSuccess={handleAddMenuSuccess}
+        existingMenuTypes={existingMenuTypes}
       />
 
       {/* View/Edit Menu Modal */}
@@ -299,6 +306,10 @@ const MenuList: React.FC = () => {
           menu={selectedMenu}
           onCancel={handleEditModalCancel}
           onSuccess={handleUpdateMenuSuccess}
+          existingMenuTypes={existingMenuTypes.filter(
+            (type: string | any) =>
+              type !== selectedMenu.menuConfiguration?.name
+          )}
         />
       )}
 

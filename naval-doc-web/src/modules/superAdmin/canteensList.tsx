@@ -14,6 +14,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import AddCanteenModal from "./addCanteenModal";
 import { canteenService } from "../../auth/apiService";
 import BackHeader from "../../components/common/backHeader";
+import { useNavigate } from "react-router-dom";
 
 const { Content } = Layout;
 
@@ -30,6 +31,7 @@ const CanteenList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [canteens, setCanteens] = useState<CanteenProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   // Fetch canteens on component mount
   useEffect(() => {
@@ -67,7 +69,9 @@ const CanteenList: React.FC = () => {
 
   const handleCanteenClick = (canteenId: number) => {
     console.log(`Navigating to canteen with ID: ${canteenId}`);
-    // Replace with your actual navigation logic
+    console.log(canteenId,"canteeId");
+    navigate(`/canteens-list/canteen-dashboard/:${canteenId}`);
+    // navigate(`/canteen-dashboard`);
   };
 
   const handleAddCanteen = () => {
@@ -149,7 +153,7 @@ const CanteenList: React.FC = () => {
                   backgroundColor: "#fafafa",
                   cursor: "pointer",
                 }}
-                bodyStyle={{
+                styles={{body: {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -157,7 +161,7 @@ const CanteenList: React.FC = () => {
                   height: "100%",
                   width: "100%",
                   padding: "30px",
-                }}
+                }}}
                 onClick={handleAddCanteen}
               >
                 <div style={{ marginBottom: "8px" }}>
@@ -183,7 +187,7 @@ const CanteenList: React.FC = () => {
                       }}
                     />
                   }
-                  onClick={() => handleCanteenClick(canteen.id)}
+                  // onClick={() => handleCanteenClick(canteen.id)}
                 >
                   <Card.Meta
                     title={
@@ -197,7 +201,7 @@ const CanteenList: React.FC = () => {
                         <h5 style={{ marginBottom: 0, marginTop: 0 }}>
                           Code: {canteen.code}
                         </h5>
-                        <Button>Go to Canteen Dashboard</Button>
+                        <Button onClick={() => handleCanteenClick(canteen.id)}>Go to Canteen Dashboard</Button>
                       </>
                     }
                     style={{ textAlign: "center", fontSize: "23px" }}

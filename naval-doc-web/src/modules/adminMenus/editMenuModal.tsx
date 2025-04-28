@@ -435,6 +435,7 @@ interface EditMenuModalProps {
   menu: Menu;
   onCancel: () => void;
   onSuccess: () => void;
+  existingMenuTypes: any
 }
 
 const { Option } = Select;
@@ -446,6 +447,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
   menu,
   onCancel,
   onSuccess,
+  existingMenuTypes
 }) => {
   const [form] = Form.useForm();
   const [items, setItems] = useState<Item[]>([]);

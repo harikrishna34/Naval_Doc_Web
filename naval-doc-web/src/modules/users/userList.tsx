@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Modal, Card, Row, Col } from "antd";
 import UserImage from "./../../assets/images/navy_image.png";
+import profileImage from "../../assets/images/profile-sample.jpg";
+
 
 interface User {
   id: number;
@@ -24,7 +26,7 @@ const users: User[] = Array.from({ length: 10 }, (_, i) => ({
   canteenCode: `C00${i + 1}`,
   aadharCard: `XXXX-XXXX-XXXX`,
   addedBy: `Admin ${i + 1}`,
-  photo: "https://via.placeholder.com/150", // Placeholder image
+  photo: profileImage
 }));
 
 function UsersList() {
@@ -72,7 +74,7 @@ function UsersList() {
             cover={
               <img
                 alt="user-photo"
-                src={UserImage}
+                src={profileImage}
                 style={{
                   width: "100%",
                   height: 150,
@@ -118,7 +120,7 @@ function UsersList() {
             cover={
               <img
                 alt="Selected User"
-                src={UserImage}
+                src={profileImage}
                 style={{
                   width: "100%",
                   height: 200,
