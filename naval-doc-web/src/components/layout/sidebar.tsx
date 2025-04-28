@@ -1,14 +1,13 @@
-import { Layout, Menu, Button, Modal } from "antd";
 import {
+  BankOutlined,
+  DatabaseOutlined,
   HomeOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  ShoppingCartOutlined,
-  DatabaseOutlined,
-  BankOutlined,
+  MenuUnfoldOutlined
 } from "@ant-design/icons";
-import { useState, useEffect } from "react";
+import { Button, Layout, Menu, Modal } from "antd";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
@@ -26,6 +25,20 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
 
+  const getSelectedKey = () => {
+    const path = location.pathname;
+    if (path.includes("dashboard")) return "home";
+    if (path.includes("finance-management")) return "finance_management";
+    if (path.includes("inventory-management")) return "inventory_management";
+    return "home";
+  };
+
+  const [selectedKey, setSelectedKey] = useState<string>(getSelectedKey());
+
+  useEffect(() => {
+    setSelectedKey(getSelectedKey());
+  }, [location.pathname]);
+
   const handleLogout = () => {
     setIsModalOpen(true);
   };
@@ -34,7 +47,6 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
     localStorage.removeItem("token");
     localStorage.removeItem("userData");
     setIsModalOpen(false);
-    // Redirect to login page if needed
     navigate("/");
   };
 
@@ -46,14 +58,27 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
     onCollapsedChange(!collapsed);
   };
 
-  const getSelectedKey = () => {
-    const path = location.pathname;
-    if (path.includes("dashboard")) return "home";
-    if (path.includes("view-all-items")) return "view_all_items";
-    if (path.includes("finance-management")) return "finance_management";
-    if (path.includes("inventory-management")) return "inventory_management";
-    return "home";
-  };
+  const menuItems = [
+    {
+      key: "home",
+      label: "Dashboard",
+      icon: HomeOutlined,
+      path: "/dashboard",
+    },
+    
+    {
+      key: "finance_management",
+      label: "Finance Management",
+      icon: BankOutlined,
+      path: "/finance-management",
+    },
+    {
+      key: "inventory_management",
+      label: "Inventory Management",
+      icon: DatabaseOutlined,
+      path: "/inventory-management",
+    },
+  ];
 
   return (
     <Sider
@@ -85,7 +110,6 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
             display: "flex",
             justifyContent: "flex-end",
             padding: "16px 16px 16px",
-            // borderBottom: "1px solid rgb(194, 98, 98)",
             borderBottom: "1px solid rgb(222 222 224 / 21%)",
           }}
         >
@@ -121,61 +145,38 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
             style={{
               background: "transparent",
               paddingTop: "10px",
-              paddingLeft:"5px",
-              paddingRight:"5px"
+              paddingLeft: "5px",
+              paddingRight: "5px",
+              textAlign: "center",
+              justifyContent: "center",
+
             }}
             inlineCollapsed={collapsed}
-            selectedKeys={[getSelectedKey()]}
-            items={[
-              {
-                key: "home",
-                icon: (
-                  <HomeOutlined style={{ fontSize: "20px", color: "black" }} />
-                ),
-                label: "Dashboard",
-                style: {
-                  color: "black",
-                },
-                onClick: () => navigate("/dashboard"),
+            selectedKeys={[selectedKey]}
+            onClick={({ key }) => setSelectedKey(key)}
+            items={menuItems.map((item) => ({
+              key: item.key,
+              icon: (
+                <item.icon
+                  style={{
+                    fontSize: "20px",
+                    color: selectedKey === item.key ? "black" : "white",
+                    backgroundColor: selectedKey === item.key ? "" : "transparent",
+                    borderRadius: "8px",
+                    paddingLeft: "0px",
+                    justifyContent: "center",
+                  }}
+                />
+              ),
+              label: item.label,
+              onClick: () => navigate(item.path),
+              style: {
+                color: "white",
+              // display:"flex",
+              // justifyContent:"center",
+              // alignItems:"center"
               },
-              {
-                key: "view_all_items",
-                icon: (
-                  <ShoppingCartOutlined
-                    style={{ fontSize: "20px", color: "white" }}
-                  />
-                ),
-                style: {
-                  color: "white",
-                },
-                label: "View All Items",
-                onClick: () => navigate("/view-all-items"),
-              },
-              {
-                key: "finance_management",
-                icon: (
-                  <BankOutlined style={{ fontSize: "20px", color: "white" }} />
-                ),
-                style: {
-                  color: "white",
-                },
-                label: "Finance Management",
-                onClick: () => navigate("/finance-management"),
-              },
-              {
-                key: "inventory_management",
-                icon: (
-                  <DatabaseOutlined
-                    style={{ fontSize: "20px", color: "white" }}
-                  />
-                ),
-                label: "Inventory Management",
-                style: {
-                  color: "white",
-                },
-                onClick: () => navigate("/inventory-management"),
-              },
-            ]}
+            }))}
           />
         </div>
       </div>
