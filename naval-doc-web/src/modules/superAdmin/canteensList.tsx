@@ -13,9 +13,8 @@ import {
 import { PlusOutlined } from "@ant-design/icons";
 import AddCanteenModal from "./addCanteenModal";
 import { canteenService } from "../../auth/apiService";
-import WorldtekLogo from "../../components/common/worldTekLogo";
+import BackHeader from "../../components/common/backHeader";
 
-const { Title } = Typography;
 const { Content } = Layout;
 
 interface CanteenProps {
@@ -120,17 +119,7 @@ const CanteenList: React.FC = () => {
           marginRight: "25px",
         }}
       >
-        <Title
-          level={2}
-          style={{
-            textAlign: "left",
-            marginBottom: "30px",
-            marginTop: "-5px",
-          }}
-        >
-          Canteens Management
-        </Title>
-
+        <BackHeader path="/dashboard" title="Canteens Management" />
         {loading ? (
           <div
             style={{
@@ -146,7 +135,7 @@ const CanteenList: React.FC = () => {
           <EmptyState />
         ) : (
           <Row gutter={[16, 16]}>
-             <Col xs={24} sm={12} md={8} lg={6}>
+            <Col xs={24} sm={12} md={8} lg={6}>
               <Card
                 hoverable
                 style={{

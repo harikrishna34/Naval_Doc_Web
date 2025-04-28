@@ -314,6 +314,7 @@ import dayjs from "dayjs";
 import lunchImage from "../../assets/images/menu_lunch.avif";
 import tiffinImage from "../../assets/images/menu_tiffin.avif";
 import snacksImage from "../../assets/images/menu_snacks.jpg";
+import BackHeader from "../../components/common/backHeader";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -438,9 +439,7 @@ const MenuList: React.FC = () => {
           marginBottom: "24px",
         }}
       >
-        <Title level={2} style={{ margin: 0, paddingLeft: "10px" }}>
-          Menus Management
-        </Title>
+        <BackHeader path="/dashboard" title="Menu Management" />
         <Button
           type="default"
           icon={<SettingOutlined />}

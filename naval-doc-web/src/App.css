@@ -5,7 +5,7 @@
   text-align: center;
 }
 body{
-  margin:0px;
+  /* margin:0px; */
 }
 .logo {
   height: 6em;
@@ -463,6 +463,12 @@ body{
   background-color: #1a4b94;
   opacity: 0.7;
   color: white;
+}
+
+.item-card-meta{
+  .ant-card-body {
+    padding: 10px !important;
+  }
 }
 
 @media (max-width: 480px) {

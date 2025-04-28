@@ -5,7 +5,6 @@ import canteenImg from "../../assets/images/canteens.jpg";
 import menuImage from "../../assets/images/menu.jpg";
 import ordersImage from "../../assets/images/orders.jpg";
 import itemsImage from "../../assets/images/items.jpg";
-import WorldtekLogo from "../../components/common/worldTekLogo";
 
 const { Title, Text } = Typography;
 
@@ -121,7 +120,6 @@ const SuperAdminDashboard: React.FC = () => {
           ))}
         </Row>
       </div>
-      <WorldtekLogo />
     </div>
   );
 };
