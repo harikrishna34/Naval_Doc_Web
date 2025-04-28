@@ -107,7 +107,7 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
       width={800}
       onCancel={onCancel}
       footer={modalFooter}
-      bodyStyle={{ padding: "24px", maxHeight: "80vh", overflow: "auto" }}
+      styles={{body:{ padding: "24px", maxHeight: "80vh", overflow: "auto" }}}
     >
       {loading ? (
         <div
@@ -162,7 +162,7 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
                   <Col xs={24} sm={12} key={menuItem.itemId}>
                     <Card
                       size="small"
-                      bodyStyle={{ padding: "16px" }}
+                      styles={{body: {padding:"16px"}}}
                       style={{ height: "100%" }}
                     >
                       <div

@@ -109,8 +109,7 @@ const Billing: React.FC = () => {
   return (
     <div style={containerStyle}>
       <div style={cardsContainerStyle}>
-        {/* Bill Summary Card */}
-        <Card style={billCardStyle} bodyStyle={{ padding: "30px" }}>
+        <Card style={billCardStyle}  styles={{body : {padding : "30px"}}}>
           <Title level={4} style={billHeadingStyle}>
             Bill Summary
           </Title>
@@ -135,7 +134,6 @@ const Billing: React.FC = () => {
           </div>
         </Card>
 
-        {/* Payment Method Card */}
         <Card
           style={paymentCardStyle}
           bodyStyle={{

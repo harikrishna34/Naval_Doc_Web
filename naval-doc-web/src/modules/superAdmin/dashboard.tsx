@@ -165,9 +165,9 @@ const SuperAdminDashboard: React.FC = () => {
   ];
 
   return (
-    // Add a scrollable container with fixed height
     <div style={{ 
-      height: "calc(100vh - 64px)", // Adjust based on your header height
+      // height: "calc(100vh - 64px)", 
+      height: "75vh",
       overflowY: "auto",
       display: "flex",
       flexDirection: "column"

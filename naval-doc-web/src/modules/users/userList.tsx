@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Modal, Card, Row, Col } from "antd";
 import UserImage from "./../../assets/images/navy_image.png";
 import profileImage from "../../assets/images/profile-sample.jpg";
-
+import BackHeader from "../../components/common/backHeader";
 
 interface User {
   id: number;
@@ -26,7 +26,7 @@ const users: User[] = Array.from({ length: 10 }, (_, i) => ({
   canteenCode: `C00${i + 1}`,
   aadharCard: `XXXX-XXXX-XXXX`,
   addedBy: `Admin ${i + 1}`,
-  photo: profileImage
+  photo: profileImage,
 }));
 
 function UsersList() {
@@ -42,17 +42,8 @@ function UsersList() {
     setIsModalVisible(false);
   };
 
-  // Split users manually
-  const firstRow = users.slice(0, 4);
-  const secondRow = users.slice(4, 8);
-  const thirdRow = users.slice(8, 10);
-
   const renderRow = (rowUsers: User[]) => (
-    <Row
-      gutter={[16, 16]}
-      justify="center"
-      style={{ marginBottom: 20 }}
-    >
+    <Row gutter={[16, 16]} justify="center" style={{ marginBottom: 20 }}>
       {rowUsers.map((user) => (
         <Col
           key={user.id}
@@ -72,15 +63,17 @@ function UsersList() {
               cursor: "pointer",
             }}
             cover={
-              <img
-                alt="user-photo"
-                src={profileImage}
-                style={{
-                  width: "100%",
-                  height: 150,
-                  objectFit: "cover",
-                }}
-              />
+              <div>
+                <img
+                  alt="user-photo"
+                  src={profileImage}
+                  style={{
+                    width: "72%",
+                    height: 150,
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
             }
           >
             <div style={{ fontWeight: "bold" }}>{user.name}</div>
@@ -102,46 +95,68 @@ function UsersList() {
   );
 
   return (
-    <div style={{ padding: 20 }}>
-      {renderRow(firstRow)}
-      {renderRow(secondRow)}
-      {renderRow(thirdRow)}
+    <div>
+      <BackHeader path="/dashboard" title="Users List" />
+      <div style={{ padding: 20 }}>
+        {renderRow(users)}
 
-      <Modal
-        open={isModalVisible}
-        onCancel={handleCloseModal}
-        footer={null}
-        centered
-        width={400}
-      >
-        {selectedUser && (
-          <Card
-            style={{ textAlign: "center", border: "none", boxShadow: "none" }}
-            cover={
-              <img
-                alt="Selected User"
-                src={profileImage}
-                style={{
-                  width: "100%",
-                  height: 200,
-                  objectFit: "cover",
-                  borderRadius: 8,
-                }}
-              />
-            }
-          >
-            <div style={{ marginTop: 10, textAlign: "left" }}>
-              <p><strong>User Name:</strong> {selectedUser.name}</p>
-              <p><strong>Mobile Number:</strong> {selectedUser.mobile}</p>
-              <p><strong>Phone Number:</strong> {selectedUser.phone}</p>
-              <p><strong>Canteen Name:</strong> {selectedUser.canteenName}</p>
-              <p><strong>Canteen Code:</strong> {selectedUser.canteenCode}</p>
-              <p><strong>Aadhaar Card:</strong> {selectedUser.aadharCard}</p>
-              <p><strong>Added By:</strong> {selectedUser.addedBy}</p>
-            </div>
-          </Card>
-        )}
-      </Modal>
+        <Modal
+          open={isModalVisible}
+          onCancel={handleCloseModal}
+          footer={null}
+          centered
+          width={400}
+        >
+          {selectedUser && (
+            <Card
+              style={{ textAlign: "center", border: "none", boxShadow: "none" }}
+              cover={
+                <img
+                  alt="Selected User"
+                  src={profileImage}
+                  style={{
+                    width: "100%",
+                    height: 200,
+                    objectFit: "cover",
+                    borderRadius: 8,
+                  }}
+                />
+              }
+              styles={{
+                body: {
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+              }}
+            >
+              <div style={{ marginTop: 10, textAlign: "left" }}>
+                <p>
+                  <strong>User Name:</strong> {selectedUser.name}
+                </p>
+                <p>
+                  <strong>Mobile Number:</strong> {selectedUser.mobile}
+                </p>
+                <p>
+                  <strong>Phone Number:</strong> {selectedUser.phone}
+                </p>
+                <p>
+                  <strong>Canteen Name:</strong> {selectedUser.canteenName}
+                </p>
+                <p>
+                  <strong>Canteen Code:</strong> {selectedUser.canteenCode}
+                </p>
+                <p>
+                  <strong>Aadhaar Card:</strong> {selectedUser.aadharCard}
+                </p>
+                <p>
+                  <strong>Added By:</strong> {selectedUser.addedBy}
+                </p>
+              </div>
+            </Card>
+          )}
+        </Modal>
+      </div>
     </div>
   );
 }

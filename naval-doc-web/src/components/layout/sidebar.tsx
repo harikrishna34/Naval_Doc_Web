@@ -173,9 +173,6 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
               onClick: () => navigate(item.path),
               style: {
                 color: "white",
-              // display:"flex",
-              // justifyContent:"center",
-              // alignItems:"center"
               },
             }))}
           />
@@ -190,7 +187,7 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
           paddingBottom: "24px",
         }}
       >
-        <Button
+        {/* <Button
           type="text"
           icon={<LogoutOutlined style={{ fontSize: "16px" }} />}
           onClick={handleLogout}
@@ -206,7 +203,7 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
           }}
         >
           {!collapsed && "Logout"}
-        </Button>
+        </Button> */}
         <Modal
           title="Confirm Logout"
           open={isModalOpen}

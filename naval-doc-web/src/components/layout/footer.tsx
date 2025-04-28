@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
 
   return (
     <div>
-      <WorldtekLogo />
+      {/* <WorldtekLogo /> */}
       <AntFooter
         style={{
           flexShrink: 0,
@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
         <img
           src={FooterLogo}
           alt="logo"
-          style={{ width: "75px", height: "35px", objectFit:"cover" }}
+          style={{ width: "87px", height: "43px", objectFit:"cover" }}
         />
       </AntFooter>
     </div>

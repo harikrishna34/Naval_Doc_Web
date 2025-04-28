@@ -141,7 +141,7 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
                       borderRadius: "4px",
                       height: "100%",
                     }}
-                    bodyStyle={{ padding: "10px" }}
+                    styles={{body: {padding: "10px"}}}
                   >
                     <div style={{ fontWeight: 500 }}>{config.name}</div>
                     <div
