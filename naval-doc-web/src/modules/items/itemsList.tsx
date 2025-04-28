@@ -74,23 +74,6 @@ const ItemsList: React.FC = () => {
           // Handle image properly - check if it's a Buffer object
           console.log(item, "item");
           let image = getImageSrc(item.image);
-          console.log(image, "image");
-          
-          let imageUrl = "/api/placeholder/250/150"; // Default placeholder
-
-
-          if (item.image) {
-            if (
-              item.image.type === "Buffer" &&
-              Array.isArray(item.image.data)
-            ) {
-              // Convert Buffer data to base64 string for display
-              const buffer = Buffer.from(item.image.data);
-              imageUrl = `data:image/jpeg;base64,${buffer.toString("base64")}`;
-            } else if (typeof item.image === "string") {
-              imageUrl = item.image;
-            }
-          }
 
           return {
             id: item.id,
@@ -103,7 +86,7 @@ const ItemsList: React.FC = () => {
             currency: item.pricing?.currency || "INR",
             startDate: item.pricing?.startDate || "",
             endDate: item.pricing?.endDate || "",
-            image: imageUrl,
+            image: image,
             status: item.status,
           };
         });

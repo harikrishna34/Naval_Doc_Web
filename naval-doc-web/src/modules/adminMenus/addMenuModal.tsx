@@ -150,8 +150,8 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
         canteenId: values.canteenId,
         description: values.description,
         items: menuItems,
-        startDate: startDate || "",
-        endDate: endDate || "",
+        startTime: startDate || "",
+        endTime: endDate || "",
       };
 
       setSubmitting(true);
