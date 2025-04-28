@@ -1,8 +1,6 @@
 import {
-  BankOutlined,
   DatabaseOutlined,
   HomeOutlined,
-  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   MoneyCollectOutlined
@@ -69,13 +67,13 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
     
     {
       key: "finance_management",
-      label: "Finance Management",
+      label: "Finance ",
       icon: MoneyCollectOutlined,
       path: "/finance-management",
     },
     {
       key: "inventory_management",
-      label: "Inventory Management",
+      label: "Inventory ",
       icon: DatabaseOutlined,
       path: "/inventory-management",
     },
@@ -172,7 +170,8 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
               label: item.label,
               onClick: () => navigate(item.path),
               style: {
-                color: "white",
+                color: selectedKey === item.key ? "black" : "white",
+                textAlign:"left",
               },
             }))}
           />

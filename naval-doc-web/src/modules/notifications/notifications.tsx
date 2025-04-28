@@ -2,7 +2,6 @@
 // import { Card, Typography, List, Badge } from "antd";
 // import { BellOutlined, DeleteFilled, DeleteOutlined } from "@ant-design/icons";
 
-// import WorldtekLogo from "../../components/common/worldTekLogo";
 
 // const { Title } = Typography;
 
@@ -146,7 +145,6 @@
 //           />
 //         </Card>
 //       </div>
-//       <WorldtekLogo />
 //     </div>
 //   );
 // };
@@ -158,7 +156,6 @@ import React from "react";
 import { Card, Typography, List, Badge } from "antd";
 import { BellOutlined, DeleteFilled } from "@ant-design/icons";
 
-import WorldtekLogo from "../../components/common/worldTekLogo";
 
 const { Title, Text } = Typography;
 
@@ -310,7 +307,6 @@ const Notifications: React.FC = () => {
           />
         </Card>
       </div>
-      <WorldtekLogo />
     </div>
   );
 };
