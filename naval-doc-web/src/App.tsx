@@ -137,6 +137,7 @@ import ItemsList from "./modules/items/itemsList";
 import MenuList from "./modules/adminMenus/menuList";
 import NotFound from "./components/common/notFound";
 import ProtectedRoute from "./auth/protectedRoute";
+import LoginScreen from "./auth/loginScreen";
 
 // Simulating authentication
 const isAuthenticated = Boolean(localStorage.getItem('Token'));
@@ -146,7 +147,8 @@ const App = () => {
     <Router>
       <Routes>
         {/* Public Route */}
-        <Route path="/" element={<Login />} />
+        {/* <Route path="/" element={<Login />} /> */}
+        <Route path="/" element={<LoginScreen />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
