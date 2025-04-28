@@ -54,8 +54,8 @@ export interface Item {
   export interface CreateMenuPayload {
     menuConfigurationId: number;
     canteenId: number;
-    startDate: string;
-    endDate: string;
+    startTime: string;
+    endTime: string;
     description: string;
     items: Array<{
       itemId: number;
