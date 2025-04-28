@@ -12,12 +12,12 @@ import {
   Popover,
 } from "antd";
 import {
-  ShoppingCartOutlined,
-  WalletOutlined,
   QuestionCircleOutlined,
   UserOutlined,
   MenuOutlined,
   BellFilled,
+  LogoutOutlined,
+  ProfileOutlined,
 } from "@ant-design/icons";
 import NotificationsDropdown from "../../modules/notifications/notificationDropdown";
 import navyLogo from "../../assets/images/navy_image.png";
@@ -82,7 +82,26 @@ const StyledHeader: React.FC<HeaderProps> = ({
     }
   };
 
+  const handleLogout = () => {
+    handleNavigation("/");
+  };
+
   const unreadCount = notifications.filter((n) => !n.isRead).length;
+
+  const profileMenu = (
+    <Menu style={{ width: 200 }}>
+      <Menu.Item
+        key="profile"
+        icon={<ProfileOutlined />}
+        onClick={() => handleNavigation("/profile")}
+      >
+        Profile
+      </Menu.Item>
+      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
 
   const renderMobileMenu = () => (
     <Button
@@ -104,38 +123,6 @@ const StyledHeader: React.FC<HeaderProps> = ({
         gap: "24px",
       }}
     >
-      {/* <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          color: "white",
-          cursor: "pointer",
-          gap: "5px",
-        }}
-        onClick={() => handleNavigation("/cart")}
-      >
-        <Badge count={0} size="small">
-          <ShoppingCartOutlined
-            style={{ fontSize: "29px", color: "ghostwhite" }}
-          />
-        </Badge>
-        <span>Cart</span>
-      </div> */}
-
-      {/* <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          color: "white",
-          cursor: "pointer",
-          gap: "5px",
-        }}
-        onClick={() => handleNavigation("/wallet")}
-      >
-        <WalletOutlined style={{ fontSize: "25px", color: "ghostwhite" }} />
-        <span>Wallet</span>
-      </div> */}
-
       <Popover
         content={
           <NotificationsDropdown
@@ -214,7 +201,6 @@ const StyledHeader: React.FC<HeaderProps> = ({
       <Header
         className="site-header"
         style={{
-          // background: "#3F51B5",
           backgroundColor: "rgb(1, 0, 128)",
           padding: "0 16px",
           height: "92px",
@@ -232,9 +218,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
-                // cursor: "pointer",
               }}
-              // onClick={() => handleNavigation("/")}
             >
               <div
                 style={{
@@ -255,10 +239,8 @@ const StyledHeader: React.FC<HeaderProps> = ({
                 justifyContent: "center",
                 alignItems: "center",
                 height: "100%",
-                marginLeft:"7rem"
-                // cursor: "pointer",
+                marginLeft: "7rem",
               }}
-              // onClick={() => handleNavigation("/")}
             >
               <Text
                 style={{ color: "white", fontSize: "30px", fontWeight: "bold" }}
@@ -278,12 +260,17 @@ const StyledHeader: React.FC<HeaderProps> = ({
               }}
             >
               {isMobile ? renderMobileMenu() : renderDesktopNavItems()}
-              <Avatar
-                size="large"
-                icon={<UserOutlined style={{ color: "#3F51B5" }} />}
-                style={{ background: "white", cursor: "pointer" }}
-                onClick={() => handleNavigation("/profile")}
-              />
+              <Popover
+                content={profileMenu}
+                trigger="click"
+                placement="bottomRight"
+              >
+                <Avatar
+                  size="large"
+                  icon={<UserOutlined style={{ color: "#3F51B5" }} />}
+                  style={{ background: "white", cursor: "pointer" }}
+                />
+              </Popover>
             </div>
           </Col>
         </Row>
@@ -297,20 +284,6 @@ const StyledHeader: React.FC<HeaderProps> = ({
         width={250}
       >
         <Menu mode="vertical" style={{ border: "none" }}>
-          <Menu.Item
-            key="cart"
-            icon={<ShoppingCartOutlined />}
-            onClick={() => handleNavigation("/cart")}
-          >
-            Cart
-          </Menu.Item>
-          <Menu.Item
-            key="wallet"
-            icon={<WalletOutlined />}
-            onClick={() => handleNavigation("/wallet")}
-          >
-            Wallet
-          </Menu.Item>
           <Menu.Item
             key="notification"
             icon={
@@ -349,6 +322,21 @@ const StyledHeader: React.FC<HeaderProps> = ({
               Privacy Policy
             </Menu.Item>
           </Menu.SubMenu>
+          <Menu.Divider />
+          <Menu.Item
+            key="profile"
+            icon={<ProfileOutlined />}
+            onClick={() => handleNavigation("/profile")}
+          >
+            Profile
+          </Menu.Item>
+          <Menu.Item
+            key="logout"
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+          >
+            Logout
+          </Menu.Item>
         </Menu>
       </Drawer>
     </>

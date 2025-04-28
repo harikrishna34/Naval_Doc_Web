@@ -4,7 +4,8 @@ import {
   HomeOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
-  MenuUnfoldOutlined
+  MenuUnfoldOutlined,
+  MoneyCollectOutlined
 } from "@ant-design/icons";
 import { Button, Layout, Menu, Modal } from "antd";
 import { useEffect, useState } from "react";
@@ -69,7 +70,7 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
     {
       key: "finance_management",
       label: "Finance Management",
-      icon: BankOutlined,
+      icon: MoneyCollectOutlined,
       path: "/finance-management",
     },
     {
