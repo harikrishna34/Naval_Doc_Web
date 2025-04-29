@@ -19,7 +19,7 @@ const SuperAdminDashboard: React.FC = () => {
     } else if (cardName === "Menu") {
       navigate("/menus-list");
     } else if (cardName === "Orders") {
-      navigate("/orders-list");
+      navigate("/orders");
     }
   };
 

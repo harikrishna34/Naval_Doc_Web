@@ -13,7 +13,6 @@ import {
   message,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import WorldtekLogo from "../../components/common/worldTekLogo";
 import { canteenService } from "../../auth/apiService";
 import dayjs, { Dayjs } from "dayjs";
 import Loader from "../../components/common/loader";
@@ -40,8 +39,8 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
 
   const handleOk = async () => {
     try {
-      setLoading(true);
       const values = await form.validateFields();
+      setLoading(true);
       const formData = new FormData();
       formData.append("canteenName", values.canteenName.trim());
       formData.append("canteenCode", values.canteenCode.trim());
@@ -58,7 +57,9 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
       if (fileList.length > 0 && fileList[0].originFileObj) {
         formData.append("canteenImage", fileList[0].originFileObj);
       }
-      await canteenService.createCanteen(formData);
+
+      const res = await canteenService.createCanteen(formData);
+      console.log(res, "ressss");
 
       message.success("Canteen added successfully!");
       form.resetFields();
@@ -68,7 +69,6 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
       onCancel();
     } catch (error) {
       console.error("Failed to add canteen:", error);
-      message.error("Failed to add canteen. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -134,9 +134,16 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
       width={920}
       centered
       footer={null}
-      styles={{body:{ maxHeight: "75vh", overflowY: "auto", padding: "24px" }}}
+      styles={{
+        body: { maxHeight: "75vh", overflowY: "auto", padding: "24px" },
+      }}
     >
-      <Form form={form} layout="vertical" name="add_canteen_form">
+      <Form
+        form={form}
+        layout="vertical"
+        name="add_canteen_form"
+        validateTrigger={["onBlur", "onChange"]}
+      >
         <Row gutter={24}>
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
@@ -166,10 +173,7 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
             <Form.Item
               name="canteenCode"
               label="Canteen CODE"
-              rules={[
-                { required: true, message: "Please enter canteen code" },
-                { validator: validateCanteenCode },
-              ]}
+              rules={[{ validator: validateCanteenCode }]}
               style={formItemStyle}
             >
               <Input placeholder="Enter Canteen Code" style={inputStyle} />
@@ -227,23 +231,6 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
         <Row gutter={24}>
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
-              name="dob"
-              label="DOB"
-              rules={[
-                { required: true, message: "Please select date of birth" },
-              ]}
-              style={formItemStyle}
-            >
-              <DatePicker
-                placeholder="DD/MM/YYYY"
-                style={inputStyle}
-                format="DD/MM/YYYY"
-                disabledDate={disableFutureDate}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
-            <Form.Item
               name="gender"
               label="Gender"
               rules={[{ required: true, message: "Please select gender" }]}
@@ -256,9 +243,6 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               </Select>
             </Form.Item>
           </Col>
-        </Row>
-
-        <Row gutter={24}>
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
               name="mobileNumber"
@@ -282,10 +266,14 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
                 },
               ]}
               style={formItemStyle}
+              validateFirst={true}
             >
               <Input placeholder="Enter Mobile Number" style={inputStyle} />
             </Form.Item>
           </Col>
+        </Row>
+
+        <Row gutter={24}>
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
               name="emailId"
@@ -296,20 +284,17 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
                 { max: 50, message: "Email cannot exceed 50 characters" },
               ]}
               style={formItemStyle}
+              validateFirst={true}
             >
               <Input placeholder="Enter Email ID" style={inputStyle} />
             </Form.Item>
           </Col>
-        </Row>
-        <Row gutter={24}>
-          <Col xs={24}>
+          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
               name="canteenImage"
               label="Canteen Image"
-              rules={[
-                { required: true, message: "Please upload canteen image" },
-                { validator: validateFileUpload },
-              ]}
+              rules={[{ validator: validateFileUpload }]}
+              style={formItemStyle}
             >
               <Upload
                 listType="picture"
@@ -329,28 +314,28 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
                 }}
               >
                 <Button icon={<UploadOutlined />}>Upload Canteen Image</Button>
-                <Text type="secondary" style={{ marginLeft: 8 }}>
-                  Supported formats: JPG, PNG. Max size: 2MB
-                </Text>
               </Upload>
+              <Text type="secondary" style={{ marginLeft: 8 }}>
+                Supported formats: JPG, PNG. Max size: 2MB
+              </Text>
             </Form.Item>
           </Col>
         </Row>
+        <Row gutter={24}></Row>
 
-        <Row justify="center" style={{ marginTop: "24px" }}>
+        <Row justify="center" style={{ marginTop: "6px",marginBottom:"-19px" }}>
           <Col xs={24} sm={12} md={8}>
             <Button
               type="primary"
               block
               onClick={handleOk}
               style={{ height: "40px" }}
+              disabled={loading}
             >
-              Confirm
+              {loading ? "Processing..." : "Confirm"}
             </Button>
           </Col>
         </Row>
-
-        <WorldtekLogo />
       </Form>
       {loading && <Loader />}
     </Modal>

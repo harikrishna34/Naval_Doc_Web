@@ -172,7 +172,7 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
                         }}
                       >
                         <Text strong>{item.name}</Text>
-                        <Text type="secondary">₹{item.price}</Text>
+                        <Text type="secondary">₹{item?.pricing?.price}</Text>
                       </div>
                       <Text
                         type="secondary"

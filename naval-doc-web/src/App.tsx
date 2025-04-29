@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 import LayoutWrapper from "./components/layout/layoutWrapper";
@@ -20,6 +22,7 @@ import NotFound from "./components/common/notFound";
 import ProtectedRoute from "./auth/protectedRoute";
 import LoginScreen from "./auth/loginScreen";
 import CanteenAdminDB from "./modules/admin/canteenAdminDB";
+import OrdersDashboard from "./modules/orders/ordersDB";
 
 const isAuthenticated = Boolean(localStorage.getItem("Token"));
 
@@ -41,14 +44,34 @@ const App = () => {
             <Route path="/admin" element={<AdminDB />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/canteens-list" element={<CanteenList />} />
-            <Route path="/canteens-list/canteen-dashboard/:canteenId/users-list" element={<UsersList />} />
+            <Route
+              path="/canteens-list/canteen-dashboard/:canteenId/users-list"
+              element={<UsersList />}
+            />
             <Route path="/items-list" element={<ItemsList />} />
             <Route path="/menus-list" element={<MenuList />} />
-            <Route path="/canteens-list/canteen-dashboard/:canteenId" element={<CanteenAdminDB/>}/>
+            <Route
+              path="/canteens-list/canteen-dashboard/:canteenId"
+              element={<CanteenAdminDB />}
+            />
+            {/* <Route path="/canteens-list/canteen-dashboard/:canteenId/orders" element={<OrdersDashboard />} /> */}
+            <Route path="/orders" element={<OrdersDashboard />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      {/* Toast Container at root level */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+      />
     </Router>
   );
 };

@@ -30,7 +30,7 @@ interface AddMenuModalProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
-  existingMenuTypes: any
+  existingMenuTypes: any;
 }
 
 const { Option } = Select;
@@ -41,7 +41,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   visible,
   onCancel,
   onSuccess,
-  existingMenuTypes
+  existingMenuTypes,
 }) => {
   const [form] = Form.useForm();
   const [items, setItems] = useState<Item[]>([]);
@@ -52,7 +52,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [loadingItems, setLoadingItems] = useState<boolean>(false);
   const [loadingConfigs, setLoadingConfigs] = useState<boolean>(false);
-  const [loadingCanteens, setLoadingCanteens] = useState<boolean>(false); 
+  const [loadingCanteens, setLoadingCanteens] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
@@ -125,14 +125,17 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
       const values = form.getFieldsValue();
       const selectedConfigId = values?.menuType;
       const selectedConfig = menuConfigurations.find(
-        config => config.id === selectedConfigId
+        (config) => config.id === selectedConfigId
       );
-      if (selectedConfig?.name && existingMenuTypes.includes(selectedConfig?.name)) {
+      if (
+        selectedConfig?.name &&
+        existingMenuTypes.includes(selectedConfig?.name)
+      ) {
         await Swal.fire({
           icon: "error",
           title: "Menu Type Exists",
           text: `A menu with the type "${selectedConfig.name}" already exists. Please choose a different menu type.`,
-          confirmButtonColor: '#d33'
+          confirmButtonColor: "#d33",
         });
         return;
       }
@@ -144,11 +147,6 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           maxQuantity: values[`max_${itemId}`] || 10,
         };
       });
-
-      if (menuItems.length === 0) {
-        message.error("Please select at least one item");
-        return;
-      }
 
       const startDate = values.startDate
         ? dayjs(values.startDate).format("DD-MM-YYYY")
@@ -168,15 +166,16 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
 
       setSubmitting(true);
       await menuService.createMenuWithItems(menuData);
+      message.success("Menu created successfully");
       onSuccess();
       resetForm();
     } catch (error) {
       console.error("Error creating menu:", error);
-      message.error("Failed to create menu");
     } finally {
       setSubmitting(false);
     }
   };
+
   const resetForm = () => {
     form.resetFields();
     setSelectedItems([]);
@@ -200,22 +199,26 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
         <Button
           key="submit"
           type="primary"
-          // loading={submitting}
+          loading={submitting}
           onClick={handleSubmit}
         >
           Submit
         </Button>,
       ]}
-      styles={{body:{maxHeight: "80vh", overflow: "auto", padding: "24px"}}}
+      styles={{
+        body: { maxHeight: "80vh", overflow: "auto", padding: "24px" },
+      }}
     >
       <Form
         form={form}
-        // className={`${loadingItems ? "loader-container" : ""}`}
         layout="vertical"
         initialValues={{
           description: "",
           startDate: dayjs(),
           endDate: dayjs().add(1, "day"),
+        }}
+        validateMessages={{
+          required: "${label} is required!",
         }}
       >
         <Row gutter={16}>
@@ -295,6 +298,13 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           <Text strong style={{ fontSize: "16px" }}>
             Select Items
           </Text>
+          {selectedItems.length === 0 && (
+            <div
+              style={{ color: "#ff4d4f", fontSize: "14px", marginTop: "4px" }}
+            >
+              Please select at least one item
+            </div>
+          )}
           {loadingItems ? (
             <div
               style={{
@@ -305,91 +315,99 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
             >
               <Spin />
             </div>
-            // <Loader/>
           ) : (
             <div style={{ maxHeight: "400px", marginTop: "16px" }}>
               <Row gutter={[16, 16]}>
-                {items.map((item) => (
-                  <Col span={12} key={item.id}>
-                    <Card
-                      size="small"
-                      style={{
-                        borderColor: selectedItems.includes(item.id)
-                          ? "#1890ff"
-                          : "#f0f0f0",
-                        backgroundColor: selectedItems.includes(item.id)
-                          ? "#e6f7ff"
-                          : "#fff",
-                      }}
-                      styles={{body: {padding:"16px"}}}
-                    >
-                      <div
-                        style={{ display: "flex", alignItems: "flex-start" }}
+                {items.map((item) => {
+                  return (
+                    <Col span={12} key={item.id}>
+                      <Card
+                        size="small"
+                        style={{
+                          borderColor: selectedItems.includes(item.id)
+                            ? "#1890ff"
+                            : "#f0f0f0",
+                          backgroundColor: selectedItems.includes(item.id)
+                            ? "#e6f7ff"
+                            : "#fff",
+                        }}
+                        styles={{ body: { padding: "16px" } }}
                       >
-                        <Checkbox
-                          checked={selectedItems.includes(item.id)}
-                          onChange={(e) =>
-                            handleItemSelect(item.id, e.target.checked)
-                          }
-                          style={{ marginTop: "4px" }}
-                        />
-                        <div style={{ marginLeft: "8px", flex: 1 }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <Text strong>{item.name}</Text>
-                            <Text type="secondary">₹{item.price}</Text>
-                          </div>
-                          <Text
-                            type="secondary"
-                            style={{ fontSize: "12px", marginTop: "4px" }}
-                          >
-                            {item.description}
-                          </Text>
+                        <div
+                          style={{ display: "flex", alignItems: "flex-start" }}
+                        >
+                          <Checkbox
+                            checked={selectedItems.includes(item.id)}
+                            onChange={(e) =>
+                              handleItemSelect(item.id, e.target.checked)
+                            }
+                            style={{ marginTop: "4px" }}
+                          />
+                          <div style={{ marginLeft: "8px", flex: 1 }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <Text strong>{item.name}</Text>
+                              {item?.pricing && (
+                                <Text
+                                  type="secondary"
+                                  style={{ fontWeight: "500" }}
+                                >
+                                  ₹{item?.pricing?.price ?? ""}
+                                </Text>
+                              )}
+                            </div>
+                            <Text
+                              type="secondary"
+                              style={{ fontSize: "12px", marginTop: "4px" }}
+                            >
+                              {item.description}
+                            </Text>
 
-                          {selectedItems.includes(item.id) && (
-                            <Row gutter={8} style={{ marginTop: "12px" }}>
-                              <Col span={12}>
-                                <Form.Item
-                                  name={`min_${item.id}`}
-                                  label="Min Quantity"
-                                  initialValue={1}
-                                  style={{ marginBottom: 0 }}
-                                >
-                                  <InputNumber
-                                    min={1}
-                                    style={{ width: "100%" }}
-                                  />
-                                </Form.Item>
-                              </Col>
-                              <Col span={12}>
-                                <Form.Item
-                                  name={`max_${item.id}`}
-                                  label="Max Quantity"
-                                  initialValue={10}
-                                  style={{ marginBottom: 0 }}
-                                >
-                                  <InputNumber
-                                    min={1}
-                                    style={{ width: "100%" }}
-                                  />
-                                </Form.Item>
-                              </Col>
-                            </Row>
-                          )}
+                            {selectedItems.includes(item.id) && (
+                              <Row gutter={8} style={{ marginTop: "12px" }}>
+                                <Col span={12}>
+                                  <Form.Item
+                                    name={`min_${item.id}`}
+                                    label="Min Quantity"
+                                    initialValue={1}
+                                    style={{ marginBottom: 0 }}
+                                  >
+                                    <InputNumber
+                                      min={1}
+                                      style={{ width: "100%" }}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                  <Form.Item
+                                    name={`max_${item.id}`}
+                                    label="Max Quantity"
+                                    initialValue={10}
+                                    style={{ marginBottom: 0 }}
+                                  >
+                                    <InputNumber
+                                      min={1}
+                                      style={{ width: "100%" }}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                              </Row>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </Col>
-                ))}
+                      </Card>
+                    </Col>
+                  );
+                })}
               </Row>
             </div>
           )}
         </div>
-        {submitting && <Loader/>}
+        {submitting && <Loader />}
       </Form>
     </Modal>
   );

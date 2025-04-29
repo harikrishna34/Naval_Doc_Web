@@ -299,7 +299,7 @@ const ItemsList: React.FC = () => {
                       </div>
                     }
                     description={
-                      <div style={{ marginTop: 8, marginBottom: 12 }}>
+                      <div style={{ marginTop: 8, marginBottom: 12 , display:"flex", justifyContent:"center", alignItems:"center"}}>
                         <Text strong style={{ fontSize: "16px" }}>
                           {item.currency === "INR" ? "₹" : "$"}
                           {item.price}

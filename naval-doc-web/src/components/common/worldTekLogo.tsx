@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography, Space } from "antd";
 import Logo from "../../assets/images/logo.png";
+import footerLogo from "../../assets/images/footerLogo.png";
 
 const WorldtekLogo: React.FC = () => {
   return (
@@ -24,25 +25,27 @@ const WorldtekLogo: React.FC = () => {
           <div
             style={{
               width: "120px",
-              height: "50px",
-              marginTop: "30px",
-              marginBottom: "25px",
+              // height: "50px",
+              marginTop: "10px",
+              // marginBottom: "25px",
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               alignItems: "center",
-              overflow: "hidden", // Important to make image fit inside circle
+              overflow: "hidden",
               position: "relative",
             }}
           >
             <img
-              src={Logo}
+              src={footerLogo}
               alt="logo"
               style={{
-                width: "100%",
-                marginTop: "30px",
-                marginLeft: "32px",
-                marginRight: "35px",
-                height: "420%",
+                // width: "100%",
+                width:"69%",
+                height:"75%",
+                // marginTop: "30px",
+                // marginLeft: "32px",
+                // marginRight: "35px",
+                // height: "420%",
                 objectFit: "cover",
               }}
             />

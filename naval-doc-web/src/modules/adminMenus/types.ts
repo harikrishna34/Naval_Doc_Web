@@ -3,7 +3,7 @@ export interface Item {
     id: number;
     name: string;
     description: string;
-    price: number;
+    pricing: any;
     image: string;
     itemType: string;
     status: string;

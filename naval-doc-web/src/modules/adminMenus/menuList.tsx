@@ -221,7 +221,7 @@ const MenuList: React.FC = () => {
               }
               styles={{body: { padding: "16px" }}}
             >
-              <div>
+              <div style={{textAlign:"center"}}>
                 <ClockCircleOutlined style={{ marginRight: "8px" }} />
                 <Text type="secondary" style={{ fontWeight: "700" }}>
                   {menu.menuConfiguration && menu.menuConfiguration.name}
@@ -231,13 +231,13 @@ const MenuList: React.FC = () => {
                 </Tag>
               </div>
 
-              <div style={{ marginTop: "12px" }}>
+              <div style={{ marginTop: "12px", textAlign:"center" }}>
                 <Space
                   direction="vertical"
                   size="small"
                   style={{ width: "100%" }}
                 >
-                  <div>
+                  <div >
                     <CalendarOutlined style={{ marginRight: "8px" }} />
                     <Text type="secondary" style={{ fontWeight: "700" }}>
                       {formatDate(menu.startTime)} - {formatDate(menu.endTime)}

@@ -14,13 +14,12 @@ import {
   InputNumber,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import WorldtekLogo from "../../components/common/worldTekLogo";
 import { itemService } from "../../auth/apiService";
 import dayjs, { Dayjs } from "dayjs";
 import Loader from "../../components/common/loader";
 
 const { Option } = Select;
-const { Text, Title } = Typography;
+const { Text } = Typography;
 const { TextArea } = Input;
 
 interface AddItemModalProps {
@@ -39,13 +38,21 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState<any[]>([]);
+  const [errorDetails, setErrorDetails] = useState<string | null>(null);
+
+  const handleCancel = () => {
+    setErrorDetails(null);
+    form.resetFields();
+    setFileList([]);
+    onCancel();
+  };
 
   const handleOk = async () => {
     try {
       setLoading(true);
+      setErrorDetails(null); 
       const values = await form.validateFields();
 
-      // Create a FormData object for the API request
       const formData = new FormData();
       formData.append("name", values.name.trim());
       formData.append("description", values.description.trim());
@@ -54,7 +61,6 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
       formData.append("quantityUnit", values.quantityUnit);
       formData.append("price", values.price.toString());
 
-      // Format dates for API
       if (values.startDate) {
         formData.append("startDate", values.startDate.format("DD-MM-YYYY"));
       }
@@ -62,23 +68,52 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
         formData.append("endDate", values.endDate.format("DD-MM-YYYY"));
       }
 
-      // Add item image if provided
       if (fileList.length > 0 && fileList[0].originFileObj) {
         formData.append("image", fileList[0].originFileObj);
       }
 
-      // Call the API to create a new item
-      await itemService.createItem(formData);
+      const response = await itemService.createItem(formData);
 
       message.success("Item added successfully!");
       form.resetFields();
       setFileList([]);
       onSubmit(values);
       onSuccess(); // Refresh the item list
-      onCancel(); // Close modal
-    } catch (error) {
+      handleCancel(); // Close modal
+    } catch (error: any) {
       console.error("Failed to add item:", error);
-      message.error("Failed to add item. Please try again.");
+
+      // Extract detailed error information
+      let errorMessage = "Failed to add item. Please try again.";
+
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        const status = error.response.status;
+        const data = error.response.data;
+
+        if (data && data.message) {
+          errorMessage = `Error ${status}: ${data.message}`;
+        } else if (data && data.error) {
+          errorMessage = `Error ${status}: ${data.error}`;
+        } else {
+          errorMessage = `Error ${status}: Server error`;
+        }
+
+        setErrorDetails(errorMessage);
+      } else if (error.request) {
+        // The request was made but no response was received
+        errorMessage =
+          "Network error: No response from server. Please check your connection.";
+        setErrorDetails(errorMessage);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        errorMessage = `Error: ${error.message || "Unknown error occurred"}`;
+        setErrorDetails(errorMessage);
+      }
+
+      message.error(errorMessage);
+      // Don't close the modal on error so user can fix the issue
     } finally {
       setLoading(false);
     }
@@ -138,13 +173,20 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
       className={`add-item-modal ${loading ? "loader-container" : ""}`}
       title="Add Menu Item"
       open={isOpen}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       width={920}
       centered
       footer={null}
-      styles={{body:{ maxHeight: "75vh", overflowY: "auto", padding: "24px" }}}
+      styles={{
+        body: { maxHeight: "75vh", overflowY: "auto", padding: "24px" },
+      }}
     >
-      <Form form={form} layout="vertical" name="add_item_form">
+      <Form
+        form={form}
+        layout="vertical"
+        name="add_item_form"
+        style={{ background: "white" }}
+      >
         <Row gutter={24}>
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
@@ -180,8 +222,6 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
               <Select placeholder="Select Type" style={inputStyle}>
                 <Option value="veg">Vegetarian</Option>
                 <Option value="non-veg">Non-Vegetarian</Option>
-                <Option value="beverage">Beverage</Option>
-                <Option value="dessert">Dessert</Option>
               </Select>
             </Form.Item>
           </Col>
@@ -207,7 +247,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
             >
               <TextArea
                 placeholder="Enter item description"
-                rows={3}
+                rows={2}
                 style={{ width: "100%" }}
               />
             </Form.Item>
@@ -246,9 +286,6 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
               <Select placeholder="Select Unit" style={inputStyle}>
                 <Option value="grams">Grams</Option>
                 <Option value="ml">Milliliters</Option>
-                <Option value="pieces">Pieces</Option>
-                <Option value="plates">Plates</Option>
-                <Option value="servings">Servings</Option>
               </Select>
             </Form.Item>
           </Col>
@@ -291,6 +328,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
                 placeholder="DD-MM-YYYY"
                 style={inputStyle}
                 format="DD-MM-YYYY"
+                disabledDate={disablePastDate}
               />
             </Form.Item>
           </Col>
@@ -336,7 +374,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
                   if (!isLt2M) {
                     message.error("Image must be smaller than 2MB!");
                   }
-                  return false; // Prevent auto upload
+                  return false;
                 }}
               >
                 <Button icon={<UploadOutlined />}>Upload Item Image</Button>
@@ -348,23 +386,70 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
           </Col>
         </Row>
 
-        <Row justify="center" style={{ marginTop: "24px" }}>
-          <Col xs={24} sm={12} md={8}>
+        <Row
+          style={{
+            marginTop: "24px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Col
+            xs={24}
+            sm={12}
+            md={8}
+            style={{ marginLeft: "10px", marginRight: "10px" }}
+          >
             <Button
               type="primary"
               block
               onClick={handleOk}
-              // loading={loading}
+              loading={loading}
               style={{ height: "40px" }}
             >
               Add Item
             </Button>
           </Col>
+          <Col
+            xs={24}
+            sm={12}
+            md={8}
+            style={{
+              textAlign: "center",
+              marginLeft: "10px",
+              marginRight: "10px",
+            }}
+          >
+            <Button
+              type="default"
+              onClick={handleCancel}
+              style={{ height: "40px", width: "100%" }}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+          </Col>
         </Row>
-
-        <WorldtekLogo />
+        {errorDetails && (
+          <Row style={{ marginTop: "16px" }}>
+            <Col span={24}>
+              <div
+                className="error-message"
+                style={{
+                  padding: "10px",
+                  background: "#ffecec",
+                  border: "1px solid #ff4d4f",
+                  borderRadius: "4px",
+                  color: "#ff4d4f",
+                }}
+              >
+                <strong>Error Details:</strong> {errorDetails}
+              </div>
+            </Col>
+          </Row>
+        )}
       </Form>
-      {loading && <Loader/>}
+      {loading && <Loader />}
     </Modal>
   );
 };

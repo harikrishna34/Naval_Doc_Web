@@ -15,6 +15,9 @@ import { canteenService } from "../../auth/apiService";
 import BackHeader from "../../components/common/backHeader";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/common/loader";
+import { toast } from "react-toastify";
+import CanteenOrdersDisplay from "../admin/canteenOrders";
+
 
 const { Content } = Layout;
 
@@ -117,13 +120,14 @@ const CanteenList: React.FC = () => {
         }}
       >
         <BackHeader path="/dashboard" title="Canteens Management" />
+        <CanteenOrdersDisplay/>
         {loading ? (
           <Loader/>
         ) : canteens.length === 0 ? (
           <EmptyState />
         ) : (
           <Row gutter={[16, 16]}>
-            <Col xs={24} sm={12} md={8} lg={6}>
+            <Col xs={12} sm={8} md={6} lg={5}>
               <Card
                 hoverable
                 style={{
@@ -157,7 +161,7 @@ const CanteenList: React.FC = () => {
               </Card>
             </Col>
             {canteens.map((canteen) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={canteen.id}>
+              <Col xs={12} sm={8} md={6} lg={5} key={canteen.id}>
                 <Card
                   hoverable
                   style={{ height: "100%" }}
@@ -182,9 +186,9 @@ const CanteenList: React.FC = () => {
                     }
                     description={
                       <>
-                        <h5 style={{ marginBottom: 0, marginTop: 0 }}>
+                        {/* <h5 style={{ marginBottom: 0, marginTop: 0 }}>
                           Code: {canteen.code}
-                        </h5>
+                        </h5> */}
                         <Button onClick={() => handleCanteenClick(canteen.id)}>Go to Canteen Dashboard</Button>
                       </>
                     }

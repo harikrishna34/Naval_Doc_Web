@@ -6,7 +6,7 @@ type LoaderProps = {
   size?: number;
 };
 
-const Loader: React.FC<LoaderProps> = ({ color = "#FEDA15", size = 15 }) => {
+const Loader: React.FC<LoaderProps> = ({ color = "rgb(1, 0, 128)", size = 12 }) => {
   return (
     <div
       style={{
@@ -15,7 +15,7 @@ const Loader: React.FC<LoaderProps> = ({ color = "#FEDA15", size = 15 }) => {
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: "rgba(255, 255, 255, 0.46)",
+        backgroundColor: "rgba(255, 255, 255, 0.16)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

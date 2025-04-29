@@ -13,6 +13,7 @@
 //   const [otpSent, setOtpSent] = useState(false);
 //   const [loading, setLoading] = useState(false);
 //   const [language, setLanguage] = useState<Language>("en");
+//   const [otpButtonDisabled, setOtpButtonDisabled] = useState(false);
 //   const navigate = useNavigate();
 
 //   const API_URL_SEND = "http://localhost:3002/api/login";
@@ -54,6 +55,7 @@
 //       }
 
 //       setLoading(true);
+//       setOtpButtonDisabled(true); // Disable the button when OTP is being sent
 
 //       try {
 //         const response = await axios.post(API_URL_SEND, {
@@ -65,16 +67,19 @@
 //           message.success("OTP Sent Successfully");
 //         } else {
 //           message.error("Failed to send OTP");
+//           setOtpButtonDisabled(false); // Re-enable if failed
 //         }
 //       } catch (error) {
 //         console.error("Error sending OTP:", error);
 //         message.error("Error sending OTP");
+//         setOtpButtonDisabled(false); // Re-enable if error
 //       } finally {
 //         setLoading(false);
 //       }
 //     } catch (err) {
 //       // Form validation error
 //       console.log("Validation failed:", err);
+//       setOtpButtonDisabled(false); // Re-enable if validation fails
 //     }
 //   };
 
@@ -202,7 +207,7 @@
 //               padding: "24px",
 //               borderRadius: "8px",
 //               boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-//               border:" 4px solid #010080"
+//               border: " 4px solid #010080",
 //             }}
 //           >
 //             <h1
@@ -249,11 +254,20 @@
 //                   onClick={handleSendOtp}
 //                   loading={loading}
 //                   disabled={
+//                     otpButtonDisabled ||
 //                     !form.getFieldValue("mobile") ||
 //                     form.getFieldValue("mobile").length !== 10
 //                   }
 //                   block
-//                   style={{ marginBottom: otpSent ? "24px" : "0" }}
+//                   style={{
+//                     // marginBottom: otpSent ? "24px" : "0",
+//                     marginBottom: otpSent ? "-3px" : "0",
+//                     fontSize: "16px",
+//                     fontWeight: "500",
+//                     padding: "20px",
+//                     backgroundColor: "#010080",
+//                     color: "white",
+//                   }}
 //                 >
 //                   {texts.sendOtp}
 //                 </Button>
@@ -283,7 +297,7 @@
 //                     />
 //                   </Form.Item>
 
-//                   <Form.Item>
+//                   <Form.Item style={{ marginBottom: "10px" }}>
 //                     <Button
 //                       type="link"
 //                       onClick={handleSendOtp}
@@ -294,11 +308,18 @@
 //                     </Button>
 //                   </Form.Item>
 
-//                   <Form.Item>
+//                   <Form.Item style={{ marginBottom: "10px" }}>
 //                     <Button
 //                       type="primary"
 //                       onClick={handleLogin}
 //                       loading={loading}
+//                       style={{
+//                         backgroundColor: "#010080",
+//                         color: "white",
+//                         fontSize: "16px",
+//                         fontWeight: "500",
+//                         padding: "20px",
+//                       }}
 //                       disabled={
 //                         !form.getFieldValue("otp") ||
 //                         form.getFieldValue("otp").length !== 6
@@ -313,7 +334,7 @@
 //             </Form>
 //           </div>
 
-//           <div style={{ marginTop: "24px" }}>
+//           <div style={{ marginTop: "13px" }}>
 //             <WorldtekLogo />
 //           </div>
 //         </div>
@@ -345,9 +366,10 @@
 // export default LoginScreen;
 
 
+
 import { Col, Row, Switch, Form, Input, Button, message } from "antd";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import WorldtekLogo from "../components/common/worldTekLogo";
 import { languageTexts } from "../utils/data";
@@ -356,12 +378,15 @@ type Language = "en" | "te";
 const LoginScreen: React.FC = () => {
   const [form] = Form.useForm();
   const [mobileNumber, setMobileNumber] = useState("");
-  const [otp, setOtp] = useState("");
+  const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState<Language>("en");
-  const [otpButtonDisabled, setOtpButtonDisabled] = useState(false); // New state for OTP button disable
+  const [otpButtonDisabled, setOtpButtonDisabled] = useState(false);
   const navigate = useNavigate();
+  
+  // Create refs for each OTP input field
+  const otpRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
   const API_URL_SEND = "http://localhost:3002/api/login";
   const API_URL_VERIFY = "http://localhost:3002/api/verifyOtp";
@@ -412,6 +437,16 @@ const LoginScreen: React.FC = () => {
         if (response.status === 200) {
           setOtpSent(true);
           message.success("OTP Sent Successfully");
+          
+          // Reset OTP values
+          setOtpValues(Array(6).fill(""));
+          
+          // Focus on the first OTP input
+          setTimeout(() => {
+            if (otpRefs.current[0]) {
+              otpRefs.current[0].focus();
+            }
+          }, 100);
         } else {
           message.error("Failed to send OTP");
           setOtpButtonDisabled(false); // Re-enable if failed
@@ -427,6 +462,58 @@ const LoginScreen: React.FC = () => {
       // Form validation error
       console.log("Validation failed:", err);
       setOtpButtonDisabled(false); // Re-enable if validation fails
+    }
+  };
+
+  const handleOtpChange = (index: number, value: string) => {
+    // Only allow digits
+    const sanitizedValue = value.replace(/\D/g, "");
+
+    // Update the OTP value at the specified index
+    const newOtpValues = [...otpValues];
+    newOtpValues[index] = sanitizedValue;
+    setOtpValues(newOtpValues);
+
+    // Update form field with combined OTP
+    form.setFieldsValue({ otp: newOtpValues.join("") });
+
+    // Auto-focus to next input if current input is filled
+    if (sanitizedValue && index < 5) {
+      otpRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    // When backspace is pressed on an empty input, focus the previous input
+    if (e.key === "Backspace" && !otpValues[index] && index > 0) {
+      otpRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").substring(0, 6);
+    
+    if (pastedData) {
+      // Fill in OTP boxes with pasted data
+      const newOtpValues = [...otpValues];
+      for (let i = 0; i < pastedData.length; i++) {
+        if (i < 6) {
+          newOtpValues[i] = pastedData[i];
+        }
+      }
+      setOtpValues(newOtpValues);
+      
+      // Update form field
+      form.setFieldsValue({ otp: newOtpValues.join("") });
+      
+      // Focus the next empty input or the last one if all are filled
+      const nextEmptyIndex = newOtpValues.findIndex(value => !value);
+      if (nextEmptyIndex !== -1 && nextEmptyIndex < 6) {
+        otpRefs.current[nextEmptyIndex]?.focus();
+      } else {
+        otpRefs.current[5]?.focus();
+      }
     }
   };
 
@@ -554,7 +641,7 @@ const LoginScreen: React.FC = () => {
               padding: "24px",
               borderRadius: "8px",
               boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-              border:" 4px solid #010080"
+              border: " 4px solid #010080",
             }}
           >
             <h1
@@ -601,12 +688,19 @@ const LoginScreen: React.FC = () => {
                   onClick={handleSendOtp}
                   loading={loading}
                   disabled={
-                    otpButtonDisabled || // Use the new state here
+                    otpButtonDisabled ||
                     !form.getFieldValue("mobile") ||
                     form.getFieldValue("mobile").length !== 10
                   }
                   block
-                  style={{ marginBottom: otpSent ? "24px" : "0" , fontSize:"16px", fontWeight:"500", padding:"20px"}}
+                  style={{
+                    marginBottom: otpSent ? "-3px" : "0",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                    padding: "20px",
+                    backgroundColor: "#010080",
+                    color: "white",
+                  }}
                 >
                   {texts.sendOtp}
                 </Button>
@@ -619,24 +713,49 @@ const LoginScreen: React.FC = () => {
                     label={texts.enterOtp}
                     rules={[{ validator: validateOtp }]}
                     validateTrigger={["onBlur", "onChange"]}
+                    style={{ display: "none" }} // Hidden field to store the combined OTP value
                   >
-                    <Input
-                      type="text"
-                      maxLength={6}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "");
-                        setOtp(value);
-                        form.setFieldsValue({ otp: value });
-                      }}
-                      placeholder={
-                        language === "en"
-                          ? "Enter 6-digit OTP"
-                          : "6 అంకెల OTP నమోదు చేయండి"
-                      }
-                    />
+                    <Input type="hidden" />
                   </Form.Item>
+                  
+                  {/* OTP Input Boxes */}
+                  <div style={{ marginBottom: "16px" }}>
+                    <label style={{ display: "block", marginBottom: "8px" }}>
+                      {texts.enterOtp}
+                    </label>
+                    <div style={{ 
+                      display: "flex", 
+                      justifyContent: "space-between", 
+                      gap: "8px" 
+                    }}>
+                      {Array(6).fill(0).map((_, index) => (
+                        <Input
+                          key={index}
+                          ref={(el:any) => (otpRefs.current[index] = el)}
+                          maxLength={1}
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            textAlign: "center",
+                            padding: "4px",
+                            fontSize: "16px",
+                            borderRadius: "4px"
+                          }}
+                          value={otpValues[index]}
+                          onChange={(e) => handleOtpChange(index, e.target.value)}
+                          onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                          onPaste={index === 0 ? handleOtpPaste : undefined}
+                        />
+                      ))}
+                    </div>
+                    {form.getFieldError("otp") && (
+                      <div style={{ color: "#ff4d4f", fontSize: "14px", marginTop: "8px" }}>
+                        {form.getFieldError("otp")}
+                      </div>
+                    )}
+                  </div>
 
-                  <Form.Item>
+                  <Form.Item style={{ marginBottom: "10px" }}>
                     <Button
                       type="link"
                       onClick={handleSendOtp}
@@ -647,15 +766,19 @@ const LoginScreen: React.FC = () => {
                     </Button>
                   </Form.Item>
 
-                  <Form.Item>
+                  <Form.Item style={{ marginBottom: "10px" }}>
                     <Button
                       type="primary"
                       onClick={handleLogin}
                       loading={loading}
-                      disabled={
-                        !form.getFieldValue("otp") ||
-                        form.getFieldValue("otp").length !== 6
-                      }
+                      style={{
+                        backgroundColor: "#010080",
+                        color: "white",
+                        fontSize: "16px",
+                        fontWeight: "500",
+                        padding: "20px",
+                      }}
+                      disabled={otpValues.join("").length !== 6}
                       block
                     >
                       {texts.loginButton}
@@ -666,7 +789,7 @@ const LoginScreen: React.FC = () => {
             </Form>
           </div>
 
-          <div style={{ marginTop: "24px" }}>
+          <div style={{ marginTop: "13px" }}>
             <WorldtekLogo />
           </div>
         </div>
