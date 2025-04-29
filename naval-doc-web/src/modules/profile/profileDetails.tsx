@@ -210,7 +210,7 @@ const ProfileDetails: React.FC = () => {
   ];
 
   return (
-    <Card style={cardStyle} bodyStyle={{ padding: "16px" }}>
+    <Card style={cardStyle} styles={{body:{ padding: "16px" }}}>
       <Typography.Title level={4} style={titleStyle}>
         Profile Details
       </Typography.Title>

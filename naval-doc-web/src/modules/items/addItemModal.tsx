@@ -17,6 +17,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import WorldtekLogo from "../../components/common/worldTekLogo";
 import { itemService } from "../../auth/apiService";
 import dayjs, { Dayjs } from "dayjs";
+import Loader from "../../components/common/loader";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -134,14 +135,14 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
 
   return (
     <Modal
-      className="add-item-modal"
+      className={`add-item-modal ${loading ? "loader-container" : ""}`}
       title="Add Menu Item"
       open={isOpen}
       onCancel={onCancel}
       width={920}
       centered
       footer={null}
-      bodyStyle={{ maxHeight: "75vh", overflowY: "auto", padding: "24px" }}
+      styles={{body:{ maxHeight: "75vh", overflowY: "auto", padding: "24px" }}}
     >
       <Form form={form} layout="vertical" name="add_item_form">
         <Row gutter={24}>
@@ -353,7 +354,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
               type="primary"
               block
               onClick={handleOk}
-              loading={loading}
+              // loading={loading}
               style={{ height: "40px" }}
             >
               Add Item
@@ -363,6 +364,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
 
         <WorldtekLogo />
       </Form>
+      {loading && <Loader/>}
     </Modal>
   );
 };

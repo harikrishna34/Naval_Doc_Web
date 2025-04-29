@@ -66,7 +66,7 @@ const TransactionHistory: React.FC = () => {
   });
 
   return (
-    <Card style={cardStyle} bodyStyle={{ padding: '20px' }}>
+    <Card style={cardStyle} styles={{body: { padding: '20px' }}}>
       <Title level={4} style={titleStyle}>
         History
       </Title>

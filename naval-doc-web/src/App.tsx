@@ -41,7 +41,7 @@ const App = () => {
             <Route path="/admin" element={<AdminDB />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/canteens-list" element={<CanteenList />} />
-            <Route path="/users-list" element={<UsersList />} />
+            <Route path="/canteens-list/canteen-dashboard/:canteenId/users-list" element={<UsersList />} />
             <Route path="/items-list" element={<ItemsList />} />
             <Route path="/menus-list" element={<MenuList />} />
             <Route path="/canteens-list/canteen-dashboard/:canteenId" element={<CanteenAdminDB/>}/>

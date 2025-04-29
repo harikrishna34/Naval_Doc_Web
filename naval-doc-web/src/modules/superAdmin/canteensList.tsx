@@ -7,7 +7,6 @@ import {
   Button,
   Layout,
   Empty,
-  Spin,
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -15,6 +14,7 @@ import AddCanteenModal from "./addCanteenModal";
 import { canteenService } from "../../auth/apiService";
 import BackHeader from "../../components/common/backHeader";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../components/common/loader";
 
 const { Content } = Layout;
 
@@ -27,25 +27,21 @@ interface CanteenProps {
 }
 
 const CanteenList: React.FC = () => {
-  // State variables
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [canteens, setCanteens] = useState<CanteenProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
-  // Fetch canteens on component mount
   useEffect(() => {
     fetchCanteens();
   }, []);
 
-  // Function to fetch canteens from API
   const fetchCanteens = async () => {
     try {
       setLoading(true);
       const response = await canteenService.getAllCanteens();
 
       if (response && response.data) {
-        // Transform API data to match our component's expected format
         const formattedCanteens = response.data.map((canteen: any) => ({
           id: canteen.id,
           name: canteen.canteenName,
@@ -70,8 +66,7 @@ const CanteenList: React.FC = () => {
   const handleCanteenClick = (canteenId: number) => {
     console.log(`Navigating to canteen with ID: ${canteenId}`);
     console.log(canteenId,"canteeId");
-    navigate(`/canteens-list/canteen-dashboard/:${canteenId}`);
-    // navigate(`/canteen-dashboard`);
+    navigate(`/canteens-list/canteen-dashboard/${canteenId}`);
   };
 
   const handleAddCanteen = () => {
@@ -84,10 +79,8 @@ const CanteenList: React.FC = () => {
 
   const handleSubmitCanteen = (values: any) => {
     console.log("Submitted values:", values);
-    // No need to handle API call here as it's now handled inside the modal component
   };
 
-  // Empty state component
   const EmptyState = () => (
     <div
       style={{
@@ -125,16 +118,7 @@ const CanteenList: React.FC = () => {
       >
         <BackHeader path="/dashboard" title="Canteens Management" />
         {loading ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "200px",
-            }}
-          >
-            <Spin size="large" />
-          </div>
+          <Loader/>
         ) : canteens.length === 0 ? (
           <EmptyState />
         ) : (
@@ -212,7 +196,6 @@ const CanteenList: React.FC = () => {
           </Row>
         )}
 
-        {/* Add Canteen Modal */}
         <AddCanteenModal
           isOpen={isModalOpen}
           onCancel={handleCancelModal}

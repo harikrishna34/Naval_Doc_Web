@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Empty,
-  Spin,
   message,
   Card,
   Button,
@@ -32,6 +31,7 @@ import lunchImage from "../../assets/images/menu_lunch.avif";
 import tiffinImage from "../../assets/images/menu_tiffin.avif";
 import snacksImage from "../../assets/images/menu_snacks.jpg";
 import BackHeader from "../../components/common/backHeader";
+import Loader from "../../components/common/loader";
 
 const { Paragraph, Text } = Typography;
 
@@ -135,21 +135,6 @@ const MenuList: React.FC = () => {
   const formatDate = (timestamp: number) => {
     return dayjs(timestamp * 1000).format("MMM D, YYYY");
   };
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "256px",
-        }}
-      >
-        <Spin size="large" />
-      </div>
-    );
-  }
 
   return (
     <div style={{ padding: "10px" }}>
@@ -291,7 +276,6 @@ const MenuList: React.FC = () => {
         <Empty description="No menus found" style={{ marginTop: "32px" }} />
       )}
 
-      {/* Add Menu Modal */}
       <AddMenuModal
         visible={isAddModalVisible}
         onCancel={handleAddModalCancel}
@@ -299,7 +283,6 @@ const MenuList: React.FC = () => {
         existingMenuTypes={existingMenuTypes}
       />
 
-      {/* View/Edit Menu Modal */}
       {selectedMenu && (
         <EditMenuModal
           visible={isEditOpen}
@@ -330,6 +313,8 @@ const MenuList: React.FC = () => {
           }}
         />
       )}
+
+      {loading && <Loader/>}
     </div>
   );
 };

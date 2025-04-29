@@ -20,7 +20,7 @@ const PastOrders: React.FC = () => {
   };
 
   return (
-    <Card style={cardStyle} bodyStyle={{ padding: '24px' }}>
+    <Card style={cardStyle} styles={{ body: { padding: '24px' } }}>
       <Title level={4} style={titleStyle}>
         Past Orders
       </Title>

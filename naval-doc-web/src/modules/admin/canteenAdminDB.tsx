@@ -25,9 +25,11 @@ const CanteenAdminDB = () => {
     } else if (cardName === "Menu") {
       navigate("/menus-list");
     } else if (cardName === "Users") {
-      navigate("/users-list");
+      // navigate("/users-list");
+      navigate(`/canteens-list/canteen-dashboard/${route?.canteenId}/users-list`)
     }
   };
+  
 
   return (
     <div>

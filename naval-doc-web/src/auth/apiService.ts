@@ -8,7 +8,7 @@ const BASE_URL = "http://localhost:3002/api";
 const getToken = () => {
   return localStorage.getItem("Token") || "";
 };
-console.log(getToken(), "tokennn");
+// console.log(getToken(), "tokennn");
 
 // Create axios instance with default configurations
 const apiClient = axios.create({

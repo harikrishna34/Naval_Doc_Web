@@ -29,7 +29,7 @@ const WalletBalance: React.FC = () => {
   };
 
   return (
-    <Card style={cardStyle} bodyStyle={{ padding: '20px' }}>
+    <Card style={cardStyle} styles={{ body: { padding: '20px' } }}>
       <div style={balanceContainerStyle}>
         <Text style={labelStyle}>Wallet Balance</Text>
         <Text style={amountStyle}>100/-</Text>

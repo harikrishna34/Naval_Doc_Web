@@ -136,13 +136,13 @@ const Billing: React.FC = () => {
 
         <Card
           style={paymentCardStyle}
-          bodyStyle={{
+          styles={{body:{
             padding: "30px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             height: "100%",
-          }}
+          }}}
         >
           <div>
             <Title level={4} style={paymentHeadingStyle}>

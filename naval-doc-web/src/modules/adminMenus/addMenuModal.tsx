@@ -24,6 +24,7 @@ import {
   menuService,
 } from "../../auth/apiService";
 import { CreateMenuPayload, Item, MenuConfiguration } from "./types";
+import Loader from "../../components/common/loader";
 
 interface AddMenuModalProps {
   visible: boolean;
@@ -199,7 +200,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
         <Button
           key="submit"
           type="primary"
-          loading={submitting}
+          // loading={submitting}
           onClick={handleSubmit}
         >
           Submit
@@ -209,6 +210,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     >
       <Form
         form={form}
+        // className={`${loadingItems ? "loader-container" : ""}`}
         layout="vertical"
         initialValues={{
           description: "",
@@ -303,6 +305,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
             >
               <Spin />
             </div>
+            // <Loader/>
           ) : (
             <div style={{ maxHeight: "400px", marginTop: "16px" }}>
               <Row gutter={[16, 16]}>
@@ -386,6 +389,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
             </div>
           )}
         </div>
+        {submitting && <Loader/>}
       </Form>
     </Modal>
   );
