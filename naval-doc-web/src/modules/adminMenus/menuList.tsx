@@ -10,6 +10,7 @@ import {
   Col,
   Space,
   Divider,
+  Tooltip,
 } from "antd";
 import {
   PlusOutlined,
@@ -246,8 +247,7 @@ const MenuList: React.FC = () => {
                 </Space>
               </div>
 
-              <Divider style={{ margin: "12px 0" }} />
-              <Space
+              {/* <Space
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
                 <Button
@@ -266,7 +266,42 @@ const MenuList: React.FC = () => {
                   icon={<DeleteOutlined />}
                   onClick={() => handleDeleteMenu(menu.id)}
                 />
-              </Space>
+              </Space> */}
+
+              <Space 
+                      style={{ 
+                        width: '100%', 
+                        justifyContent: 'center', 
+                        marginTop: 17,
+                        borderTop: '1px solid #f0f0f0',
+                        paddingTop: 16
+                      }}
+                    >
+                      <Tooltip title="View Details">
+                        <Button 
+                          icon={<EyeOutlined />} 
+                          type="text" 
+                          onClick={() => handleViewMenu(menu)}
+                          style={{ color: '#1890ff' }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Edit">
+                        <Button 
+                          icon={<EditOutlined />} 
+                          type="text" 
+                          onClick={() => handleEditMenu(menu)}
+                          style={{ color: '#52c41a' }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <Button 
+                          icon={<DeleteOutlined />} 
+                          type="text" 
+                          danger 
+                          onClick={() => handleDeleteMenu(menu.id)}
+                        />
+                      </Tooltip>
+                    </Space>
             </Card>
           </Col>
         ))}

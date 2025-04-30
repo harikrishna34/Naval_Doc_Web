@@ -10,6 +10,8 @@ import {
   message,
   Tag,
   Modal,
+  Tooltip,
+  Space,
 } from "antd";
 import {
   PlusOutlined,
@@ -311,41 +313,49 @@ const ItemsList: React.FC = () => {
                     }
                   />
 
-                  <div
-                    style={{
-                      borderTop: "1px solid #f0f0f0",
-                      paddingTop: 12,
-                      marginTop: 8,
-                      display: "flex",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <Button
-                      type="text"
-                      icon={<EyeOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewItem(item);
+                  <Space 
+                      style={{ 
+                        width: '100%', 
+                        justifyContent: 'center', 
+                        marginTop: 17,
+                        borderTop: '1px solid #f0f0f0',
+                        paddingTop: 11
                       }}
-                    />
-                    <Button
-                      type="text"
-                      icon={<EditOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditItem(item);
-                      }}
-                    />
-                    <Button
-                      type="text"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteItem(item);
-                      }}
-                    />
-                  </div>
+                    >
+                      <Tooltip title="View Details">
+                        <Button 
+                          icon={<EyeOutlined />} 
+                          type="text" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewItem(item);
+                          }}
+                          style={{ color: '#1890ff' }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Edit">
+                        <Button 
+                          icon={<EditOutlined />} 
+                          type="text" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditItem(item);
+                          }}
+                          style={{ color: '#52c41a' }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <Button 
+                          icon={<DeleteOutlined />} 
+                          type="text" 
+                          danger 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteItem(item);
+                          }}
+                        />
+                      </Tooltip>
+                    </Space>
                 </Card>
               </Col>
             ))}

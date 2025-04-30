@@ -1,6 +1,5 @@
 import React from 'react';
 import ProfileDetails from './profileDetails';
-import PastOrders from './pastOrders';
 import WorldtekLogo from '../../components/common/worldTekLogo';
 
 const Profile: React.FC = () => {
@@ -22,7 +21,6 @@ const Profile: React.FC = () => {
     <div style={containerStyle}>
       <div style={contentStyle}>
         <ProfileDetails />
-        <PastOrders />
       </div>
       <WorldtekLogo />
     </div>
