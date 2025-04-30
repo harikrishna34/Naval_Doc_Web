@@ -83,6 +83,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("Token");
     handleNavigation("/");
   };
 
@@ -152,9 +153,6 @@ const StyledHeader: React.FC<HeaderProps> = ({
       <Popover
         content={
           <Menu style={{ width: 200 }}>
-            <Menu.Item key="help-faq" onClick={() => handleNavigation("/faq")}>
-              FAQ
-            </Menu.Item>
             <Menu.Item
               key="help-support"
               onClick={() => handleNavigation("/support")}
@@ -165,13 +163,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
               key="help-terms"
               onClick={() => handleNavigation("/terms")}
             >
-              Terms & Conditions
-            </Menu.Item>
-            <Menu.Item
-              key="help-privacy"
-              onClick={() => handleNavigation("/privacy")}
-            >
-              Privacy Policy
+              WhatsApp and Support
             </Menu.Item>
           </Menu>
         }
@@ -202,7 +194,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
         className="site-header"
         style={{
           backgroundColor: "rgb(1, 0, 128)",
-          padding: "0 16px",
+          padding: "0 18px",
           height: "92px",
           position: "sticky",
           top: 0,
@@ -220,43 +212,40 @@ const StyledHeader: React.FC<HeaderProps> = ({
                 gap: "12px",
               }}
             >
-              <div
-                style={{
-                  borderRadius: "4px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
               <img src={navyLogo} style={{ height: "73px", width: "73px" }} />
             </div>
           </Col>
 
-          <Col xs={0} sm={0} md={12} lg={12}>
+          <Col xs={12} sm={12} md={12} lg={12}>
             <div
               style={{
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: isMobile ? "flex-start" : "center",
                 alignItems: "center",
                 height: "100%",
-                marginLeft: "7rem",
+                marginLeft: isMobile ? "5px" : "7rem",
               }}
             >
               <Text
-                style={{ color: "white", fontSize: "30px", fontWeight: "bold" }}
+                style={{
+                  color: "white",
+                  fontSize: "30px",
+                  fontWeight: "bold",
+                  whiteSpace: "nowrap",
+                }}
               >
                 {brandName}
               </Text>
             </div>
           </Col>
 
-          <Col xs={18} sm={18} md={7} lg={8}>
+          <Col xs={6} sm={6} md={7} lg={8}>
             <div
               style={{
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-                gap: "16px",
+                gap: "20px",
               }}
             >
               {isMobile ? renderMobileMenu() : renderDesktopNavItems()}
@@ -300,9 +289,6 @@ const StyledHeader: React.FC<HeaderProps> = ({
             icon={<QuestionCircleOutlined />}
             title="Help"
           >
-            <Menu.Item key="help-faq" onClick={() => handleNavigation("/faq")}>
-              FAQ
-            </Menu.Item>
             <Menu.Item
               key="help-support"
               onClick={() => handleNavigation("/support")}
@@ -313,13 +299,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
               key="help-terms"
               onClick={() => handleNavigation("/terms")}
             >
-              Terms & Conditions
-            </Menu.Item>
-            <Menu.Item
-              key="help-privacy"
-              onClick={() => handleNavigation("/privacy")}
-            >
-              Privacy Policy
+              WhatsApp Support
             </Menu.Item>
           </Menu.SubMenu>
           <Menu.Divider />

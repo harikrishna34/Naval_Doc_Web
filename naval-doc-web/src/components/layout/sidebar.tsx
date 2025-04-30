@@ -82,7 +82,7 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
   return (
     <Sider
       width={200}
-      collapsedWidth={60}
+      collapsedWidth={70}
       collapsible
       collapsed={collapsed}
       trigger={null}
@@ -108,7 +108,8 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
           style={{
             display: "flex",
             justifyContent: "flex-end",
-            padding: "16px 16px 16px",
+            padding: "16px 16px 26px",
+            marginBottom: "20px",
             borderBottom: "1px solid rgb(222 222 224 / 21%)",
           }}
         >
@@ -132,6 +133,9 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              marginBottom: "20px",
+
+              
             }}
           />
         </div>
@@ -143,12 +147,11 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
             className="custom-menu"
             style={{
               background: "transparent",
-              paddingTop: "10px",
+              paddingTop: "25px",
               paddingLeft: "5px",
               paddingRight: "5px",
               textAlign: "center",
               justifyContent: "center",
-
             }}
             inlineCollapsed={collapsed}
             selectedKeys={[selectedKey]}
@@ -159,9 +162,9 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
                 <item.icon
                   style={{
                     fontSize: "20px",
+                    margin:"0px",
                     color: selectedKey === item.key ? "black" : "white",
                     backgroundColor: selectedKey === item.key ? "" : "transparent",
-                    borderRadius: "8px",
                     paddingLeft: "0px",
                     justifyContent: "center",
                   }}
@@ -172,6 +175,7 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
               style: {
                 color: selectedKey === item.key ? "black" : "white",
                 textAlign:"left",
+                marginBottom:"25px",
               },
             }))}
           />
@@ -183,7 +187,6 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
           padding: "16px",
           textAlign: "center",
           marginTop: "auto",
-          paddingBottom: "24px",
         }}
       >
         {/* <Button
