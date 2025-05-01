@@ -229,7 +229,8 @@ const StyledHeader: React.FC<HeaderProps> = ({
               <Text
                 style={{
                   color: "white",
-                  fontSize: "30px",
+                  fontSize: isMobile ? "20px" : "30px",
+                  marginLeft:"40px",
                   fontWeight: "bold",
                   whiteSpace: "nowrap",
                 }}

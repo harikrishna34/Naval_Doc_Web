@@ -24,25 +24,30 @@ const CanteenAdminDB = () => {
     } else if (cardName === "Items") {
       navigate("/items-list");
     } else if (cardName === "Menu") {
-      navigate("/menus-list");
+      navigate(`/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}/menu`);
     } else if (cardName === "Users") {
-      // navigate("/users-list");
-      navigate(`/canteens-list/canteen-dashboard/${route?.canteenId}/users-list`)
-    } else if(cardName === "Orders") {
-      navigate(`/canteens-list/canteen-dashboard/${route?.canteenId}/orders`)
+      navigate(
+        `/canteens-list/canteen-dashboard/${route?.canteenId}/users-list`
+      );
+    } else if (cardName === "Orders") {
+      navigate(`/canteens-list/canteen-dashboard/${route?.canteenId}/orders`);
     }
   };
-  
 
   return (
     <div>
       <BackHeader
         path="/canteens-list"
-        title="Canteen Dashboard"
+        title={
+          route?.canteenName
+            ? `Canteen Dashboard  |  ${route.canteenName}`
+            : "Canteen Dashboard"
+        }
         styles={{
           marginLeft: "22px",
         }}
       />
+
       <div style={{ padding: "20px 57px", paddingBottom: 0, paddingTop: 0 }}>
         <Row
           gutter={[16, 16]}

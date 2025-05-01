@@ -29,7 +29,7 @@ const LayoutWrapper: React.FC<AppLayoutProps> = ({
       <Layout
         className={`site-layout ${collapsed ? "collapsed" : ""} ${pageTitle}`}
         style={{
-          marginLeft: collapsed ? "50px" : "187px",
+          marginLeft: collapsed ? "63px" : "187px",
           transition: "all 0.2s ease-in-out",
           // marginTop: "-10px",
           // marginRight: "-8px",

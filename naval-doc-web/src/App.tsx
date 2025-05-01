@@ -24,7 +24,28 @@ import LoginScreen from "./auth/loginScreen";
 import CanteenAdminDB from "./modules/admin/canteenAdminDB";
 import OrdersDashboard from "./modules/orders/ordersDB";
 
-const isAuthenticated = Boolean(localStorage.getItem("Token"));
+
+const checkAuthentication = (): boolean => {
+  try {
+    // debugger
+    const token = localStorage.getItem("Token");
+    const isAuthenticated = !!token; // Double bang converts to boolean
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.debug('Authentication status:', isAuthenticated);
+    }
+    
+    return isAuthenticated;
+  } catch (error) {
+    console.error('Error checking authentication:', error);
+    // If there's any error (e.g., localStorage blocked), treat as not authenticated
+    return false;
+  }
+};
+
+// Usage
+const isAuthenticated = checkAuthentication();
+
 
 const App = () => {
   return (
@@ -51,11 +72,12 @@ const App = () => {
             <Route path="/items-list" element={<ItemsList />} />
             <Route path="/menus-list" element={<MenuList />} />
             <Route
-              path="/canteens-list/canteen-dashboard/:canteenId"
+              path="/canteens-list/canteen-dashboard/:canteenId/:canteenName"
               element={<CanteenAdminDB />}
             />
-            {/* <Route path="/canteens-list/canteen-dashboard/:canteenId/orders" element={<OrdersDashboard />} /> */}
+            <Route path="/canteens-list/canteen-dashboard/:canteenId/orders" element={<OrdersDashboard />} />
             <Route path="/orders" element={<OrdersDashboard />} />
+            <Route path="/canteens-list/canteen-dashboard/:canteenId/:canteenName/menu" element={<MenuList />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

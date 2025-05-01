@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Button } from "antd";
 import {
   DollarCircleOutlined,
@@ -7,6 +7,8 @@ import {
   CloseCircleOutlined,
 } from "@ant-design/icons";
 import BackHeader from "../../components/common/backHeader";
+import { useParams } from "react-router-dom";
+import { adminDashboardService } from "../../auth/apiService";
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -15,6 +17,8 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ icon, value, title }) => {
+  
+
   return (
     <Card
       style={{
@@ -26,13 +30,15 @@ const StatCard: React.FC<StatCardProps> = ({ icon, value, title }) => {
         borderRadius: "4px",
         boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
       }}
-      styles={{body:{
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}}
+      styles={{
+        body: {
+          padding: "20px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+        },
+      }}
     >
       <div
         style={{
@@ -74,12 +80,41 @@ const StatCard: React.FC<StatCardProps> = ({ icon, value, title }) => {
 };
 
 const OrdersDashboard: React.FC = () => {
+  const route = useParams();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      let response;
+      if (route?.canteenId) {
+        response = await adminDashboardService.getTotalOrders(
+          parseInt(route?.canteenId)
+        );
+      } else {
+        response = await adminDashboardService.getTotalOrders();
+      }
+
+      if (response && response?.data) {
+        setOrders(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching menus:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    <div style={{ padding: "20px" , paddingTop:"2px",}}>
+    <div style={{ padding: "20px", paddingTop: "2px" }}>
       <BackHeader
         path={`/canteens-list/canteen-dashboard/${1}`}
         title="Orders Dashboard"
-        styles={{marginBottom:"16px"}}
+        styles={{ marginBottom: "16px" }}
       />
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} md={6}>
@@ -92,7 +127,7 @@ const OrdersDashboard: React.FC = () => {
         <Col xs={24} sm={12} md={6}>
           <StatCard
             icon={<ShoppingCartOutlined />}
-            value="1000"
+            value={orders?.length > 0 ? orders?.length : 0}
             title="Total Orders"
           />
         </Col>

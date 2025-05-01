@@ -12,6 +12,7 @@ import {
   Row,
   Select,
   Spin,
+  Tag,
   Typography,
 } from "antd";
 import dayjs from "dayjs";
@@ -143,7 +144,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
       const menuItems = selectedItems.map((itemId) => {
         return {
           itemId,
-          minQuantity: values[`min_${itemId}`] || 1,
+          minQuantity: 1, // Always fixed at 1
           maxQuantity: values[`max_${itemId}`] || 10,
         };
       });
@@ -184,6 +185,17 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   const handleCancel = () => {
     resetForm();
     onCancel();
+  };
+
+  const getTagColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "veg":
+        return "green";
+      case "non-veg":
+        return "red";
+      default:
+        return "default";
+    }
   };
 
   return (
@@ -261,7 +273,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
               label="Start Date"
               rules={[{ required: true, message: "Please select start date" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -270,7 +282,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
               label="End Date"
               rules={[{ required: true, message: "Please select end date" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -348,17 +360,52 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                               style={{
                                 display: "flex",
                                 justifyContent: "space-between",
+                                alignItems: "center",
                               }}
                             >
                               <Text strong>{item.name}</Text>
-                              {item?.pricing && (
-                                <Text
-                                  type="secondary"
-                                  style={{ fontWeight: "500" }}
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <Tag
+                                  color={getTagColor(
+                                    item?.type ? item?.type : ""
+                                  )}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    height: "20px",
+                                    width: "20px",
+                                    padding: 0,
+                                    marginRight: "8px",
+                                  }}
                                 >
-                                  ₹{item?.pricing?.price ?? ""}
-                                </Text>
-                              )}
+                                  <span
+                                    style={{
+                                      width: "10px",
+                                      height: "10px",
+                                      borderRadius: "50%",
+                                      backgroundColor:
+                                        item.type.toLowerCase() === "veg"
+                                          ? "green"
+                                          : "red",
+                                      display: "inline-block",
+                                    }}
+                                  />
+                                </Tag>
+                                {item?.pricing && (
+                                  <Text
+                                    type="secondary"
+                                    style={{ fontWeight: "500" }}
+                                  >
+                                    ₹{item?.pricing?.price ?? ""}
+                                  </Text>
+                                )}
+                              </div>
                             </div>
                             <Text
                               type="secondary"
@@ -376,8 +423,9 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                                     initialValue={1}
                                     style={{ marginBottom: 0 }}
                                   >
-                                    <InputNumber
-                                      min={1}
+                                    <Input
+                                      disabled
+                                      value="1"
                                       style={{ width: "100%" }}
                                     />
                                   </Form.Item>
@@ -391,6 +439,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                                   >
                                     <InputNumber
                                       min={1}
+                                      precision={0}
                                       style={{ width: "100%" }}
                                     />
                                   </Form.Item>

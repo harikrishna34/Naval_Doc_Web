@@ -25,11 +25,11 @@ export const languageTexts: LanguageTexts = {
   en: {
     login: "LOGIN",
     mobileNumber: "Enter your Mobile Number",
-    sendOtp: "Send OTP",
+    sendOtp: "Request OTP",
     enterOtp: "Enter OTP",
     enterOtpPlaceholder: "Enter 6-digit OTP",
     resendOtp: "Resend OTP",
-    loginButton: "Login",
+    loginButton: "Verify OTP",
     invalidMobile: "Please enter a valid 10-digit mobile number",
     invalidOtp: "Please enter a valid 6-digit OTP",
     enterMobileNumber: "Please enter your mobile number",
@@ -45,10 +45,10 @@ export const languageTexts: LanguageTexts = {
   te: {
     login: "లాగిన్",
     mobileNumber: "మీ మొబైల్ నంబర్‌ని నమోదు చేయండి",
-    sendOtp: "OTP పంపండి",
+    sendOtp: "OTP అభ్యర్థించండి",
     enterOtp: "OTP నమోదు చేయండి",
     enterOtpPlaceholder: "6 అంకెల OTP నమోదు చేయండి",
-    resendOtp: "OTP మళ్ళీ పంపండి",
+    resendOtp: "OTP మళ్ళీ అభ్యర్థించండి",
     loginButton: "లాగిన్",
     invalidMobile:
       "దయచేసి చెల్లుబాటు అయ్యే 10 అంకెల మొబైల్ నంబర్‌ని నమోదు చేయండి",

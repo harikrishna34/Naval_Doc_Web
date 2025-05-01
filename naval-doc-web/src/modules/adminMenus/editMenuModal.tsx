@@ -15,6 +15,7 @@ import {
   Col,
   Typography,
   Divider,
+  Tag,
 } from "antd";
 import dayjs from "dayjs";
 import { Menu, Item, MenuConfiguration } from "./types";
@@ -83,7 +84,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
     // Set min/max quantities for each item
     menu.menuItems.forEach((menuItem) => {
       form.setFieldsValue({
-        [`min_${menuItem.itemId}`]: menuItem.minQuantity,
+        [`min_${menuItem.itemId}`]: 1, // Always set to 1
         [`max_${menuItem.itemId}`]: menuItem.maxQuantity,
       });
     });
@@ -151,7 +152,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
       const menuItems = selectedItems.map((itemId) => {
         return {
           itemId,
-          minQuantity: values[`min_${itemId}`] || 1,
+          minQuantity: 1, // Always fixed at 1
           maxQuantity: values[`max_${itemId}`] || 10,
         };
       });
@@ -189,6 +190,17 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
     }
   };
 
+  const getTagColor = (type: string) => {
+    switch (type?.toLowerCase()) {
+      case "veg":
+        return "green";
+      case "non-veg":
+        return "red";
+      default:
+        return "default";
+    }
+  };
+
   const modalFooter = [
     <Button key="cancel" onClick={onCancel}>
       Cancel
@@ -210,7 +222,9 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
       width={1000}
       onCancel={onCancel}
       footer={modalFooter}
-      styles={{body:{ padding: "24px", maxHeight: "80vh", overflow: "auto" }}}
+      styles={{
+        body: { padding: "24px", maxHeight: "80vh", overflow: "auto" },
+      }}
     >
       <Form form={form} layout="vertical">
         <Title level={5} style={{ marginTop: 0, marginBottom: "16px" }}>
@@ -259,7 +273,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
               label="Start Date"
               rules={[{ required: true, message: "Please select start date" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
           <Col xs={24} sm={12} md={8}>
@@ -268,7 +282,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
               label="End Date"
               rules={[{ required: true, message: "Please select end date" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
           <Col xs={24} md={8}>
@@ -326,7 +340,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
                           : "#fff",
                         transition: "all 0.3s ease",
                       }}
-                      styles={{body: { padding: "16px" }}}
+                      styles={{ body: { padding: "16px" } }}
                     >
                       <div
                         style={{ display: "flex", alignItems: "flex-start" }}
@@ -343,10 +357,49 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
                             style={{
                               display: "flex",
                               justifyContent: "space-between",
+                              alignItems: "center",
                             }}
                           >
                             <Text strong>{item.name}</Text>
-                            <Text type="secondary">₹{item?.pricing?.price}</Text>
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              <Tag
+                                color={getTagColor(
+                                  item?.type ? item?.type : ""
+                                )}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  height: "20px",
+                                  width: "20px",
+                                  padding: 0,
+                                  marginRight: "8px",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: "10px",
+                                    height: "10px",
+                                    borderRadius: "50%",
+                                    backgroundColor:
+                                      item.type?.toLowerCase() === "veg"
+                                        ? "green"
+                                        : "red",
+                                    display: "inline-block",
+                                  }}
+                                />
+                              </Tag>
+                              {item?.pricing && (
+                                <Text
+                                  type="secondary"
+                                  style={{ fontWeight: "500" }}
+                                >
+                                  ₹{item?.pricing?.price ?? ""}
+                                </Text>
+                              )}
+                            </div>
                           </div>
                           <Text
                             type="secondary"
@@ -368,8 +421,9 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
                                   initialValue={1}
                                   style={{ marginBottom: 0 }}
                                 >
-                                  <InputNumber
-                                    min={1}
+                                  <Input
+                                    disabled
+                                    value="1"
                                     style={{ width: "100%" }}
                                   />
                                 </Form.Item>
@@ -383,6 +437,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
                                 >
                                   <InputNumber
                                     min={1}
+                                    precision={0}
                                     style={{ width: "100%" }}
                                   />
                                 </Form.Item>

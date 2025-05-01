@@ -121,9 +121,6 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
     return Promise.resolve();
   };
 
-  const disableFutureDate = (current: Dayjs) => {
-    return current && current.isAfter(dayjs());
-  };
 
   return (
     <Modal
@@ -185,7 +182,7 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
               name="firstName"
-              label="First Name"
+              label="Admin FirstName"
               rules={[
                 { required: true, message: "Please enter first name" },
                 { min: 2, message: "First name must be at least 2 characters" },
@@ -207,23 +204,23 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
               name="lastName"
-              label="Last Name"
+              label="Admin LastName"
               rules={[
                 { required: true, message: "Please enter last name" },
-                { min: 2, message: "Last name must be at least 2 characters" },
-                { max: 30, message: "Last name cannot exceed 30 characters" },
+                { min: 2, message: "Admin Last name must be at least 2 characters" },
+                { max: 30, message: "Admin Last name cannot exceed 30 characters" },
                 {
                   pattern: /^[A-Za-z\s]+$/,
-                  message: "Last name should contain only letters",
+                  message: "Admin Last name should contain only letters",
                 },
                 {
                   whitespace: true,
-                  message: "Last name cannot be empty spaces",
+                  message: "Admin Last name cannot be empty spaces",
                 },
               ]}
               style={formItemStyle}
             >
-              <Input placeholder="Enter Last Name" style={inputStyle} />
+              <Input placeholder="Enter Admin Last Name" style={inputStyle} />
             </Form.Item>
           </Col>
         </Row>

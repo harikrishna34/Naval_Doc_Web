@@ -11,13 +11,12 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import AddCanteenModal from "./addCanteenModal";
-import { canteenService } from "../../auth/apiService";
+import { canteenService, adminDashboardService } from "../../auth/apiService";
 import BackHeader from "../../components/common/backHeader";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/common/loader";
 import { toast } from "react-toastify";
 import CanteenOrdersDisplay from "../admin/canteenOrders";
-
 
 const { Content } = Layout;
 
@@ -34,9 +33,23 @@ const CanteenList: React.FC = () => {
   const [canteens, setCanteens] = useState<CanteenProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const [countsData, setCountsData] = React.useState<any>([]);
+  console.log(countsData, "countsData");
+  
 
   useEffect(() => {
     fetchCanteens();
+  }, []);
+
+  useEffect(() => {
+    adminDashboardService
+      .getOrdersByCanteen()
+      .then((response) => {
+        setCountsData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   const fetchCanteens = async () => {
@@ -66,10 +79,11 @@ const CanteenList: React.FC = () => {
     }
   };
 
-  const handleCanteenClick = (canteenId: number) => {
+  const handleCanteenClick = (canteenId: number, canteenName:string) => {
     console.log(`Navigating to canteen with ID: ${canteenId}`);
-    console.log(canteenId,"canteeId");
-    navigate(`/canteens-list/canteen-dashboard/${canteenId}`);
+    console.log(canteenId, "canteeId", canteenName, "canteenName");
+    navigate(`/canteens-list/canteen-dashboard/${canteenId}/${canteenName}`);
+    // /canteens-list/canteen-dashboard/:canteenId/:canteenName/menu
   };
 
   const handleAddCanteen = () => {
@@ -120,9 +134,10 @@ const CanteenList: React.FC = () => {
         }}
       >
         <BackHeader path="/dashboard" title="Canteens Management" />
-        <CanteenOrdersDisplay/>
+        {countsData?.length !== 0 && <CanteenOrdersDisplay data={countsData}/>}
+        {/* <CanteenOrdersDisplay /> */}
         {loading ? (
-          <Loader/>
+          <Loader />
         ) : canteens.length === 0 ? (
           <EmptyState />
         ) : (
@@ -141,15 +156,17 @@ const CanteenList: React.FC = () => {
                   backgroundColor: "#fafafa",
                   cursor: "pointer",
                 }}
-                styles={{body: {
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "100%",
-                  width: "100%",
-                  padding: "30px",
-                }}}
+                styles={{
+                  body: {
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    width: "100%",
+                    padding: "30px",
+                  },
+                }}
                 onClick={handleAddCanteen}
               >
                 <div style={{ marginBottom: "8px" }}>
@@ -189,7 +206,9 @@ const CanteenList: React.FC = () => {
                         {/* <h5 style={{ marginBottom: 0, marginTop: 0 }}>
                           Code: {canteen.code}
                         </h5> */}
-                        <Button onClick={() => handleCanteenClick(canteen.id)}>Go to Canteen Dashboard</Button>
+                        <Button onClick={() => handleCanteenClick(canteen.id, canteen?.name?.charAt(0).toUpperCase() + canteen.name.slice(1))}>
+                          Go to Canteen Dashboard
+                        </Button>
                       </>
                     }
                     style={{ textAlign: "center", fontSize: "23px" }}

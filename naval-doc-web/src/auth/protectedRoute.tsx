@@ -6,6 +6,8 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ isAuthenticated }) => {
+  console.log(isAuthenticated, "isAuthenticated");
+  
   return isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;
 };
 

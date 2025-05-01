@@ -1,83 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Typography, Spin, Empty, message } from "antd";
-
-const { Text } = Typography;
+import React from "react";
+import { Card, Row, Col, Typography } from "antd";
 
 interface Canteen {
-  id: string;
-  name: string;
-  ordersCount: number;
+  id?: string;
+  canteenName: string;
+  totalOrders: number;
+  totalAmount: number;
 }
 
-const API_URL = "/api/canteens";
+interface CanteenOrdersDisplayProps {
+  data: Canteen[];
+}
 
-const CanteenOrdersDisplay: React.FC = () => {
-  const [canteens, setCanteens] = useState<Canteen[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
-
-  const demoCanteens: Canteen[] = [
-    { id: "1", name: "Annapurna Canteen", ordersCount: 127 },
-    { id: "2", name: "Dockyard Canteen", ordersCount: 85 },
-    { id: "3", name: "Science Wing", ordersCount: 104 },
-  ];
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    const fetchCanteens = async () => {
-      try {
-        setLoading(true);
-
-        // UNCOMMENT THIS CODE AND REMOVE THE DEMO DATA IN PRODUCTION
-        // const response = await fetch(API_URL);
-        // if (!response.ok) {
-        //   throw new Error(`Error: ${response.status}`);
-        // }
-        // const data = await response.json();
-        // setCanteens(data);
-
-        // For demo purposes only - simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setCanteens(demoCanteens);
-      } catch (error) {
-        console.error("Error fetching canteen data:", error);
-        setError("Failed to load canteen data. Please try again later.");
-        message.error("Failed to load canteen data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCanteens();
-  }, []);
-
+const CanteenOrdersDisplay: React.FC<CanteenOrdersDisplayProps> = ({ data }) => {
   const containerStyle = {
     padding: "24px",
     paddingLeft: 0,
     paddingTop: 0,
-  };
-
-  const loadingContainerStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "300px",
-  };
-
-  const emptyContainerStyle = {
-    textAlign: "center" as const,
-    padding: "50px 20px",
   };
 
   const cardStyle = {
@@ -93,11 +32,6 @@ const CanteenOrdersDisplay: React.FC = () => {
     transition: "all 0.3s ease",
     border: "1px solid rgba(0, 0, 0, 0.06)",
     minHeight: "180px",
-  };
-
-  const cardHoverStyle = {
-    transform: "translateY(-4px)",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.12)",
   };
 
   const nameStyle = {
@@ -123,7 +57,6 @@ const CanteenOrdersDisplay: React.FC = () => {
     fontWeight: 700,
     color: "#f5222d",
     lineHeight: 1.2,
-    transition: "transform 0.3s ease",
   };
 
   const getResponsiveColSpan = (width: number) => {
@@ -152,82 +85,35 @@ const CanteenOrdersDisplay: React.FC = () => {
     };
   };
 
-  const handleMouseEnter = (id: string) => {
-    setHoveredCard(id);
-  };
+  const colSpan = getResponsiveColSpan(window.innerWidth);
 
-  const handleMouseLeave = () => {
-    setHoveredCard(null);
-  };
-
-  const getCardStyles = (id: string) => {
-    return {
-      ...cardStyle,
-      ...(hoveredCard === id ? cardHoverStyle : {}),
-      ...getCardBackground(id),
-    };
-  };
-
-  const getCountStyle = (id: string) => {
-    return {
-      ...ordersCountStyle,
-      transform: hoveredCard === id ? "scale(1.1)" : "scale(1)",
-    };
-  };
-
-  const renderContent = () => {
-    // if (loading) {
-    //   return (
-    //     <div style={loadingContainerStyle}>
-    //       <Spin size="large" />
-    //     </div>
-    //   );
-    // }
-
-    if (error) {
-      return (
-        <div style={emptyContainerStyle}>
-          <Empty description={error} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        </div>
-      );
-    }
-
-    // if (canteens.length === 0) {
-    //   return (
-    //     <div style={emptyContainerStyle}>
-    //       <Empty description="No canteens found" />
-    //     </div>
-    //   );
-    // }
-
-    const colSpan = getResponsiveColSpan(windowWidth);
-
-    return (
+  return (
+    <div style={containerStyle}>
       <Row gutter={[24, 24]}>
-        {canteens.map((canteen) => (
-          <Col key={canteen.id} {...colSpan}>
+        {data.map((canteen, index) => (
+          <Col key={canteen.id || index} {...colSpan}>
             <Card
-              style={getCardStyles(canteen.id)}
+              style={{ ...cardStyle, ...getCardBackground(index?.toString()) }}
               hoverable
-              styles={{ body: { padding: "0px" } }}
-              onMouseEnter={() => handleMouseEnter(canteen.id)}
-              onMouseLeave={handleMouseLeave}
             >
-              <Text style={nameStyle}>{canteen.name}</Text>
+              <Typography.Text style={nameStyle}>
+                {canteen?.canteenName}
+              </Typography.Text>
               <div>
-                <div style={ordersLabelStyle}>orders count</div>
-                <div style={getCountStyle(canteen.id)}>
-                  {canteen.ordersCount}
-                </div>
+                <Typography.Text style={ordersLabelStyle}>
+                  orders count
+                </Typography.Text>
+                <Typography.Text style={ordersCountStyle}>
+                  {canteen.totalOrders}
+                </Typography.Text>
               </div>
             </Card>
           </Col>
         ))}
       </Row>
-    );
-  };
-
-  return <div style={containerStyle}>{renderContent()}</div>;
+    </div>
+  );
 };
 
 export default CanteenOrdersDisplay;
+
