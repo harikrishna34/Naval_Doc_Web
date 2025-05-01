@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import WorldtekLogo from "../components/common/worldTekLogo";
 import { languageTexts } from "../utils/data";
+import { toastError, toastSuccess } from "../components/common/toasterMessage";
 type Language = "en" | "te";
 
 const LoginScreen: React.FC = () => {
@@ -172,18 +173,14 @@ const LoginScreen: React.FC = () => {
           response.data.message === "OTP verified successfully"
         ) {
           const token = response?.data?.token;
-
           // Save token to localStorage
           localStorage.setItem("Token", token);
-
-          // Use setTimeout to ensure token is saved before navigation
+          toastSuccess("Login successful! Welcome back.");
           setTimeout(() => {
             navigate("/dashboard");
-          }, 100);
-
-          message.success("Login successful!");
+          }, 1000); // Slightly longer timeout to ensure the message is visible
         } else {
-          message.error("Invalid OTP or verification failed.");
+          toastError("Invalid OTP or verification failed.");
           form.setFields([
             {
               name: "otp",
@@ -192,8 +189,7 @@ const LoginScreen: React.FC = () => {
           ]);
         }
       } catch (error) {
-        console.error("Error verifying OTP:", error);
-        message.error("Verification failed. Try again.");
+        toastError("Verification failed. Try again.");
         form.setFields([
           {
             name: "otp",
@@ -204,7 +200,6 @@ const LoginScreen: React.FC = () => {
         setLoading(false);
       }
     } catch (err) {
-      // Form validation error
       console.log("Validation failed:", err);
     }
   };

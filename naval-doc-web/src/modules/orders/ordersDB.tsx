@@ -5,6 +5,7 @@ import {
   ShoppingCartOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 import BackHeader from "../../components/common/backHeader";
 import { useParams } from "react-router-dom";
@@ -17,8 +18,6 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ icon, value, title }) => {
-  
-
   return (
     <Card
       style={{
@@ -84,6 +83,19 @@ const OrdersDashboard: React.FC = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [countsData, setCountsData] = React.useState<any>({});
+
+  useEffect(() => {
+    adminDashboardService
+      .getDashboardMainCounts()
+      .then((response) => {
+        setCountsData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -109,45 +121,59 @@ const OrdersDashboard: React.FC = () => {
       setLoading(false);
     }
   };
+
   return (
     <div style={{ padding: "20px", paddingTop: "2px" }}>
       <BackHeader
-        path={`/canteens-list/canteen-dashboard/${1}`}
-        title="Orders Dashboard"
+        // path={`/canteens-list/canteen-dashboard/${1}`}
+        path={
+          route?.canteenName && route?.canteenId
+            ? `/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}`
+            : `/dashboard`
+        }
+        title={
+          route?.canteenName
+            ? `Orders Dashboard  |  ${route.canteenName}`
+            : "Orders Dashboard"
+        }
         styles={{ marginBottom: "16px" }}
       />
-      <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12} md={6}>
+      <Row gutter={[17, 17]}>
+        <Col xs={24} sm={12} md={5} lg={4}>
           <StatCard
             icon={<DollarCircleOutlined />}
-            value="₹ 10,000"
+            // value="₹ 10,000"
+            value={`₹ ${countsData?.totalRevenue || 0}`}
             title="Total Revenue"
           />
         </Col>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={5} lg={4}>
           <StatCard
             icon={<ShoppingCartOutlined />}
-            value={orders?.length > 0 ? orders?.length : 0}
+            value={`${countsData?.totalOrders || 0}`}
             title="Total Orders"
           />
         </Col>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={5} lg={4}>
           <StatCard
             icon={<CheckCircleOutlined />}
-            value="940"
+            value={`${countsData?.totalDeliveries || 0}`}
             title="Total Delivered"
           />
         </Col>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={5} lg={4}>
           <StatCard
             icon={<CloseCircleOutlined />}
-            value="60"
+            value={`${countsData?.totalCancelled || 0}`}
             title="Total Canceled"
           />
         </Col>
+        <Col xs={24} sm={12} md={5} lg={4}>
+          <StatCard icon={<BankOutlined />} value="3" title="Total Canteens" />
+        </Col>
       </Row>
 
-      <Row style={{ marginTop: "30px" }}>
+      <Row style={{ marginTop: "35px" }}>
         <Col span={24}>
           <Button
             type="default"

@@ -34,6 +34,7 @@ import snacksImage from "../../assets/images/menu_snacks.jpg";
 import BackHeader from "../../components/common/backHeader";
 import Loader from "../../components/common/loader";
 import { useParams } from "react-router-dom";
+import { toastSuccess } from "../../components/common/toasterMessage";
 
 const { Paragraph, Text } = Typography;
 
@@ -50,8 +51,6 @@ const MenuList: React.FC = () => {
     []
   );
   const route = useParams();
-  console.log(route,"menu--route");
-  
 
   useEffect(() => {
     fetchMenus();
@@ -71,19 +70,12 @@ const MenuList: React.FC = () => {
   const fetchMenus = async () => {
     try {
       setLoading(true);
-      let response;
-      if (route?.canteenId) {
-        console.log("canteenId is there");
-
-        response = await adminDashboardService.getTotalMenus(
-          parseInt(route?.canteenId)
-        );
-      } else {
-        response = await menuService.getAllMenus();
-      }
-
-      // const response = await menuService.getAllMenus();
-      if (response && response?.data) {
+      
+      const response = route?.canteenId
+        ? await adminDashboardService.getTotalMenus(Number(route.canteenId))
+        : await menuService.getAllMenus();
+  
+      if (response?.data) {
         setMenus(response.data);
       }
     } catch (error) {
@@ -105,7 +97,7 @@ const MenuList: React.FC = () => {
   const handleAddMenuSuccess = () => {
     setIsAddModalVisible(false);
     fetchMenus();
-    message.success("Menu added successfully");
+    toastSuccess("Menu Added Successfully!!");
   };
 
   const handleViewMenu = (menu: Menu) => {
@@ -145,7 +137,7 @@ const MenuList: React.FC = () => {
     setIsEditOpen(false);
     setSelectedMenu(null);
     fetchMenus();
-    message.success("Menu updated successfully");
+    toastSuccess("Menu Updated Successfully!!");
   };
 
   const formatDate = (timestamp: number) => {
@@ -163,8 +155,11 @@ const MenuList: React.FC = () => {
         }}
       >
         <BackHeader
-          // path="/dashboard"
-          path={(route?.canteenName && route?.canteenId ) ? `/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}` :   `/dashboard`}
+          path={
+            route?.canteenName && route?.canteenId
+              ? `/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}`
+              : `/dashboard`
+          }
           title={
             route?.canteenName
               ? `Menu Management  |  ${route.canteenName}`
@@ -252,10 +247,9 @@ const MenuList: React.FC = () => {
                 <div style={{ textAlign: "center" }}>
                   <ClockCircleOutlined style={{ marginRight: "8px" }} />
                   <Text type="secondary" style={{ fontWeight: "700" }}>
-                    {!route.canteenId &&
-                      menu.menuConfiguration &&
-                      menu.menuConfiguration.name}
-                    {route?.canteenId && `${menu?.name}`}
+                    {route?.canteenId
+                      ? menu?.menuConfiguration?.name
+                      : menu?.name}
                   </Text>
                   <Tag color="blue" style={{ marginLeft: "10px" }}>
                     {menu.menuItems ? menu.menuItems.length : 0} items
@@ -279,7 +273,6 @@ const MenuList: React.FC = () => {
                               menu.endTime
                             )}`}
 
-                        {/* {formatDate(menu.startTime)} - {formatDate(menu.endTime)} */}
                       </Text>
                     </div>
                   </Space>
@@ -363,6 +356,7 @@ const MenuList: React.FC = () => {
           onClose={() => setIsConfigModalOpen(false)}
           onSuccess={() => {
             setIsConfigModalOpen(false);
+            toastSuccess("Menu Configuration Updated Successfully!!");
           }}
         />
       )}

@@ -30,7 +30,7 @@ const CanteenAdminDB = () => {
         `/canteens-list/canteen-dashboard/${route?.canteenId}/users-list`
       );
     } else if (cardName === "Orders") {
-      navigate(`/canteens-list/canteen-dashboard/${route?.canteenId}/orders`);
+      navigate(`/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}/orders`);
     }
   };
 

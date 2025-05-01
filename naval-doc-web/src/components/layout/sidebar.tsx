@@ -134,8 +134,6 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
               alignItems: "center",
               justifyContent: "center",
               marginBottom: "20px",
-
-              
             }}
           />
         </div>
@@ -147,7 +145,6 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
             className="custom-menu"
             style={{
               background: "transparent",
-              paddingTop: "25px",
               paddingLeft: "5px",
               paddingRight: "5px",
               textAlign: "center",

@@ -24,8 +24,6 @@ const SuperAdminDashboard: React.FC = () => {
         console.log(error);
       });
   },[])
-
-  console.log(countsData,"countsData");
   
 
   const handleCardClick = (cardName: string) => {

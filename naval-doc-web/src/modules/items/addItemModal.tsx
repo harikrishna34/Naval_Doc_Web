@@ -17,6 +17,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { itemService } from "../../auth/apiService";
 import dayjs, { Dayjs } from "dayjs";
 import Loader from "../../components/common/loader";
+import { toastError, toastSuccess } from "../../components/common/toasterMessage";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -72,48 +73,16 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
         formData.append("image", fileList[0].originFileObj);
       }
 
-      const response = await itemService.createItem(formData);
-
-      message.success("Item added successfully!");
+      await itemService.createItem(formData);
+      toastSuccess("Item added successfully!");
       form.resetFields();
       setFileList([]);
       onSubmit(values);
-      onSuccess(); // Refresh the item list
-      handleCancel(); // Close modal
+      onSuccess(); 
+      handleCancel(); 
     } catch (error: any) {
-      console.error("Failed to add item:", error);
-
-      // Extract detailed error information
-      let errorMessage = "Failed to add item. Please try again.";
-
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        const status = error.response.status;
-        const data = error.response.data;
-
-        if (data && data.message) {
-          errorMessage = `Error ${status}: ${data.message}`;
-        } else if (data && data.error) {
-          errorMessage = `Error ${status}: ${data.error}`;
-        } else {
-          errorMessage = `Error ${status}: Server error`;
-        }
-
-        setErrorDetails(errorMessage);
-      } else if (error.request) {
-        // The request was made but no response was received
-        errorMessage =
-          "Network error: No response from server. Please check your connection.";
-        setErrorDetails(errorMessage);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        errorMessage = `Error: ${error.message || "Unknown error occurred"}`;
-        setErrorDetails(errorMessage);
-      }
-
-      message.error(errorMessage);
-      // Don't close the modal on error so user can fix the issue
+      toastError("Failed to add item. Please try again.");
+      console.error("Error adding item:", error);
     } finally {
       setLoading(false);
     }

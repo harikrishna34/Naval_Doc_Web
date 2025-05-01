@@ -18,6 +18,7 @@ import { menuConfigService } from "../../auth/apiService";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Loader from "../../components/common/loader";
+import { toastError } from "../../components/common/toasterMessage";
 
 dayjs.extend(customParseFormat);
 
@@ -97,6 +98,7 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
       });
       onSuccess();
     } catch (err) {
+      toastError("Failed to create menu configuration!!");
       setError("Failed to create menu configuration. Please try again.");
     } finally {
       setLoading(false);

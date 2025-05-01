@@ -26,6 +26,7 @@ import {
 } from "../../auth/apiService";
 import { CreateMenuPayload, Item, MenuConfiguration } from "./types";
 import Loader from "../../components/common/loader";
+import { toastError } from "../../components/common/toasterMessage";
 
 interface AddMenuModalProps {
   visible: boolean;
@@ -128,18 +129,18 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
       const selectedConfig = menuConfigurations.find(
         (config) => config.id === selectedConfigId
       );
-      if (
-        selectedConfig?.name &&
-        existingMenuTypes.includes(selectedConfig?.name)
-      ) {
-        await Swal.fire({
-          icon: "error",
-          title: "Menu Type Exists",
-          text: `A menu with the type "${selectedConfig.name}" already exists. Please choose a different menu type.`,
-          confirmButtonColor: "#d33",
-        });
-        return;
-      }
+      // if (
+      //   selectedConfig?.name &&
+      //   existingMenuTypes.includes(selectedConfig?.name)
+      // ) {
+      //   await Swal.fire({
+      //     icon: "error",
+      //     title: "Menu Type Exists",
+      //     text: `A menu with the type "${selectedConfig.name}" already exists. Please choose a different menu type.`,
+      //     confirmButtonColor: "#d33",
+      //   });
+      //   return;
+      // }
 
       const menuItems = selectedItems.map((itemId) => {
         return {
@@ -167,10 +168,10 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
 
       setSubmitting(true);
       await menuService.createMenuWithItems(menuData);
-      message.success("Menu created successfully");
       onSuccess();
       resetForm();
     } catch (error) {
+      toastError("Failed to create menu");
       console.error("Error creating menu:", error);
     } finally {
       setSubmitting(false);

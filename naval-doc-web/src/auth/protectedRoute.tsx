@@ -1,13 +1,8 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
 
-interface ProtectedRouteProps {
-  isAuthenticated: boolean;
-}
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ isAuthenticated }) => {
-  console.log(isAuthenticated, "isAuthenticated");
-  
+import { Navigate, Outlet } from "react-router-dom";
+
+const ProtectedRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   return isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;
 };
 

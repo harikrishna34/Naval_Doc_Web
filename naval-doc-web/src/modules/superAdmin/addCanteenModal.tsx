@@ -16,6 +16,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { canteenService } from "../../auth/apiService";
 import dayjs, { Dayjs } from "dayjs";
 import Loader from "../../components/common/loader";
+import { toastError, toastSuccess } from "../../components/common/toasterMessage";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -58,16 +59,15 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
         formData.append("canteenImage", fileList[0].originFileObj);
       }
 
-      const res = await canteenService.createCanteen(formData);
-      console.log(res, "ressss");
-
-      message.success("Canteen added successfully!");
+      await canteenService.createCanteen(formData);
+      toastSuccess("Canteen Added Successfully!!");
       form.resetFields();
       setFileList([]);
       onSubmit(values);
       onSuccess();
       onCancel();
     } catch (error) {
+      toastError("Failed to add canteen!!");
       console.error("Failed to add canteen:", error);
     } finally {
       setLoading(false);

@@ -15,7 +15,6 @@ import { canteenService, adminDashboardService } from "../../auth/apiService";
 import BackHeader from "../../components/common/backHeader";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/common/loader";
-import { toast } from "react-toastify";
 import CanteenOrdersDisplay from "../admin/canteenOrders";
 
 const { Content } = Layout;
@@ -34,8 +33,6 @@ const CanteenList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const [countsData, setCountsData] = React.useState<any>([]);
-  console.log(countsData, "countsData");
-  
 
   useEffect(() => {
     fetchCanteens();
