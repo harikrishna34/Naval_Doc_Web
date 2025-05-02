@@ -154,8 +154,8 @@ const StyledHeader: React.FC<HeaderProps> = ({
         content={
           <Menu style={{ width: 200 }}>
             <Menu.Item
-              key="help-support"
-              onClick={() => handleNavigation("/support")}
+              key="help"
+              onClick={() => handleNavigation("/contact-support")}
             >
               Contact Support
             </Menu.Item>
@@ -163,7 +163,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
               key="help-terms"
               onClick={() => handleNavigation("/terms")}
             >
-              WhatsApp and Support
+              WhatsApp Support
             </Menu.Item>
           </Menu>
         }
