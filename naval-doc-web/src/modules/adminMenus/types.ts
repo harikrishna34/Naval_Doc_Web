@@ -40,6 +40,8 @@ export interface Item {
     description: string;
     menuConfigurationId: number;
     canteenId: number;
+    startTime?:number;
+    endTime?:number;
     defaultStartTime: number;
     defaultEndTime: number;
     status: string;
