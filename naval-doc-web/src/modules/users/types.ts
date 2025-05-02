@@ -29,17 +29,6 @@ export const dummyUsers: User[] = [
   },
   {
     id: uuidv4(),
-    name: 'Jane Smith',
-    mobile: '987-654-3210',
-    email: 'jane.smith@example.com',
-    photoUrl: 'https://i.pravatar.cc/300?img=2',
-    canteenName: 'Tech Canteen',
-    canteenCode: 'TC002',
-    aadhaarCard: '2345-6789-0123',
-    addedBy: 'Krishna'
-  },
-  {
-    id: uuidv4(),
     name: 'Michael Johnson',
     mobile: '456-789-0123',
     email: 'michael.johnson@example.com',
@@ -51,17 +40,6 @@ export const dummyUsers: User[] = [
   },
   {
     id: uuidv4(),
-    name: 'Emily Davis',
-    mobile: '789-012-3456',
-    email: 'emily.davis@example.com',
-    photoUrl: 'https://i.pravatar.cc/300?img=4',
-    canteenName: 'South Canteen',
-    canteenCode: 'SC004',
-    aadhaarCard: '4567-8901-2345',
-    addedBy: 'Krishna'
-  },
-  {
-    id: uuidv4(),
     name: 'Robert Wilson',
     mobile: '234-567-8901',
     email: 'robert.wilson@example.com',
@@ -69,28 +47,6 @@ export const dummyUsers: User[] = [
     canteenName: 'East Canteen',
     canteenCode: 'EC005',
     aadhaarCard: '5678-9012-3456',
-    addedBy: 'Krishna'
-  },
-  {
-    id: uuidv4(),
-    name: 'Sarah Brown',
-    mobile: '567-890-1234',
-    email: 'sarah.brown@example.com',
-    photoUrl: 'https://i.pravatar.cc/300?img=6',
-    canteenName: 'West Canteen',
-    canteenCode: 'WC006',
-    aadhaarCard: '6789-0123-4567',
-    addedBy: 'Krishna'
-  },
-  {
-    id: uuidv4(),
-    name: 'David Miller',
-    mobile: '890-123-4567',
-    email: 'david.miller@example.com',
-    photoUrl: 'https://i.pravatar.cc/300?img=7',
-    canteenName: 'Central Canteen',
-    canteenCode: 'CC007',
-    aadhaarCard: '7890-1234-5678',
     addedBy: 'Krishna'
   },
   {
