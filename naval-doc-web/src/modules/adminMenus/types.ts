@@ -1,9 +1,10 @@
 // Item interface
 export interface Item {
+    type: string;
     id: number;
     name: string;
     description: string;
-    price: number;
+    pricing: any;
     image: string;
     itemType: string;
     status: string;
@@ -15,8 +16,8 @@ export interface Item {
   export interface MenuConfiguration {
     id: number;
     name: string;
-    defaultStartTime: number;
-    defaultEndTime: number;
+    defaultStartTime: number | null;
+    defaultEndTime: number | null;
     status: string;
     createdById: number | null;
     updatedById: number | null;
@@ -39,8 +40,10 @@ export interface Item {
     description: string;
     menuConfigurationId: number;
     canteenId: number;
-    startTime: number;
-    endTime: number;
+    startTime?:number;
+    endTime?:number;
+    defaultStartTime: number;
+    defaultEndTime: number;
     status: string;
     createdById?: number | null;
     updatedById?: number | null;
@@ -48,9 +51,11 @@ export interface Item {
     updatedAt?: number;
     menuItems: MenuItem[];
     menuConfiguration?: MenuConfiguration;
+    menuMenuConfiguration?: MenuConfiguration;
+    canteenMenu:any
   }
   
-  // Create menu payload interface
+  // Create menu payload: interface
   export interface CreateMenuPayload {
     menuConfigurationId: number;
     canteenId: number;

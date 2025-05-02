@@ -7,13 +7,15 @@ import {
   Button,
   Layout,
   Empty,
-  Spin,
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import AddCanteenModal from "./addCanteenModal";
-import { canteenService } from "../../auth/apiService";
+import { canteenService, adminDashboardService } from "../../auth/apiService";
 import BackHeader from "../../components/common/backHeader";
+import { useNavigate } from "react-router-dom";
+import Loader from "../../components/common/loader";
+import CanteenOrdersDisplay from "../admin/canteenOrders";
 
 const { Content } = Layout;
 
@@ -26,24 +28,33 @@ interface CanteenProps {
 }
 
 const CanteenList: React.FC = () => {
-  // State variables
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [canteens, setCanteens] = useState<CanteenProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
+  const [countsData, setCountsData] = React.useState<any>([]);
 
-  // Fetch canteens on component mount
   useEffect(() => {
     fetchCanteens();
   }, []);
 
-  // Function to fetch canteens from API
+  useEffect(() => {
+    adminDashboardService
+      .getOrdersByCanteen()
+      .then((response) => {
+        setCountsData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const fetchCanteens = async () => {
     try {
       setLoading(true);
       const response = await canteenService.getAllCanteens();
 
       if (response && response.data) {
-        // Transform API data to match our component's expected format
         const formattedCanteens = response.data.map((canteen: any) => ({
           id: canteen.id,
           name: canteen.canteenName,
@@ -65,9 +76,11 @@ const CanteenList: React.FC = () => {
     }
   };
 
-  const handleCanteenClick = (canteenId: number) => {
+  const handleCanteenClick = (canteenId: number, canteenName:string) => {
     console.log(`Navigating to canteen with ID: ${canteenId}`);
-    // Replace with your actual navigation logic
+    console.log(canteenId, "canteeId", canteenName, "canteenName");
+    navigate(`/canteens-list/canteen-dashboard/${canteenId}/${canteenName}`);
+    // /canteens-list/canteen-dashboard/:canteenId/:canteenName/menu
   };
 
   const handleAddCanteen = () => {
@@ -80,10 +93,8 @@ const CanteenList: React.FC = () => {
 
   const handleSubmitCanteen = (values: any) => {
     console.log("Submitted values:", values);
-    // No need to handle API call here as it's now handled inside the modal component
   };
 
-  // Empty state component
   const EmptyState = () => (
     <div
       style={{
@@ -120,22 +131,15 @@ const CanteenList: React.FC = () => {
         }}
       >
         <BackHeader path="/dashboard" title="Canteens Management" />
+        {countsData?.length !== 0 && <CanteenOrdersDisplay data={countsData}/>}
+        {/* <CanteenOrdersDisplay /> */}
         {loading ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "200px",
-            }}
-          >
-            <Spin size="large" />
-          </div>
+          <Loader />
         ) : canteens.length === 0 ? (
           <EmptyState />
         ) : (
           <Row gutter={[16, 16]}>
-            <Col xs={24} sm={12} md={8} lg={6}>
+            <Col xs={12} sm={8} md={6} lg={5}>
               <Card
                 hoverable
                 style={{
@@ -149,14 +153,16 @@ const CanteenList: React.FC = () => {
                   backgroundColor: "#fafafa",
                   cursor: "pointer",
                 }}
-                bodyStyle={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "100%",
-                  width: "100%",
-                  padding: "30px",
+                styles={{
+                  body: {
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    width: "100%",
+                    padding: "30px",
+                  },
                 }}
                 onClick={handleAddCanteen}
               >
@@ -169,7 +175,7 @@ const CanteenList: React.FC = () => {
               </Card>
             </Col>
             {canteens.map((canteen) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={canteen.id}>
+              <Col xs={12} sm={8} md={6} lg={5} key={canteen.id}>
                 <Card
                   hoverable
                   style={{ height: "100%" }}
@@ -183,7 +189,7 @@ const CanteenList: React.FC = () => {
                       }}
                     />
                   }
-                  onClick={() => handleCanteenClick(canteen.id)}
+                  // onClick={() => handleCanteenClick(canteen.id)}
                 >
                   <Card.Meta
                     title={
@@ -194,10 +200,12 @@ const CanteenList: React.FC = () => {
                     }
                     description={
                       <>
-                        <h5 style={{ marginBottom: 0, marginTop: 0 }}>
+                        {/* <h5 style={{ marginBottom: 0, marginTop: 0 }}>
                           Code: {canteen.code}
-                        </h5>
-                        <Button>Go to Canteen Dashboard</Button>
+                        </h5> */}
+                        <Button onClick={() => handleCanteenClick(canteen.id, canteen?.name?.charAt(0).toUpperCase() + canteen.name.slice(1))}>
+                          Go to Canteen Dashboard
+                        </Button>
                       </>
                     }
                     style={{ textAlign: "center", fontSize: "23px" }}
@@ -208,7 +216,6 @@ const CanteenList: React.FC = () => {
           </Row>
         )}
 
-        {/* Add Canteen Modal */}
         <AddCanteenModal
           isOpen={isModalOpen}
           onCancel={handleCancelModal}

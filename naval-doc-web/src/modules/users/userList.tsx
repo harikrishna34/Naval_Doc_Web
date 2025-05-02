@@ -1,147 +1,115 @@
-import { useState } from "react";
-import { Modal, Card, Row, Col } from "antd";
-import UserImage from "./../../assets/images/navy_image.png";
+import React, { useState } from "react";
+import { Row, Col, Modal, message } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import UserCard from "./userCard";
+import AddUserCard from "./addUserCard";
+import UserForm from "./userForm";
+import UserView from "./userView";
+import { User, UserFormData, dummyUsers } from "./types";
+import BackHeader from "../../components/common/backHeader";
+import { useParams } from "react-router-dom";
 
-interface User {
-  id: number;
-  name: string;
-  mobile: string;
-  phone: string;
-  canteenName: string;
-  canteenCode: string;
-  aadharCard: string;
-  addedBy: string;
-  photo: string;
-}
+const { confirm } = Modal;
 
-// Create 10 dummy users
-const users: User[] = Array.from({ length: 10 }, (_, i) => ({
-  id: i,
-  name: `User Name ${i + 1}`,
-  mobile: `987654321${i}`,
-  phone: `012345678${i}`,
-  canteenName: `Canteen ${i + 1}`,
-  canteenCode: `C00${i + 1}`,
-  aadharCard: `XXXX-XXXX-XXXX`,
-  addedBy: `Admin ${i + 1}`,
-  photo: "https://via.placeholder.com/150", // Placeholder image
-}));
+const UsersList: React.FC = () => {
+  const [users, setUsers] = useState<User[]>(dummyUsers);
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isViewVisible, setIsViewVisible] = useState(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [formTitle, setFormTitle] = useState("Add New User");
+  const route = useParams();
 
-function UsersList() {
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const handleCardClick = (user: User) => {
-    setSelectedUser(user);
-    setIsModalVisible(true);
+  const handleAddUser = () => {
+    setCurrentUser(null);
+    setFormTitle("Add New User");
+    setIsFormVisible(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
+  const handleEditUser = (id: string) => {
+    const user = users.find((user) => user.id === id);
+    if (user) {
+      setCurrentUser(user);
+      setFormTitle("Edit User");
+      setIsFormVisible(true);
+    }
   };
 
-  // Split users manually
-  const firstRow = users.slice(0, 4);
-  const secondRow = users.slice(4, 8);
-  const thirdRow = users.slice(8, 10);
+  const handleViewUser = (id: string) => {
+    const user = users.find((user) => user.id === id);
+    if (user) {
+      setCurrentUser(user);
+      setIsViewVisible(true);
+    }
+  };
 
-  const renderRow = (rowUsers: User[]) => (
-    <Row
-      gutter={[16, 16]}
-      justify="center"
-      style={{ marginBottom: 20 }}
-    >
-      {rowUsers.map((user) => (
-        <Col
-          key={user.id}
-          xs={24}
-          sm={12}
-          md={6}
-          lg={6}
-          xl={6}
-          style={{ display: "flex", justifyContent: "center" }}
-        >
-          <Card
-            hoverable
-            onClick={() => handleCardClick(user)}
-            style={{
-              width: 250,
-              textAlign: "center",
-              cursor: "pointer",
-            }}
-            cover={
-              <img
-                alt="user-photo"
-                src={UserImage}
-                style={{
-                  width: "100%",
-                  height: 150,
-                  objectFit: "cover",
-                }}
-              />
-            }
-          >
-            <div style={{ fontWeight: "bold" }}>{user.name}</div>
-            <div style={{ fontSize: 12 }}>{user.mobile}</div>
-            <div
-              style={{
-                color: "#1890ff",
-                marginTop: 5,
-                fontSize: 13,
-                fontWeight: 500,
-              }}
-            >
-              View Details
-            </div>
-          </Card>
-        </Col>
-      ))}
-    </Row>
-  );
+  const handleDeleteUser = (id: string) => {
+    confirm({
+      title: "Are you sure you want to delete this user?",
+      icon: <ExclamationCircleOutlined />,
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        setUsers(users.filter((user) => user.id !== id));
+        message.success("User deleted successfully");
+      },
+    });
+  };
+
+  const handleFormSubmit = (values: UserFormData) => {
+    if (currentUser) {
+      setUsers(
+        users.map((user) =>
+          user.id === currentUser.id ? { ...user, ...values } : user
+        )
+      );
+      message.success("User updated successfully");
+    } else {
+      const newUser = {
+        id: crypto.randomUUID(),
+        ...values,
+      };
+      setUsers([...users, newUser]);
+      message.success("User added successfully");
+    }
+    setIsFormVisible(false);
+  };
 
   return (
-    <div style={{ padding: 20 }}>
-      {renderRow(firstRow)}
-      {renderRow(secondRow)}
-      {renderRow(thirdRow)}
+    <div style={{ padding: "24px", paddingTop:"2px" }}>
+      <BackHeader path={`/canteens-list/canteen-dashboard/${route?.canteenId}`} title="Users List"/>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={12} md={8} lg={4} xl={4}>
+          <AddUserCard onClick={handleAddUser} />
+        </Col>
+        {users.map((user) => (
+          <Col xs={24} sm={12} md={8} lg={4} xl={4} key={user.id}>
+            <UserCard
+              user={user}
+              onEdit={handleEditUser}
+              onView={handleViewUser}
+              onDelete={handleDeleteUser}
+            />
+          </Col>
+        ))}
+      </Row>
 
-      <Modal
-        open={isModalVisible}
-        onCancel={handleCloseModal}
-        footer={null}
-        centered
-        width={400}
-      >
-        {selectedUser && (
-          <Card
-            style={{ textAlign: "center", border: "none", boxShadow: "none" }}
-            cover={
-              <img
-                alt="Selected User"
-                src={UserImage}
-                style={{
-                  width: "100%",
-                  height: 200,
-                  objectFit: "cover",
-                  borderRadius: 8,
-                }}
-              />
-            }
-          >
-            <div style={{ marginTop: 10, textAlign: "left" }}>
-              <p><strong>User Name:</strong> {selectedUser.name}</p>
-              <p><strong>Mobile Number:</strong> {selectedUser.mobile}</p>
-              <p><strong>Phone Number:</strong> {selectedUser.phone}</p>
-              <p><strong>Canteen Name:</strong> {selectedUser.canteenName}</p>
-              <p><strong>Canteen Code:</strong> {selectedUser.canteenCode}</p>
-              <p><strong>Aadhaar Card:</strong> {selectedUser.aadharCard}</p>
-              <p><strong>Added By:</strong> {selectedUser.addedBy}</p>
-            </div>
-          </Card>
-        )}
-      </Modal>
+      <UserForm
+        visible={isFormVisible}
+        onCancel={() => setIsFormVisible(false)}
+        onSubmit={handleFormSubmit}
+        initialValues={currentUser || undefined}
+        title={formTitle}
+      />
+
+      <UserView
+        visible={isViewVisible}
+        user={currentUser}
+        onClose={() => setIsViewVisible(false)}
+      />
     </div>
   );
-}
+};
 
 export default UsersList;

@@ -1,33 +1,38 @@
-import React, { useEffect, useState } from "react";
 import {
-  Modal,
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  DatePicker,
   Form,
   Input,
-  DatePicker,
-  Select,
-  Checkbox,
   InputNumber,
   message,
-  Button,
-  Spin,
-  Card,
+  Modal,
   Row,
-  Col,
+  Select,
+  Spin,
+  Tag,
   Typography,
 } from "antd";
 import dayjs from "dayjs";
-import { Item, MenuConfiguration, CreateMenuPayload } from "./types";
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import {
+  canteenService,
   itemService,
   menuConfigService,
   menuService,
-  canteenService,
 } from "../../auth/apiService";
+import { CreateMenuPayload, Item, MenuConfiguration } from "./types";
+import Loader from "../../components/common/loader";
+import { toastError } from "../../components/common/toasterMessage";
 
 interface AddMenuModalProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
+  existingMenuTypes: any;
 }
 
 const { Option } = Select;
@@ -38,24 +43,25 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   visible,
   onCancel,
   onSuccess,
+  existingMenuTypes,
 }) => {
   const [form] = Form.useForm();
   const [items, setItems] = useState<Item[]>([]);
   const [menuConfigurations, setMenuConfigurations] = useState<
     MenuConfiguration[]
   >([]);
-  const [canteens, setCanteens] = useState<any[]>([]); // Added canteens state
+  const [canteens, setCanteens] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [loadingItems, setLoadingItems] = useState<boolean>(false);
   const [loadingConfigs, setLoadingConfigs] = useState<boolean>(false);
-  const [loadingCanteens, setLoadingCanteens] = useState<boolean>(false); // Added loading state for canteens
+  const [loadingCanteens, setLoadingCanteens] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     if (visible) {
       fetchItems();
       fetchMenuConfigurations();
-      fetchCanteens(); // Added fetch canteens call
+      fetchCanteens();
     }
   }, [visible]);
 
@@ -89,16 +95,12 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     }
   };
 
-  // Added function to fetch canteens
   const fetchCanteens = async () => {
     try {
       setLoadingCanteens(true);
       const response = await canteenService.getAllCanteens();
-      console.log(response, "canteens-res");
-
       if (response && response.data) {
         setCanteens(response.data);
-        // Set default canteen if available
         if (response.data.length > 0) {
           form.setFieldsValue({ canteenId: response.data[0].id });
         }
@@ -123,20 +125,30 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     try {
       await form.validateFields();
       const values = form.getFieldsValue();
+      const selectedConfigId = values?.menuType;
+      const selectedConfig = menuConfigurations.find(
+        (config) => config.id === selectedConfigId
+      );
+      // if (
+      //   selectedConfig?.name &&
+      //   existingMenuTypes.includes(selectedConfig?.name)
+      // ) {
+      //   await Swal.fire({
+      //     icon: "error",
+      //     title: "Menu Type Exists",
+      //     text: `A menu with the type "${selectedConfig.name}" already exists. Please choose a different menu type.`,
+      //     confirmButtonColor: "#d33",
+      //   });
+      //   return;
+      // }
 
-      // Format the items with min and max quantities
       const menuItems = selectedItems.map((itemId) => {
         return {
           itemId,
-          minQuantity: values[`min_${itemId}`] || 1,
+          minQuantity: 1, // Always fixed at 1
           maxQuantity: values[`max_${itemId}`] || 10,
         };
       });
-
-      if (menuItems.length === 0) {
-        message.error("Please select at least one item");
-        return;
-      }
 
       const startDate = values.startDate
         ? dayjs(values.startDate).format("DD-MM-YYYY")
@@ -159,12 +171,13 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
       onSuccess();
       resetForm();
     } catch (error) {
+      toastError("Failed to create menu");
       console.error("Error creating menu:", error);
-      message.error("Failed to create menu");
     } finally {
       setSubmitting(false);
     }
   };
+
   const resetForm = () => {
     form.resetFields();
     setSelectedItems([]);
@@ -173,6 +186,17 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   const handleCancel = () => {
     resetForm();
     onCancel();
+  };
+
+  const getTagColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "veg":
+        return "green";
+      case "non-veg":
+        return "red";
+      default:
+        return "default";
+    }
   };
 
   return (
@@ -194,7 +218,9 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           Submit
         </Button>,
       ]}
-      bodyStyle={{ padding: "24px", maxHeight: "80vh", overflow: "auto" }}
+      styles={{
+        body: { maxHeight: "80vh", overflow: "auto", padding: "24px" },
+      }}
     >
       <Form
         form={form}
@@ -204,8 +230,10 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           startDate: dayjs(),
           endDate: dayjs().add(1, "day"),
         }}
+        validateMessages={{
+          required: "${label} is required!",
+        }}
       >
-        {/* Description and Canteen Selection in same row */}
         <Row gutter={16}>
           <Col span={16}>
             <Form.Item
@@ -239,7 +267,6 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           </Col>
         </Row>
 
-        {/* Date fields and Meal Type in one row */}
         <Row gutter={16}>
           <Col span={8}>
             <Form.Item
@@ -247,7 +274,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
               label="Start Date"
               rules={[{ required: true, message: "Please select start date" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -256,7 +283,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
               label="End Date"
               rules={[{ required: true, message: "Please select end date" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -284,6 +311,13 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           <Text strong style={{ fontSize: "16px" }}>
             Select Items
           </Text>
+          {selectedItems.length === 0 && (
+            <div
+              style={{ color: "#ff4d4f", fontSize: "14px", marginTop: "4px" }}
+            >
+              Please select at least one item
+            </div>
+          )}
           {loadingItems ? (
             <div
               style={{
@@ -295,89 +329,135 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
               <Spin />
             </div>
           ) : (
-            // <div style={{ maxHeight: "400px", overflow: "auto", marginTop: "16px" }}>
             <div style={{ maxHeight: "400px", marginTop: "16px" }}>
               <Row gutter={[16, 16]}>
-                {items.map((item) => (
-                  <Col span={12} key={item.id}>
-                    <Card
-                      size="small"
-                      style={{
-                        borderColor: selectedItems.includes(item.id)
-                          ? "#1890ff"
-                          : "#f0f0f0",
-                        backgroundColor: selectedItems.includes(item.id)
-                          ? "#e6f7ff"
-                          : "#fff",
-                      }}
-                      bodyStyle={{ padding: "16px" }}
-                    >
-                      <div
-                        style={{ display: "flex", alignItems: "flex-start" }}
+                {items.map((item) => {
+                  return (
+                    <Col span={12} key={item.id}>
+                      <Card
+                        size="small"
+                        style={{
+                          borderColor: selectedItems.includes(item.id)
+                            ? "#1890ff"
+                            : "#f0f0f0",
+                          backgroundColor: selectedItems.includes(item.id)
+                            ? "#e6f7ff"
+                            : "#fff",
+                        }}
+                        styles={{ body: { padding: "16px" } }}
                       >
-                        <Checkbox
-                          checked={selectedItems.includes(item.id)}
-                          onChange={(e) =>
-                            handleItemSelect(item.id, e.target.checked)
-                          }
-                          style={{ marginTop: "4px" }}
-                        />
-                        <div style={{ marginLeft: "8px", flex: 1 }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <Text strong>{item.name}</Text>
-                            <Text type="secondary">₹{item.price}</Text>
-                          </div>
-                          <Text
-                            type="secondary"
-                            style={{ fontSize: "12px", marginTop: "4px" }}
-                          >
-                            {item.description}
-                          </Text>
+                        <div
+                          style={{ display: "flex", alignItems: "flex-start" }}
+                        >
+                          <Checkbox
+                            checked={selectedItems.includes(item.id)}
+                            onChange={(e) =>
+                              handleItemSelect(item.id, e.target.checked)
+                            }
+                            style={{ marginTop: "4px" }}
+                          />
+                          <div style={{ marginLeft: "8px", flex: 1 }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Text strong>{item.name}</Text>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <Tag
+                                  color={getTagColor(
+                                    item?.type ? item?.type : ""
+                                  )}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    height: "20px",
+                                    width: "20px",
+                                    padding: 0,
+                                    marginRight: "8px",
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      width: "10px",
+                                      height: "10px",
+                                      borderRadius: "50%",
+                                      backgroundColor:
+                                        item.type.toLowerCase() === "veg"
+                                          ? "green"
+                                          : "red",
+                                      display: "inline-block",
+                                    }}
+                                  />
+                                </Tag>
+                                {item?.pricing && (
+                                  <Text
+                                    type="secondary"
+                                    style={{ fontWeight: "500" }}
+                                  >
+                                    ₹{item?.pricing?.price ?? ""}
+                                  </Text>
+                                )}
+                              </div>
+                            </div>
+                            <Text
+                              type="secondary"
+                              style={{ fontSize: "12px", marginTop: "4px" }}
+                            >
+                              {item.description}
+                            </Text>
 
-                          {selectedItems.includes(item.id) && (
-                            <Row gutter={8} style={{ marginTop: "12px" }}>
-                              <Col span={12}>
-                                <Form.Item
-                                  name={`min_${item.id}`}
-                                  label="Min Quantity"
-                                  initialValue={1}
-                                  style={{ marginBottom: 0 }}
-                                >
-                                  <InputNumber
-                                    min={1}
-                                    style={{ width: "100%" }}
-                                  />
-                                </Form.Item>
-                              </Col>
-                              <Col span={12}>
-                                <Form.Item
-                                  name={`max_${item.id}`}
-                                  label="Max Quantity"
-                                  initialValue={10}
-                                  style={{ marginBottom: 0 }}
-                                >
-                                  <InputNumber
-                                    min={1}
-                                    style={{ width: "100%" }}
-                                  />
-                                </Form.Item>
-                              </Col>
-                            </Row>
-                          )}
+                            {selectedItems.includes(item.id) && (
+                              <Row gutter={8} style={{ marginTop: "12px" }}>
+                                <Col span={12}>
+                                  <Form.Item
+                                    name={`min_${item.id}`}
+                                    label="Min Quantity"
+                                    initialValue={1}
+                                    style={{ marginBottom: 0 }}
+                                  >
+                                    <Input
+                                      disabled
+                                      value="1"
+                                      style={{ width: "100%" }}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                  <Form.Item
+                                    name={`max_${item.id}`}
+                                    label="Max Quantity"
+                                    initialValue={10}
+                                    style={{ marginBottom: 0 }}
+                                  >
+                                    <InputNumber
+                                      min={1}
+                                      precision={0}
+                                      style={{ width: "100%" }}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                              </Row>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </Col>
-                ))}
+                      </Card>
+                    </Col>
+                  );
+                })}
               </Row>
             </div>
           )}
         </div>
+        {submitting && <Loader />}
       </Form>
     </Modal>
   );

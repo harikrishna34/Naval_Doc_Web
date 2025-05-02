@@ -7,10 +7,11 @@ import {
   Button,
   Layout,
   Empty,
-  Spin,
   message,
   Tag,
   Modal,
+  Tooltip,
+  Space,
 } from "antd";
 import {
   PlusOutlined,
@@ -21,6 +22,7 @@ import {
 import AddItemModal from "./addItemModal";
 import { itemService } from "../../auth/apiService";
 import BackHeader from "../../components/common/backHeader";
+import Loader from "../../components/common/loader";
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
@@ -48,7 +50,6 @@ const getImageSrc = (base64String: string) => {
 };
 
 const ItemsList: React.FC = () => {
-  // State variables
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [items, setItems] = useState<ItemProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,22 +58,17 @@ const ItemsList: React.FC = () => {
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<ItemProps | null>(null);
 
-  // Fetch items on component mount
   useEffect(() => {
     fetchItems();
   }, []);
 
-  // Function to fetch items from API
   const fetchItems = async () => {
     try {
       setLoading(true);
       const response = await itemService.getAllItems();
 
       if (response && response.data) {
-        // Transform API data to match our component's expected format
         const formattedItems = response.data.map((item: any) => {
-          // Handle image properly - check if it's a Buffer object
-          console.log(item, "item");
           let image = getImageSrc(item.image);
 
           return {
@@ -114,36 +110,30 @@ const ItemsList: React.FC = () => {
 
   const handleSubmitItem = (values: any) => {
     console.log("Submitted values:", values);
-    // API call handled in modal component
   };
 
-  // Handle view item details
   const handleViewItem = (item: ItemProps) => {
     setSelectedItem(item);
     setViewModalVisible(true);
   };
 
-  // Handle edit item
   const handleEditItem = (item: ItemProps) => {
     setSelectedItem(item);
     setEditModalVisible(true);
   };
 
-  // Handle delete item
   const handleDeleteItem = (item: ItemProps) => {
     setSelectedItem(item);
     setDeleteModalVisible(true);
   };
 
-  // Confirm deletion
   const confirmDelete = async () => {
     if (!selectedItem) return;
 
     try {
-      // Add your delete API call here
       // await itemService.deleteItem(selectedItem.id);
       message.success(`${selectedItem.name} has been deleted successfully`);
-      fetchItems(); // Refresh items list
+      fetchItems();
     } catch (error) {
       console.error("Error deleting item:", error);
       message.error("Failed to delete item. Please try again.");
@@ -153,7 +143,6 @@ const ItemsList: React.FC = () => {
     }
   };
 
-  // Get appropriate tag color based on item type
   const getTagColor = (type: string) => {
     switch (type.toLowerCase()) {
       case "veg":
@@ -169,7 +158,6 @@ const ItemsList: React.FC = () => {
     }
   };
 
-  // Empty state component
   const EmptyState = () => (
     <div
       style={{
@@ -208,16 +196,7 @@ const ItemsList: React.FC = () => {
         <BackHeader path="/dashboard" title="Items Management" />
 
         {loading ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "200px",
-            }}
-          >
-            <Spin size="large" />
-          </div>
+          <Loader/>
         ) : items.length === 0 ? (
           <EmptyState />
         ) : (
@@ -236,7 +215,7 @@ const ItemsList: React.FC = () => {
                   backgroundColor: "#fafafa",
                   cursor: "pointer",
                 }}
-                bodyStyle={{
+                styles={{body:{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -244,7 +223,7 @@ const ItemsList: React.FC = () => {
                   height: "100%",
                   width: "100%",
                   padding: "30px",
-                }}
+                }}}
                 onClick={handleAddItem}
               >
                 <div style={{ marginBottom: "8px" }}>
@@ -322,7 +301,7 @@ const ItemsList: React.FC = () => {
                       </div>
                     }
                     description={
-                      <div style={{ marginTop: 8, marginBottom: 12 }}>
+                      <div style={{ marginTop: 8, marginBottom: 12 , display:"flex", justifyContent:"center", alignItems:"center"}}>
                         <Text strong style={{ fontSize: "16px" }}>
                           {item.currency === "INR" ? "₹" : "$"}
                           {item.price}
@@ -334,57 +313,62 @@ const ItemsList: React.FC = () => {
                     }
                   />
 
-                  {/* Action buttons container */}
-                  <div
-                    style={{
-                      borderTop: "1px solid #f0f0f0",
-                      paddingTop: 12,
-                      marginTop: 8,
-                      display: "flex",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <Button
-                      type="text"
-                      icon={<EyeOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewItem(item);
+                  <Space 
+                      style={{ 
+                        width: '100%', 
+                        justifyContent: 'center', 
+                        marginTop: 17,
+                        borderTop: '1px solid #f0f0f0',
+                        paddingTop: 11
                       }}
-                    />
-                    <Button
-                      type="text"
-                      icon={<EditOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditItem(item);
-                      }}
-                    />
-                    <Button
-                      type="text"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteItem(item);
-                      }}
-                    />
-                  </div>
+                    >
+                      <Tooltip title="View Details">
+                        <Button 
+                          icon={<EyeOutlined />} 
+                          type="text" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewItem(item);
+                          }}
+                          style={{ color: '#1890ff' }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Edit">
+                        <Button 
+                          icon={<EditOutlined />} 
+                          type="text" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditItem(item);
+                          }}
+                          style={{ color: '#52c41a' }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <Button 
+                          icon={<DeleteOutlined />} 
+                          type="text" 
+                          danger 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteItem(item);
+                          }}
+                        />
+                      </Tooltip>
+                    </Space>
                 </Card>
               </Col>
             ))}
           </Row>
         )}
 
-        {/* Add Item Modal */}
         <AddItemModal
           isOpen={isModalOpen}
           onCancel={handleCancelModal}
           onSubmit={handleSubmitItem}
-          onSuccess={fetchItems} // Refresh item list after successful addition
+          onSuccess={fetchItems} 
         />
 
-        {/* View Item Modal */}
         <Modal
           title={`Item Details - ${selectedItem?.name || ""}`}
           visible={viewModalVisible}
@@ -478,20 +462,17 @@ const ItemsList: React.FC = () => {
           )}
         </Modal>
 
-        {/* Edit Item Modal - You would integrate this with your existing edit form */}
         <Modal
           title={`Edit Item - ${selectedItem?.name || ""}`}
           visible={editModalVisible}
           onCancel={() => setEditModalVisible(false)}
-          footer={null} // Form would have its own submit/cancel buttons
+          footer={null}
         >
           {selectedItem && (
             <p>Edit form would go here, populated with selectedItem data</p>
-            // You would integrate your existing form component here
           )}
         </Modal>
 
-        {/* Delete Confirmation Modal */}
         <Modal
           title="Confirm Deletion"
           visible={deleteModalVisible}

@@ -26,7 +26,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
         overflow: 'hidden',
         transition: 'all 0.3s ease'
       }}
-      bodyStyle={{ padding: '12px 16px' }}
+      styles={{body:{ padding: '12px 16px' } }}
       hoverable
     >
       <Row gutter={16} align="middle">

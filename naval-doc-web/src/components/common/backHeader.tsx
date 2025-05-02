@@ -8,9 +8,10 @@ const { Title } = Typography;
 interface BackHeaderProps {
   path: string;
   title: string;
+  styles?: React.CSSProperties;
 }
 
-const BackHeader: React.FC<BackHeaderProps> = ({ path, title }) => {
+const BackHeader: React.FC<BackHeaderProps> = ({ path, title ,styles}) => {
   const navigate = useNavigate();
 
   return (
@@ -19,6 +20,7 @@ const BackHeader: React.FC<BackHeaderProps> = ({ path, title }) => {
         display: 'flex',
         alignItems: 'center',
         marginBottom: '30px',
+        ...styles
       }}
       onClick={() => navigate(path)}
     >

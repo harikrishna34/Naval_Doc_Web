@@ -1,14 +1,12 @@
-import { Layout, Menu, Button, Modal } from "antd";
 import {
+  DatabaseOutlined,
   HomeOutlined,
-  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  ShoppingCartOutlined,
-  DatabaseOutlined,
-  BankOutlined,
+  MoneyCollectOutlined
 } from "@ant-design/icons";
-import { useState, useEffect } from "react";
+import { Button, Layout, Menu, Modal } from "antd";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
@@ -26,6 +24,20 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
 
+  const getSelectedKey = () => {
+    const path = location.pathname;
+    if (path.includes("dashboard")) return "home";
+    if (path.includes("finance-management")) return "finance_management";
+    if (path.includes("inventory-management")) return "inventory_management";
+    return "home";
+  };
+
+  const [selectedKey, setSelectedKey] = useState<string>(getSelectedKey());
+
+  useEffect(() => {
+    setSelectedKey(getSelectedKey());
+  }, [location.pathname]);
+
   const handleLogout = () => {
     setIsModalOpen(true);
   };
@@ -34,7 +46,6 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
     localStorage.removeItem("token");
     localStorage.removeItem("userData");
     setIsModalOpen(false);
-    // Redirect to login page if needed
     navigate("/");
   };
 
@@ -46,19 +57,32 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
     onCollapsedChange(!collapsed);
   };
 
-  const getSelectedKey = () => {
-    const path = location.pathname;
-    if (path.includes("dashboard")) return "home";
-    if (path.includes("view-all-items")) return "view_all_items";
-    if (path.includes("finance-management")) return "finance_management";
-    if (path.includes("inventory-management")) return "inventory_management";
-    return "home";
-  };
+  const menuItems = [
+    {
+      key: "home",
+      label: "Dashboard",
+      icon: HomeOutlined,
+      path: "/dashboard",
+    },
+    
+    {
+      key: "finance_management",
+      label: "Finance ",
+      icon: MoneyCollectOutlined,
+      path: "/finance-management",
+    },
+    {
+      key: "inventory_management",
+      label: "Inventory ",
+      icon: DatabaseOutlined,
+      path: "/inventory-management",
+    },
+  ];
 
   return (
     <Sider
       width={200}
-      collapsedWidth={60}
+      collapsedWidth={70}
       collapsible
       collapsed={collapsed}
       trigger={null}
@@ -84,8 +108,8 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
           style={{
             display: "flex",
             justifyContent: "flex-end",
-            padding: "16px 16px 16px",
-            // borderBottom: "1px solid rgb(194, 98, 98)",
+            padding: "16px 16px 26px",
+            marginBottom: "20px",
             borderBottom: "1px solid rgb(222 222 224 / 21%)",
           }}
         >
@@ -109,6 +133,7 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              marginBottom: "20px",
             }}
           />
         </div>
@@ -120,62 +145,36 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
             className="custom-menu"
             style={{
               background: "transparent",
-              paddingTop: "10px",
-              paddingLeft:"5px",
-              paddingRight:"5px"
+              paddingLeft: "5px",
+              paddingRight: "5px",
+              textAlign: "center",
+              justifyContent: "center",
             }}
             inlineCollapsed={collapsed}
-            selectedKeys={[getSelectedKey()]}
-            items={[
-              {
-                key: "home",
-                icon: (
-                  <HomeOutlined style={{ fontSize: "20px", color: "black" }} />
-                ),
-                label: "Dashboard",
-                style: {
-                  color: "black",
-                },
-                onClick: () => navigate("/dashboard"),
+            selectedKeys={[selectedKey]}
+            onClick={({ key }) => setSelectedKey(key)}
+            items={menuItems.map((item) => ({
+              key: item.key,
+              icon: (
+                <item.icon
+                  style={{
+                    fontSize: "20px",
+                    margin:"0px",
+                    color: selectedKey === item.key ? "black" : "white",
+                    backgroundColor: selectedKey === item.key ? "" : "transparent",
+                    paddingLeft: "0px",
+                    justifyContent: "center",
+                  }}
+                />
+              ),
+              label: item.label,
+              onClick: () => navigate(item.path),
+              style: {
+                color: selectedKey === item.key ? "black" : "white",
+                textAlign:"left",
+                marginBottom:"25px",
               },
-              {
-                key: "view_all_items",
-                icon: (
-                  <ShoppingCartOutlined
-                    style={{ fontSize: "20px", color: "white" }}
-                  />
-                ),
-                style: {
-                  color: "white",
-                },
-                label: "View All Items",
-                onClick: () => navigate("/view-all-items"),
-              },
-              {
-                key: "finance_management",
-                icon: (
-                  <BankOutlined style={{ fontSize: "20px", color: "white" }} />
-                ),
-                style: {
-                  color: "white",
-                },
-                label: "Finance Management",
-                onClick: () => navigate("/finance-management"),
-              },
-              {
-                key: "inventory_management",
-                icon: (
-                  <DatabaseOutlined
-                    style={{ fontSize: "20px", color: "white" }}
-                  />
-                ),
-                label: "Inventory Management",
-                style: {
-                  color: "white",
-                },
-                onClick: () => navigate("/inventory-management"),
-              },
-            ]}
+            }))}
           />
         </div>
       </div>
@@ -185,10 +184,9 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
           padding: "16px",
           textAlign: "center",
           marginTop: "auto",
-          paddingBottom: "24px",
         }}
       >
-        <Button
+        {/* <Button
           type="text"
           icon={<LogoutOutlined style={{ fontSize: "16px" }} />}
           onClick={handleLogout}
@@ -204,7 +202,7 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
           }}
         >
           {!collapsed && "Logout"}
-        </Button>
+        </Button> */}
         <Modal
           title="Confirm Logout"
           open={isModalOpen}

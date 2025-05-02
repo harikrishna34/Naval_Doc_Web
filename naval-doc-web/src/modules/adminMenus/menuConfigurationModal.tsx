@@ -17,6 +17,8 @@ import { ClockCircleOutlined } from "@ant-design/icons";
 import { menuConfigService } from "../../auth/apiService";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import Loader from "../../components/common/loader";
+import { toastError } from "../../components/common/toasterMessage";
 
 dayjs.extend(customParseFormat);
 
@@ -52,12 +54,10 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [configsLoading, setConfigsLoading] = useState<boolean>(true);
 
-  // Format time from string to dayjs object for TimePicker
   const formatTimeToDateObj = (timeString: string) => {
     return dayjs(timeString, "hh:mm A");
   };
 
-  // Format time from TimePicker to string format
   const formatTimeToString = (time: dayjs.Dayjs | null) => {
     if (!time) return "";
     return time.format("hh:mm A");
@@ -98,6 +98,7 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
       });
       onSuccess();
     } catch (err) {
+      toastError("Failed to create menu configuration!!");
       setError("Failed to create menu configuration. Please try again.");
     } finally {
       setLoading(false);
@@ -113,7 +114,7 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
       width={850}
       destroyOnClose
       style={{ top: 64 }}
-      maskStyle={{ backdropFilter: "blur(2px)" }}
+      styles={{mask: {backdropFilter: "blur(2px)"}}}
     >
       <div style={{ marginBottom: "20px" }}>
         <Title level={5} style={{ marginBottom: "12px" }}>
@@ -141,7 +142,7 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
                       borderRadius: "4px",
                       height: "100%",
                     }}
-                    bodyStyle={{ padding: "10px" }}
+                    styles={{body: {padding: "10px"}}}
                   >
                     <div style={{ fontWeight: 500 }}>{config.name}</div>
                     <div
@@ -264,11 +265,12 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
           <Button onClick={onClose} disabled={loading}>
             Cancel
           </Button>
-          <Button type="primary" onClick={handleSubmit} loading={loading}>
+          <Button type="primary" onClick={handleSubmit}>
             Create Configuration
           </Button>
         </div>
       </Form>
+      {loading && <Loader/>}
     </Modal>
   );
 };

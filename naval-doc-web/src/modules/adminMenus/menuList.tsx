@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Empty,
-  Spin,
   message,
   Card,
   Button,
@@ -11,6 +10,7 @@ import {
   Col,
   Space,
   Divider,
+  Tooltip,
 } from "antd";
 import {
   PlusOutlined,
@@ -21,7 +21,7 @@ import {
   ClockCircleOutlined,
   CalendarOutlined,
 } from "@ant-design/icons";
-import { menuService } from "../../auth/apiService";
+import { adminDashboardService, menuService } from "../../auth/apiService";
 import { Menu } from "./types";
 import AddMenuModal from "./addMenuModal";
 import EditMenuModal from "./editMenuModal";
@@ -32,8 +32,11 @@ import lunchImage from "../../assets/images/menu_lunch.avif";
 import tiffinImage from "../../assets/images/menu_tiffin.avif";
 import snacksImage from "../../assets/images/menu_snacks.jpg";
 import BackHeader from "../../components/common/backHeader";
+import Loader from "../../components/common/loader";
+import { useParams } from "react-router-dom";
+import { toastSuccess } from "../../components/common/toasterMessage";
 
-const { Title, Paragraph, Text } = Typography;
+const { Paragraph, Text } = Typography;
 
 const MenuList: React.FC = () => {
   const [menus, setMenus] = useState<Menu[]>([]);
@@ -44,18 +47,35 @@ const MenuList: React.FC = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [existingMenuTypes, setExistingMenuTypes] = useState<string[] | any>(
+    []
+  );
+  const route = useParams();
 
   useEffect(() => {
     fetchMenus();
   }, []);
 
+  useEffect(() => {
+    if (menus && menus.length > 0) {
+      const menuTypes = menus
+        .filter((menu) => menu.menuConfiguration && menu.menuConfiguration.name)
+        .map((menu) => menu?.menuConfiguration?.name);
+      setExistingMenuTypes(menuTypes);
+    } else {
+      setExistingMenuTypes([]);
+    }
+  }, [menus]);
+
   const fetchMenus = async () => {
     try {
       setLoading(true);
-      const response = await menuService.getAllMenus();
-      console.log(response, "menus-res");
 
-      if (response && response?.data) {
+      const response = route?.canteenId
+        ? await adminDashboardService.getTotalMenus(Number(route.canteenId))
+        : await menuService.getAllMenus();
+
+      if (response?.data) {
         setMenus(response.data);
       }
     } catch (error) {
@@ -77,7 +97,7 @@ const MenuList: React.FC = () => {
   const handleAddMenuSuccess = () => {
     setIsAddModalVisible(false);
     fetchMenus();
-    message.success("Menu added successfully");
+    toastSuccess("Menu Added Successfully!!");
   };
 
   const handleViewMenu = (menu: Menu) => {
@@ -117,37 +137,15 @@ const MenuList: React.FC = () => {
     setIsEditOpen(false);
     setSelectedMenu(null);
     fetchMenus();
-    message.success("Menu updated successfully");
+    toastSuccess("Menu Updated Successfully!!");
   };
 
-  // Helper function to format timestamps to readable dates
   const formatDate = (timestamp: number) => {
     return dayjs(timestamp * 1000).format("MMM D, YYYY");
   };
 
-  // Helper function to get the base64 image source
-  const getImageSource = (base64String: string) => {
-    if (!base64String) return "https://via.placeholder.com/300x200";
-    return `data:image/jpeg;base64,${base64String}`;
-  };
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "256px",
-        }}
-      >
-        <Spin size="large" />
-      </div>
-    );
-  }
-
   return (
-    <div style={{ padding: "2px" }}>
+    <div style={{ padding: "10px" }}>
       <div
         style={{
           display: "flex",
@@ -156,7 +154,19 @@ const MenuList: React.FC = () => {
           marginBottom: "24px",
         }}
       >
-        <BackHeader path="/dashboard" title="Menu Management" />
+        <BackHeader
+          path={
+            route?.canteenName && route?.canteenId
+              ? `/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}`
+              : `/dashboard`
+          }
+          title={
+            route?.canteenName
+              ? `Menu Management  |  ${route.canteenName}`
+              : "Menu Management"
+          }
+        />
+
         <Button
           type="default"
           icon={<SettingOutlined />}
@@ -172,7 +182,6 @@ const MenuList: React.FC = () => {
       </div>
 
       <Row gutter={[24, 24]}>
-        {/* Add Menu Card */}
         <Col xs={24} sm={12} lg={8} xl={6}>
           <Card
             hoverable
@@ -185,14 +194,16 @@ const MenuList: React.FC = () => {
               cursor: "pointer",
               border: "1px dashed #d9d9d9",
             }}
-            bodyStyle={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-              width: "100%",
-              padding: "48px 24px",
+            styles={{
+              body: {
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+                padding: "48px 24px",
+              },
             }}
             onClick={handleAddMenu}
           >
@@ -206,99 +217,134 @@ const MenuList: React.FC = () => {
             <Paragraph style={{ marginBottom: 0 }}>Add New Menu</Paragraph>
           </Card>
         </Col>
-        {menus.map((menu) => (
-          <Col xs={24} sm={12} lg={8} xl={6} key={menu.id}>
-            <Card
-              cover={
-                <div style={{ height: "192px", overflow: "hidden" }}>
-                  <img
-                    alt={menu.name}
-                    src={
-                      menu?.menuConfiguration?.name === "Lunch"
-                        ? lunchImage
-                        : menu?.menuConfiguration?.name === "Snacks"
-                        ? snacksImage
-                        : tiffinImage
-                    }
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-              }
-              bodyStyle={{ padding: "16px" }}
-            >
-              <div>
-                <ClockCircleOutlined style={{ marginRight: "8px" }} />
-                <Text type="secondary" style={{ fontWeight: "700" }}>
-                  {menu.menuConfiguration && menu.menuConfiguration.name}
-                </Text>
-                <Tag color="blue" style={{ marginLeft: "10px" }}>
-                  {menu.menuItems ? menu.menuItems.length : 0} items
-                </Tag>
-              </div>
+        {menus.map((menu) => {
+          console.log(menu, "menu");
 
-              <div style={{ marginTop: "12px" }}>
-                <Space
-                  direction="vertical"
-                  size="small"
-                  style={{ width: "100%" }}
-                >
-                  <div>
-                    <CalendarOutlined style={{ marginRight: "8px" }} />
-                    <Text type="secondary" style={{ fontWeight: "700" }}>
-                      {formatDate(menu.startTime)} - {formatDate(menu.endTime)}
-                    </Text>
+          return (
+            <Col xs={24} sm={12} lg={8} xl={6} key={menu.id}>
+              <Card
+                cover={
+                  <div style={{ height: "192px", overflow: "hidden" }}>
+                    <img
+                      alt={menu.name}
+                      src={
+                        menu?.menuConfiguration?.name === "Lunch"
+                          ? lunchImage
+                          : menu?.menuConfiguration?.name === "Snacks"
+                          ? snacksImage
+                          : tiffinImage
+                      }
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
                   </div>
-                </Space>
-              </div>
-
-              <Divider style={{ margin: "12px 0" }} />
-              <Space
-                style={{ display: "flex", justifyContent: "space-between" }}
+                }
+                styles={{ body: { padding: "16px" } }}
               >
-                <Button
-                  type="text"
-                  icon={<EyeOutlined />}
-                  onClick={() => handleViewMenu(menu)}
-                />
-                <Button
-                  type="text"
-                  icon={<EditOutlined />}
-                  onClick={() => handleEditMenu(menu)}
-                />
-                <Button
-                  type="text"
-                  danger
-                  icon={<DeleteOutlined />}
-                  onClick={() => handleDeleteMenu(menu.id)}
-                />
-              </Space>
-            </Card>
-          </Col>
-        ))}
+                <div style={{ textAlign: "center" }}>
+                  <ClockCircleOutlined style={{ marginRight: "8px" }} />
+                  <Text type="secondary" style={{ fontWeight: "700" }}>
+                    {/* {route?.canteenId
+                      ? menu?.menuConfiguration?.name
+                      : menu?.name}  */}
+                      {menu?.name}
+                  </Text>
+                  <Tag color="blue" style={{ marginLeft: "10px" }}>
+                    {menu.menuItems ? menu.menuItems.length : 0} items
+                  </Tag>
+                </div>
+
+                <div style={{ marginTop: "12px", textAlign: "center" }}>
+                  <Space
+                    direction="vertical"
+                    size="small"
+                    style={{ width: "100%" }}
+                  >
+                    <div>
+                      {!route?.canteenId && !route?.canteenName && (
+                        <CalendarOutlined style={{ marginRight: "8px" }} />
+                      )}
+                      <Text type="secondary" style={{ fontWeight: "700" }}>
+                        {!route?.canteenId && (
+                          <>
+                            {formatDate(
+                              menu?.menuMenuConfiguration?.defaultStartTime ?? 0
+                            )}{"  "}
+                            -
+                            {"  "}{formatDate(
+                              menu?.menuMenuConfiguration?.defaultEndTime ?? 0
+                            )}
+                          </>
+                        )}
+                      </Text>
+                    </div>
+                  </Space>
+                </div>
+
+                <Space
+                  style={{
+                    width: "100%",
+                    justifyContent: "center",
+                    marginTop: 17,
+                    borderTop: "1px solid #f0f0f0",
+                    paddingTop: 16,
+                  }}
+                >
+                  <Tooltip title="View Details">
+                    <Button
+                      icon={<EyeOutlined />}
+                      type="text"
+                      onClick={() => handleViewMenu(menu)}
+                      style={{ color: "#1890ff" }}
+                    />
+                  </Tooltip>
+                  <Tooltip title="Edit">
+                    <Button
+                      icon={<EditOutlined />}
+                      type="text"
+                      onClick={() => handleEditMenu(menu)}
+                      style={{ color: "#52c41a" }}
+                    />
+                  </Tooltip>
+                  <Tooltip title="Delete">
+                    <Button
+                      icon={<DeleteOutlined />}
+                      type="text"
+                      danger
+                      onClick={() => handleDeleteMenu(menu.id)}
+                    />
+                  </Tooltip>
+                </Space>
+              </Card>
+            </Col>
+          );
+        })}
       </Row>
 
       {menus.length === 0 && !loading && (
         <Empty description="No menus found" style={{ marginTop: "32px" }} />
       )}
 
-      {/* Add Menu Modal */}
       <AddMenuModal
         visible={isAddModalVisible}
         onCancel={handleAddModalCancel}
         onSuccess={handleAddMenuSuccess}
+        existingMenuTypes={existingMenuTypes}
       />
 
-      {/* View/Edit Menu Modal */}
       {selectedMenu && (
         <EditMenuModal
           visible={isEditOpen}
           menu={selectedMenu}
           onCancel={handleEditModalCancel}
           onSuccess={handleUpdateMenuSuccess}
+          existingMenuTypes={existingMenuTypes.filter(
+            (type: string | any) =>
+              type !== selectedMenu.menuConfiguration?.name
+          )}
         />
       )}
 
@@ -316,9 +362,12 @@ const MenuList: React.FC = () => {
           onClose={() => setIsConfigModalOpen(false)}
           onSuccess={() => {
             setIsConfigModalOpen(false);
+            toastSuccess("Menu Configuration Updated Successfully!!");
           }}
         />
       )}
+
+      {loading && <Loader />}
     </div>
   );
 };

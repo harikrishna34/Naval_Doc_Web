@@ -1,15 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Card, Typography, Space } from "antd";
 import canteenImg from "../../assets/images/canteens.jpg";
 import menuImage from "../../assets/images/menu.jpg";
 import ordersImage from "../../assets/images/orders.jpg";
 import itemsImage from "../../assets/images/items.jpg";
+import { adminDashboardService } from "../../auth/apiService";
+import { stringify } from "uuid";
 
 const { Title, Text } = Typography;
 
 const SuperAdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const [countsData, setCountsData] = React.useState<any>({});
+
+  useEffect(() => {
+    adminDashboardService
+      .getDashboardMainCounts()
+      .then((response) => {
+        setCountsData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },[])
+  
 
   const handleCardClick = (cardName: string) => {
     if (cardName === "Canteens") {
@@ -19,13 +34,15 @@ const SuperAdminDashboard: React.FC = () => {
     } else if (cardName === "Menu") {
       navigate("/menus-list");
     } else if (cardName === "Orders") {
-      navigate("/orders-list");
+      navigate("/orders");
     }
   };
 
   const statCards = [
-    { title: "TOTAL ORDERS", value: "1000" },
-    { title: "REVENUE", value: "10,000" },
+    { title: "TOTAL ORDERS", value: countsData.totalOrders },
+    { title: "TOTAL CANTEENS", value: countsData.totalCanteens },
+    { title: "TOTAL ITEMS", value: countsData.totalItems },
+    { title: "REVENUE", value: countsData.revenue !== null && countsData.revenue !== undefined ? `₹ ${countsData.revenue}` : "₹ 0" },
   ];
 
   const featureCards = [
@@ -36,12 +53,19 @@ const SuperAdminDashboard: React.FC = () => {
   ];
 
   return (
-    <div>
-      <div style={{ padding: "20px",paddingBottom: 0 }}>
-        {/* Stats Section */}
+    <div
+      style={{
+        // height: "calc(100vh - 64px)",
+        height: "75vh",
+        overflowY: "auto",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <div style={{ padding: "20px", paddingBottom: 0, flexGrow: 1 }}>
         <Row gutter={[16, 16]} style={{ marginBottom: "30px" }}>
           {statCards.map((stat, index) => (
-            <Col xs={24} sm={12} key={index}>
+            <Col xs={24} sm={12} md={4} xl={4} key={index}>
               <Card
                 hoverable
                 style={{
@@ -55,7 +79,7 @@ const SuperAdminDashboard: React.FC = () => {
                 <Title level={4} style={{ margin: 0, color: "#333" }}>
                   {stat.title}
                 </Title>
-                
+
                 <Text
                   style={{
                     fontSize: "24px",
@@ -70,7 +94,6 @@ const SuperAdminDashboard: React.FC = () => {
           ))}
         </Row>
 
-        {/* Feature Cards Section */}
         <Row gutter={[16, 16]}>
           {featureCards.map((feature, index) => (
             <Col xs={24} sm={12} md={6} key={index}>
@@ -87,7 +110,7 @@ const SuperAdminDashboard: React.FC = () => {
                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                     height: "288px",
                   }}
-                  bodyStyle={{ padding: 0 }}
+                  styles={{body:{padding:0}}}
                   cover={
                     <div
                       style={{

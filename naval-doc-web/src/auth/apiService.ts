@@ -8,7 +8,7 @@ const BASE_URL = "http://localhost:3002/api";
 const getToken = () => {
   return localStorage.getItem("Token") || "";
 };
-console.log(getToken(), "tokennn");
+// console.log(getToken(), "tokennn");
 
 // Create axios instance with default configurations
 const apiClient = axios.create({
@@ -270,3 +270,66 @@ export const menuConfigService = {
     }
   }
 };
+
+export const adminDashboardService = {
+  getDashboardMainCounts: async () => {
+    try {
+      const response = await apiClient.get("/adminDasboard/dashboard");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching dashboard orders and revenue counts:", error);
+      throw error;
+    }
+  },
+  
+  // Get Orders count by canteen 
+  getOrdersByCanteen: async () => {
+    try {
+      const response = await apiClient.get(`/order/getOrdersByCanteen`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching orders`, error);
+      throw error;
+    }
+  },
+
+  // Get total menus count (with optional canteenId filter)
+  getTotalMenus: async (canteenId?: number) => {
+    try {
+      const url = canteenId 
+        ? `/adminDasboard/getTotalMenus?canteenId=${canteenId}`
+        : `/adminDasboard/getTotalMenus`;
+      const response = await apiClient.get(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching total menus count:", error);
+      throw error;
+    }
+  },
+
+  // Get total orders count (with optional canteenId filter)
+  getTotalOrders: async (canteenId?: number) => {
+    try {
+      const url = canteenId 
+        ? `/adminDasboard/getTotalOrders?canteenId=${canteenId}`
+        : `/adminDasboard/getTotalOrders`;
+      const response = await apiClient.get(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching total orders count:", error);
+      throw error;
+    }
+  },
+
+  // Get total canteens count
+  getTotalCanteens: async () => {
+    try {
+      const response = await apiClient.get("/adminDasboard/getTotalCanteens");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching total canteens count:", error);
+      throw error;
+    }
+  },
+};
+

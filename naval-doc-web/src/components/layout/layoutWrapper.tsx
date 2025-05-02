@@ -29,13 +29,14 @@ const LayoutWrapper: React.FC<AppLayoutProps> = ({
       <Layout
         className={`site-layout ${collapsed ? "collapsed" : ""} ${pageTitle}`}
         style={{
-          marginLeft: collapsed ? "50px" : "187px",
+          marginLeft: collapsed ? "63px" : "187px",
           transition: "all 0.2s ease-in-out",
-          marginTop: "-10px",
-          marginRight: "-8px",
+          // marginTop: "-10px",
+          // marginRight: "-8px",
           display: "flex",
           flexDirection: "column",
-          minHeight: "98vh",
+          height: "100vh",
+          overflowY: "auto",
         }}
       >
         <StyledHeader />
@@ -44,10 +45,14 @@ const LayoutWrapper: React.FC<AppLayoutProps> = ({
           style={{
             flex: "1 0 auto",
             padding: "20px",
-            overflow: "auto",
+            // overflow: "auto",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <Outlet />
+          <div style={{ flex: "1 0 auto" }}>
+            <Outlet />
+          </div>
         </Content>
         <Footer />
       </Layout>
