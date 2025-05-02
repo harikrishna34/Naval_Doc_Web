@@ -37,8 +37,7 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
     useState<MenuConfiguration | null>(null);
   const [canteen, setCanteen] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  console.log(menu, "menu");
-  
+  console.log(menu, "menu-----viewmodal");
 
   useEffect(() => {
     if (visible && menu) {
@@ -89,8 +88,12 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
   };
 
   const renderDateRange = () => {
-    const startDate = dayjs(menu.startTime).format("MMM D, YYYY");
-    const endDate = dayjs(menu.endTime).format("MMM D, YYYY");
+    const startDate = dayjs(
+      menu?.menuMenuConfiguration?.defaultStartTime
+    ).format("MMM D, YYYY");
+    const endDate = dayjs(menu?.menuMenuConfiguration?.defaultEndTime).format(
+      "MMM D, YYYY"
+    );
     return `${startDate} - ${endDate}`;
   };
 
@@ -107,7 +110,9 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
       width={800}
       onCancel={onCancel}
       footer={modalFooter}
-      styles={{body:{ padding: "24px", maxHeight: "80vh", overflow: "auto" }}}
+      styles={{
+        body: { padding: "24px", maxHeight: "80vh", overflow: "auto" },
+      }}
     >
       {loading ? (
         <div
@@ -121,13 +126,10 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
             <Row gutter={[16, 16]}>
               <Col xs={24} md={16}>
                 <Title level={4} style={{ marginTop: 0, marginBottom: "8px" }}>
-                  {menu.description}
+                  {menu.menuMenuConfiguration?.name}
                 </Title>
                 <Space>
-                  {menuConfiguration && (
-                    <Tag color="blue">{menuConfiguration.name}</Tag>
-                  )}
-                  {canteen && <Tag color="green">{canteen.canteenName}</Tag>}
+                  <Tag color="green">{menu?.canteenMenu?.canteenName}</Tag>
                 </Space>
               </Col>
               <Col xs={24} md={8}>
@@ -154,7 +156,7 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
               Menu Items
             </Title>
             <Row gutter={[16, 16]}>
-              {menu.menuItems.map((menuItem) => {
+              {menu?.menuItems?.map((menuItem) => {
                 const item = getMenuItemById(menuItem.itemId);
                 if (!item) return null;
 
@@ -162,7 +164,7 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
                   <Col xs={24} sm={12} key={menuItem.itemId}>
                     <Card
                       size="small"
-                      styles={{body: {padding:"16px"}}}
+                      styles={{ body: { padding: "16px" } }}
                       style={{ height: "100%" }}
                     >
                       <div

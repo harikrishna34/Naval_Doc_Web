@@ -69,7 +69,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
   const initializeForm = () => {
     if (!menu) return;
 
-    const menuItemIds = menu.menuItems.map((item) => item.itemId);
+    const menuItemIds = menu.menuItems?.map((item) => item.itemId);
     setSelectedItems(menuItemIds);
 
     // Set form values
@@ -77,12 +77,12 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
       description: menu.description,
       menuType: menu.menuConfigurationId,
       canteenId: menu.canteenId,
-      startDate: dayjs(menu.startTime),
-      endDate: dayjs(menu.endTime),
+      startDate: dayjs(menu?.startTime),
+      endDate: dayjs(menu?.endTime),
     });
 
     // Set min/max quantities for each item
-    menu.menuItems.forEach((menuItem) => {
+    menu?.menuItems?.forEach((menuItem) => {
       form.setFieldsValue({
         [`min_${menuItem.itemId}`]: 1, // Always set to 1
         [`max_${menuItem.itemId}`]: menuItem.maxQuantity,
@@ -139,7 +139,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
     if (checked) {
       setSelectedItems([...selectedItems, itemId]);
     } else {
-      setSelectedItems(selectedItems.filter((id) => id !== itemId));
+      setSelectedItems(selectedItems?.filter((id) => id !== itemId));
     }
   };
 
@@ -149,7 +149,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
       const values = form.getFieldsValue();
 
       // Format the items with min and max quantities
-      const menuItems = selectedItems.map((itemId) => {
+      const menuItems = selectedItems?.map((itemId) => {
         return {
           itemId,
           minQuantity: 1, // Always fixed at 1
@@ -254,7 +254,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
                 <Spin size="small" />
               ) : (
                 <Select placeholder="Select canteen">
-                  {canteens.map((canteen) => (
+                  {canteens?.map((canteen) => (
                     <Option key={canteen.id} value={canteen.id}>
                       {canteen.canteenName}
                     </Option>
@@ -295,7 +295,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
                 <Spin size="small" />
               ) : (
                 <Select placeholder="Select meal type">
-                  {menuConfigurations.map((config) => (
+                  {menuConfigurations?.map((config) => (
                     <Option key={config.id} value={config.id}>
                       {config.name}
                     </Option>
@@ -326,16 +326,16 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
           ) : (
             <div style={{ maxHeight: "400px" }}>
               <Row gutter={[16, 16]}>
-                {items.map((item) => (
+                {items?.map((item) => (
                   <Col xs={24} sm={12} key={item.id}>
                     <Card
                       size="small"
                       hoverable
                       style={{
-                        borderColor: selectedItems.includes(item.id)
+                        borderColor: selectedItems?.includes(item.id)
                           ? "#1890ff"
                           : "#f0f0f0",
-                        backgroundColor: selectedItems.includes(item.id)
+                        backgroundColor: selectedItems?.includes(item.id)
                           ? "#e6f7ff"
                           : "#fff",
                         transition: "all 0.3s ease",
@@ -346,7 +346,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
                         style={{ display: "flex", alignItems: "flex-start" }}
                       >
                         <Checkbox
-                          checked={selectedItems.includes(item.id)}
+                          checked={selectedItems?.includes(item.id)}
                           onChange={(e) =>
                             handleItemSelect(item.id, e.target.checked)
                           }
@@ -412,7 +412,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
                             {item.description}
                           </Text>
 
-                          {selectedItems.includes(item.id) && (
+                          {selectedItems?.includes(item.id) && (
                             <Row gutter={8} style={{ marginTop: "12px" }}>
                               <Col span={12}>
                                 <Form.Item

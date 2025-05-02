@@ -70,11 +70,11 @@ const MenuList: React.FC = () => {
   const fetchMenus = async () => {
     try {
       setLoading(true);
-      
+
       const response = route?.canteenId
         ? await adminDashboardService.getTotalMenus(Number(route.canteenId))
         : await menuService.getAllMenus();
-  
+
       if (response?.data) {
         setMenus(response.data);
       }
@@ -247,9 +247,10 @@ const MenuList: React.FC = () => {
                 <div style={{ textAlign: "center" }}>
                   <ClockCircleOutlined style={{ marginRight: "8px" }} />
                   <Text type="secondary" style={{ fontWeight: "700" }}>
-                    {route?.canteenId
+                    {/* {route?.canteenId
                       ? menu?.menuConfiguration?.name
-                      : menu?.name}
+                      : menu?.name}  */}
+                      {menu?.name}
                   </Text>
                   <Tag color="blue" style={{ marginLeft: "10px" }}>
                     {menu.menuItems ? menu.menuItems.length : 0} items
@@ -267,12 +268,17 @@ const MenuList: React.FC = () => {
                         <CalendarOutlined style={{ marginRight: "8px" }} />
                       )}
                       <Text type="secondary" style={{ fontWeight: "700" }}>
-                        {route?.canteenId && route?.canteenName
-                          ? ""
-                          : `${formatDate(menu.startTime)} - ${formatDate(
-                              menu.endTime
-                            )}`}
-
+                        {!route?.canteenId && (
+                          <>
+                            {formatDate(
+                              menu?.menuMenuConfiguration?.defaultStartTime ?? 0
+                            )}{"  "}
+                            -
+                            {"  "}{formatDate(
+                              menu?.menuMenuConfiguration?.defaultEndTime ?? 0
+                            )}
+                          </>
+                        )}
                       </Text>
                     </div>
                   </Space>

@@ -25,21 +25,12 @@ import CanteenAdminDB from "./modules/admin/canteenAdminDB";
 import OrdersDashboard from "./modules/orders/ordersDB";
 
 const App = () => {
-  const checkAuthentication = (): boolean => {
-    try {
-      const token = localStorage.getItem("Token");
-      return !!token;
-    } catch (error) {
-      console.error("Error checking authentication:", error);
-      return false;
-    }
-  };
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginScreen />} />
         <Route
-          element={<ProtectedRoute isAuthenticated={checkAuthentication()} />}
+          element={<ProtectedRoute />}
         >
           <Route element={<LayoutWrapper pageTitle="Naval Dashboard" />}>
             <Route path="/dashboard" element={<SuperAdminDashboard />} />
