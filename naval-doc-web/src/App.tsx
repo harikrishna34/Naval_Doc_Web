@@ -23,6 +23,7 @@ import ProtectedRoute from "./auth/protectedRoute";
 import LoginScreen from "./auth/loginScreen";
 import CanteenAdminDB from "./modules/admin/canteenAdminDB";
 import OrdersDashboard from "./modules/orders/ordersDB";
+import Contact from "./modules/support/contactSupport";
 
 const App = () => {
   return (
@@ -44,6 +45,7 @@ const App = () => {
             <Route path="/admin" element={<AdminDB />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/canteens-list" element={<CanteenList />} />
+            <Route path="contact-support" element={<Contact/>} />
             <Route
               path="/canteens-list/canteen-dashboard/:canteenId/users-list"
               element={<UsersList />}
