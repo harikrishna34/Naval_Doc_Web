@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button, InputNumber, Typography, Space, Image } from "antd";
+import { Card, Button, Typography, Space, Image } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { FoodItem } from "./cartTypes";
 

@@ -4,8 +4,7 @@ import ordersImage from "../../assets/images/orders.jpg";
 import itemsImage from "../../assets/images/items.jpg";
 import { Card, Col, Row, Space, Typography } from "antd";
 import BackHeader from "../../components/common/backHeader";
-import CanteenOrdersDisplay from "./canteenOrders";
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const CanteenAdminDB = () => {
   const navigate = useNavigate();

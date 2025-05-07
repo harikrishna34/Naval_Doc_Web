@@ -11,7 +11,7 @@ import {
 // import { useNavigate, useLocation } from "react-router-dom";
 import { Modal } from "antd";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
 
@@ -21,7 +21,6 @@ const SuperAdminSidebar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleLogout = () => {
     setIsModalOpen(true);
