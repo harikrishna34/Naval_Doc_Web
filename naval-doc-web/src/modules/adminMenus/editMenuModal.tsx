@@ -42,8 +42,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
   visible,
   menu,
   onCancel,
-  onSuccess,
-  existingMenuTypes,
+  onSuccess
 }) => {
   const [form] = Form.useForm();
   const [items, setItems] = useState<Item[]>([]);

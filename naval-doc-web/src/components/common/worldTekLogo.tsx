@@ -1,6 +1,5 @@
 import React from "react";
 import { Typography, Space } from "antd";
-import Logo from "../../assets/images/logo.png";
 import footerLogo from "../../assets/images/footerLogo.png";
 
 const WorldtekLogo: React.FC = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Row, Col, Typography, Button, Divider, Space } from "antd";
+import { Card, Typography, Button, Divider, Space } from "antd";
 import PaymentMethod from "./paymentMethod";
 import BillItemRow from "./billitem";
 import FoodItems from "./foodItems";

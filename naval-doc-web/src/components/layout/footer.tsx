@@ -1,6 +1,5 @@
 import React from "react";
 import { Layout } from "antd";
-import WorldtekLogo from "../common/worldTekLogo";
 import FooterLogo from "../../assets/images/footerLogo.png";
 const { Footer: AntFooter } = Layout;
 

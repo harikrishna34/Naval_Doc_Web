@@ -9,7 +9,6 @@ import {
   Row,
   Col,
   Space,
-  Divider,
   Tooltip,
 } from "antd";
 import {
@@ -44,7 +43,7 @@ const MenuList: React.FC = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState<boolean>(false);
   const [isViewOpen, setIsViewOpen] = useState<boolean>(false);
   const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null);
-  const [editMode, setEditMode] = useState<boolean>(false);
+  const [,setEditMode] = useState<boolean>(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [existingMenuTypes, setExistingMenuTypes] = useState<string[] | any>(

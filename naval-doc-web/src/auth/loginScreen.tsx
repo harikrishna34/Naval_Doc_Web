@@ -9,7 +9,6 @@ type Language = "en" | "te";
 
 const LoginScreen: React.FC = () => {
   const [form] = Form.useForm();
-  const [mobileNumber, setMobileNumber] = useState("");
   const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -313,7 +312,6 @@ const LoginScreen: React.FC = () => {
                   maxLength={10}
                   onChange={(e) => {
                     const value = e.target.value.replace(/\D/g, "");
-                    setMobileNumber(value);
                     form.setFieldsValue({ mobile: value });
                   }}
                   placeholder="9876543210"

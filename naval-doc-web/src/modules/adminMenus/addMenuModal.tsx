@@ -17,7 +17,6 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 import {
   canteenService,
   itemService,
@@ -42,8 +41,7 @@ const { Text } = Typography;
 const AddMenuModal: React.FC<AddMenuModalProps> = ({
   visible,
   onCancel,
-  onSuccess,
-  existingMenuTypes,
+  onSuccess
 }) => {
   const [form] = Form.useForm();
   const [items, setItems] = useState<Item[]>([]);
@@ -125,22 +123,6 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     try {
       await form.validateFields();
       const values = form.getFieldsValue();
-      const selectedConfigId = values?.menuType;
-      const selectedConfig = menuConfigurations.find(
-        (config) => config.id === selectedConfigId
-      );
-      // if (
-      //   selectedConfig?.name &&
-      //   existingMenuTypes.includes(selectedConfig?.name)
-      // ) {
-      //   await Swal.fire({
-      //     icon: "error",
-      //     title: "Menu Type Exists",
-      //     text: `A menu with the type "${selectedConfig.name}" already exists. Please choose a different menu type.`,
-      //     confirmButtonColor: "#d33",
-      //   });
-      //   return;
-      // }
 
       const menuItems = selectedItems.map((itemId) => {
         return {
@@ -249,7 +231,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           <Col span={8}>
             <Form.Item
               name="canteenId"
-              label="Canteen"
+              label="Select Canteen"
               rules={[{ required: true, message: "Please select a canteen" }]}
             >
               {loadingCanteens ? (
@@ -271,7 +253,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           <Col span={8}>
             <Form.Item
               name="startDate"
-              label="Start Date"
+              label="Booking Start Date"
               rules={[{ required: true, message: "Please select start date" }]}
             >
               <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
@@ -280,7 +262,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           <Col span={8}>
             <Form.Item
               name="endDate"
-              label="End Date"
+              label="Booking End Date"
               rules={[{ required: true, message: "Please select end date" }]}
             >
               <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
@@ -289,7 +271,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           <Col span={8}>
             <Form.Item
               name="menuType"
-              label="Meal Type"
+              label="Assign To"
               rules={[{ required: true, message: "Please select a meal type" }]}
             >
               {loadingConfigs ? (
@@ -420,7 +402,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                                 <Col span={12}>
                                   <Form.Item
                                     name={`min_${item.id}`}
-                                    label="Min Quantity"
+                                    label="Min Allowed Booking"
                                     initialValue={1}
                                     style={{ marginBottom: 0 }}
                                   >
@@ -434,7 +416,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                                 <Col span={12}>
                                   <Form.Item
                                     name={`max_${item.id}`}
-                                    label="Max Quantity"
+                                    label="Max Allowed Booking"
                                     initialValue={10}
                                     style={{ marginBottom: 0 }}
                                   >

@@ -80,6 +80,7 @@ const App = () => {
         pauseOnHover
         draggable
         theme="light"
+        aria-label="Notification container"
       />
     </Router>
   );

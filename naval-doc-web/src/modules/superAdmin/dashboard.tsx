@@ -6,7 +6,6 @@ import menuImage from "../../assets/images/menu.jpg";
 import ordersImage from "../../assets/images/orders.jpg";
 import itemsImage from "../../assets/images/items.jpg";
 import { adminDashboardService } from "../../auth/apiService";
-import { stringify } from "uuid";
 
 const { Title, Text } = Typography;
 
