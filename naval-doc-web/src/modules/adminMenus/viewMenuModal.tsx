@@ -37,7 +37,6 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
     useState<MenuConfiguration | null>(null);
   const [, setCanteen] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  console.log(menu, "menu-----viewmodal");
 
   useEffect(() => {
     if (visible && menu) {
@@ -89,11 +88,11 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
 
   const renderDateRange = () => {
     const startDate = dayjs(
-      menu?.menuMenuConfiguration?.defaultStartTime
-    ).format("MMM D, YYYY");
-    const endDate = dayjs(menu?.menuMenuConfiguration?.defaultEndTime).format(
-      "MMM D, YYYY"
-    );
+      (menu?.menuMenuConfiguration?.defaultStartTime ?? 0) * 1000 // Convert to milliseconds
+    ).format("HH:mm A");
+    const endDate = dayjs(
+      (menu?.menuMenuConfiguration?.defaultEndTime ?? 0) * 1000 // Convert to milliseconds
+    ).format("HH:mm A");
     return `${startDate} - ${endDate}`;
   };
 
@@ -153,7 +152,7 @@ const ViewMenuModal: React.FC<ViewMenuModalProps> = ({
 
           <div>
             <Title level={5} style={{ marginTop: 0, marginBottom: "16px" }}>
-              Menu Items
+              Menu Items 
             </Title>
             <Row gutter={[16, 16]}>
               {menu?.menuItems?.map((menuItem) => {
