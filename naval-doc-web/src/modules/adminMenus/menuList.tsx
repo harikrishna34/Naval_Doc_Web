@@ -140,7 +140,7 @@ const MenuList: React.FC = () => {
   };
 
   const formatDate = (timestamp: number) => {
-    return dayjs(timestamp * 1000).format("HH:mm A");
+    return dayjs(timestamp * 1000).format("hh:mm A");
   };
 
   return (
