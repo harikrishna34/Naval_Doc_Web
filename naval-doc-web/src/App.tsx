@@ -24,15 +24,20 @@ import LoginScreen from "./auth/loginScreen";
 import CanteenAdminDB from "./modules/admin/canteenAdminDB";
 import OrdersDashboard from "./modules/orders/ordersDB";
 import Contact from "./modules/support/contactSupport";
+import HomePage from "./homepage/homePage";
+import   Terms from "./homepage/components/Terms";
+import Privacy from "./homepage/components/Privacy";
+import AboutUs from "./homepage/components/About us";
+import Overview from "./homepage/components/Overview";
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginScreen />} />
-        <Route
-          element={<ProtectedRoute />}
-        >
+        <Route path="/" element={<HomePage />} />
+        <Route path="/Login" element={<LoginScreen />} />
+        
+        <Route element={<ProtectedRoute />}>
           <Route element={<LayoutWrapper pageTitle="Naval Dashboard" />}>
             <Route path="/dashboard" element={<SuperAdminDashboard />} />
             <Route path="/finance-management" element={<FinanceDB />} />
@@ -45,7 +50,7 @@ const App = () => {
             <Route path="/admin" element={<AdminDB />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/canteens-list" element={<CanteenList />} />
-            <Route path="contact-support" element={<Contact/>} />
+            <Route path="contact-support" element={<Contact />} />
             <Route
               path="/canteens-list/canteen-dashboard/:canteenId/users-list"
               element={<UsersList />}
@@ -67,6 +72,14 @@ const App = () => {
             />
           </Route>
         </Route>
+
+        {/* Add routes for Terms and Privacy */}
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/about us" element={<AboutUs />} />
+        <Route path="/about us" element={<AboutUs />} />
+        <Route path="/Overview" element={<Overview />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
 
