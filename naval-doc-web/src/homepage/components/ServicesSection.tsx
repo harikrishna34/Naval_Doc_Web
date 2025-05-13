@@ -20,6 +20,7 @@ const services = [
   //   description: "A quick and healthy bite to keep hunger at bay and maintain energy levels before lunch.",
   //   image: industrialImage,
   // },
+  
   {
     title: "🥗 Lunch",
     subtitle: "🕛 12:15 PM – 1:00 PM",
