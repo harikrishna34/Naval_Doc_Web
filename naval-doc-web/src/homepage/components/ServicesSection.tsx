@@ -20,16 +20,16 @@ const services = [
   //   description: "A quick and healthy bite to keep hunger at bay and maintain energy levels before lunch.",
   //   image: industrialImage,
   // },
-  
+
   {
     title: "🥗 Lunch",
-    subtitle: "🕛 12:15 PM – 1:00 PM",
+    subtitle: "🕛 12:15 PM - 1:00 PM",
     description: "A hearty and balanced lunch featuring a variety of delicious and nutritious food options.",
     image: healthcareImage,
   },
   {
     title: "🍪 Afternoon Snacks",
-    subtitle: "🕞 3:30 PM – 3:45 PM",
+    subtitle: "🕞 3:30 PM - 3:45 PM",
     description: "A light snack to recharge and refresh for the rest of the day’s activities.",
     image: snakImage,
   },
