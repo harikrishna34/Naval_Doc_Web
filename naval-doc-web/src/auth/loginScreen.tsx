@@ -9,7 +9,6 @@ type Language = "en" | "te";
 
 const LoginScreen: React.FC = () => {
   const [form] = Form.useForm();
-  const [mobileNumber, setMobileNumber] = useState("");
   const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,8 +19,8 @@ const LoginScreen: React.FC = () => {
   // Create refs for each OTP input field
   const otpRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
-  const API_URL_SEND = "http://welfarecanteen.in/api/login";
-  const API_URL_VERIFY = "http://welfarecanteen.in/api/verifyOtp";
+  const API_URL_SEND = "https://server.welfarecanteen.in/api/login";
+  const API_URL_VERIFY = "https://server.welfarecanteen.in/api/verifyOtp";
 
   // Set language based on localStorage when the page first loads
   useEffect(() => {
@@ -313,7 +312,6 @@ const LoginScreen: React.FC = () => {
                   maxLength={10}
                   onChange={(e) => {
                     const value = e.target.value.replace(/\D/g, "");
-                    setMobileNumber(value);
                     form.setFieldsValue({ mobile: value });
                   }}
                   placeholder="9876543210"

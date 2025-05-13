@@ -80,8 +80,8 @@ const StatCard: React.FC<StatCardProps> = ({ icon, value, title }) => {
 
 const OrdersDashboard: React.FC = () => {
   const route = useParams();
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [, setOrders] = useState([]);
+  const [, setLoading] = useState(false);
 
   const [countsData, setCountsData] = React.useState<any>({});
 

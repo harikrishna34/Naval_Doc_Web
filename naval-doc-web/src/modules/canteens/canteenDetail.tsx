@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, Typography } from 'antd';
 import { canteenData } from './data';
 import { CanteenDetailProps } from '../dashboard/types';

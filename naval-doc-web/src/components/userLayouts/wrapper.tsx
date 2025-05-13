@@ -1,7 +1,6 @@
 import { Layout } from "antd";
 import UserSidebar from "./sidebar";
 import UserHeader from "./header";
-import SimpleHeader from "./header";
 
 const { Content, Footer } = Layout;
 

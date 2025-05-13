@@ -3,7 +3,6 @@ import {
   Modal,
   Form,
   Input,
-  DatePicker,
   Select,
   Button,
   Row,
@@ -14,7 +13,6 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { canteenService } from "../../auth/apiService";
-import dayjs, { Dayjs } from "dayjs";
 import Loader from "../../components/common/loader";
 import { toastError, toastSuccess } from "../../components/common/toasterMessage";
 

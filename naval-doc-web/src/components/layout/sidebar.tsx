@@ -38,9 +38,6 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
     setSelectedKey(getSelectedKey());
   }, [location.pathname]);
 
-  const handleLogout = () => {
-    setIsModalOpen(true);
-  };
 
   const handleOk = () => {
     localStorage.removeItem("token");

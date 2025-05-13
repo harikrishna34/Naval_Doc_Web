@@ -1,8 +1,6 @@
 import React from 'react';
-import { Card, Space, Typography } from 'antd';
+import { Card, Typography } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
-
-const { Title } = Typography;
 
 interface PaymentMethodProps {
   title: string;
