@@ -77,7 +77,7 @@ export default function OverviewSection() {
                             The primary mission of the Naval Dockyard Canteen is to offer high-quality products at concessional rates, ensuring convenience, affordability, and timely access to household necessities for naval officers, sailors, civilian defense employees, and their dependents.
 
                             </p>
-                            <CtaButton onClick={() => navigate("/Overview")}>Learn More</CtaButton>
+                            <CtaButton onClick={() => navigate("/Overview")}>View More</CtaButton>
                         </OverviewText>
                     </OverviewContainer>
                 </Overview>

@@ -3,6 +3,7 @@ import image from "../images/about us1.png";
 import { useNavigate } from "react-router-dom";
 
 const About = styled.section`
+  margin-top: -80px;
   padding: 5rem 1rem;
   background-color: white;
 `;
@@ -76,7 +77,7 @@ export default function AboutSection() {
               <p>
                 Operated on a No Profit – No Loss basis, these canteens are committed to serving wholesome, hygienic, and tasty food. With a team of experienced cooking staff and a focus on maintaining quality stock, the canteens consistently strive to ensure high standards of food and service.
               </p>
-              <CtaButton onClick={() => navigate("/About us")}>Learn More</CtaButton>
+              <CtaButton onClick={() => navigate("/About us")}>View More</CtaButton>
             </AboutText>
             <div>
               <AboutImg src={image} alt="About Us" />

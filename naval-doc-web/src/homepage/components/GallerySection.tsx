@@ -4,7 +4,7 @@ import image1 from "../images/image 1.png";
 import image2 from "../images/image 1.png"; 
 import image3 from "../images/image 1.png"; 
 
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 const galleryImages = [image, image1, image2, image3]; // reuse or import others similarly
 
@@ -13,6 +13,7 @@ export default function GallerySection() {
     <section
       id="gallery"
       style={{
+        marginTop: "-100px",
         padding: "5rem 1rem", // Reduced padding
         maxWidth: "1200px",
         margin: "0 auto",
@@ -25,23 +26,14 @@ export default function GallerySection() {
           color: "#010080",
           fontStyle: "italic",
           fontWeight: "bold",
-          marginBottom: "0.5rem",
-          fontSize: "1.25rem",
+          marginBottom: "2.5rem",
+          fontSize: "1.5rem",
+          
         }}
       >
         Gallery
       </Paragraph>
-      <Title
-        level={2}
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "bold",
-          marginBottom: "2rem",
-          color: "#111827",
-        }}
-      >
-        The catering with the royal touch
-      </Title>
+    
       <Row gutter={[16, 16]}>
         {galleryImages.map((src, index) => (
           <Col key={index} xs={24} sm={12} md={8} lg={6}>

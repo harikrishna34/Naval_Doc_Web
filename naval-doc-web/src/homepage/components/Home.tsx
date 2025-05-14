@@ -11,7 +11,6 @@ import Header from "./Header";
 import OverviewSection from "../components/Overviewsection";
 
 
-
 const HomeContainer = styled.div`
   font-family: sans-serif;
   // marginTop: 200px
@@ -26,7 +25,7 @@ const Home = () => {
       <Navbar /> 
       <HeroSlider /> 
       <OverviewSection/>
-      <AboutSection /> {/* Ensure this is used as a React component */}
+      <AboutSection /> 
       <ServicesSection />
       {/* <ReachAndTestimonials /> */}
       <GallerySection />

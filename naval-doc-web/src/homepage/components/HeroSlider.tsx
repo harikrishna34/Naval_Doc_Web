@@ -119,7 +119,7 @@ const HeroSlider = () => {
           <SlideContent>
             <h1>{slide.title}</h1>
             <p>{slide.text}</p>
-            {/* <button>Explore More</button> */}
+            {/* <button>Explore View More</button> */}
           </SlideContent>
         </Slide>
       ))}

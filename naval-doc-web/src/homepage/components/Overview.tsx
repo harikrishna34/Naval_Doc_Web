@@ -103,7 +103,7 @@ const NavalDockyardCanteen: React.FC = () => {
 
                 <SubTitle>Conclusion</SubTitle>
                 <Paragraph>
-                    The Naval Dockyard Canteen is more than a shopping center — it is a vital support system for those who serve the nation.
+                    The Naval Dockyard Canteen is View More than a shopping center — it is a vital support system for those who serve the nation.
                     With modern infrastructure, digital transformation, and a customer-first approach, it stands as a benchmark for defense canteen operations.
                 </Paragraph>
             </Container>

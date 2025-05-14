@@ -62,7 +62,7 @@ const ReachAndTestimonials: React.FC = () => {
         </Title>
         <Text style={{ maxWidth: "800px", margin: "0 auto", display: "block", color: "#333" }}>
           As one of the leading companies in the food services space in the country, we have a wide
-          reach across sectors including healthcare, corporate, educational institutions, and more.
+          reach across sectors including healthcare, corporate, educational institutions, and View More.
         </Text>
         <Row gutter={[16, 16]} justify="center" style={{ marginTop: "2rem" }}>
           {sectors.map((sector, index) => (

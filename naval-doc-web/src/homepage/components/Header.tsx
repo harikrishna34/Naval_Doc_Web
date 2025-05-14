@@ -1,11 +1,9 @@
-
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom"; // import Link and useNavigate for navigation
+import { Link,  useLocation } from "react-router-dom"; // Added useLocation
 import logo from "../images/Logo.png";
 
 const HeaderWrapper = styled.header`
   display: flex;
-  // justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
   background-color: #010080;
@@ -17,7 +15,7 @@ const HeaderWrapper = styled.header`
 `;
 
 const LogoImage = styled.img`
-text-align: center;
+  text-align: center;
   height: 60px;
   width: auto;
   cursor: pointer;
@@ -32,32 +30,47 @@ const CenterTitle = styled.h1`
   margin-left: 3rem;
 `;
 
-const EnquireButton = styled.button`
-  background-color: white;
-  color: #010080;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-left: auto;
-  &:hover {
-    transition: background-color 0.3s, color 0.3s;}
-`;
+// const EnquireButton = styled.button`
+//   background-color: white;
+//   color: #010080;
+//   padding: 0.5rem 1rem;
+//   border: none;
+//   border-radius: 6px;
+//   cursor: pointer;
+//   margin-left: auto;
+//   &:hover {
+//     transition: background-color 0.3s, color 0.3s;
+//   }
+// `;
 
 export default function Header() {
-const navigate = useNavigate();
-  const  handleLoginPage = () => {
-    navigate("/login");
-  }
+  // const navigate = useNavigate();
+  const location = useLocation(); // Get current location
+
+  // const handleLoginPage = () => {
+  //   navigate("/login");
+  // };
+
+  const handleLogoClick = () => {
+    if (location.pathname === "/") {
+      // If already on home page, scroll to top
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+    // Otherwise, the Link component will handle navigation
+  };
 
   return (
     <HeaderWrapper>
-      
-      <Link to="/">
+      <Link to="/" onClick={handleLogoClick}>
         <LogoImage src={logo} alt="Naval Logo" />
       </Link>
       <CenterTitle>INDUSTRIAL NDY CANTEEN</CenterTitle>
-      <EnquireButton onClick={handleLoginPage}><b>Login Now</b></EnquireButton>
+      {/* <EnquireButton onClick={handleLoginPage}>
+        <b>Login Now</b>
+      </EnquireButton> */}
     </HeaderWrapper>
   );
 }

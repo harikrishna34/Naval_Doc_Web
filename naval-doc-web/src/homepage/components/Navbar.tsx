@@ -7,13 +7,12 @@ const BottomNav = styled.nav`
   background-color: white;
   padding: 1.5rem 0;
   position: fixed;
-  top: 80px; 
+  top: 80px;
   width: 100%;
   z-index: 200;
-  
 
   a {
-  padding-top: 0.5rem;
+    padding-top: 0.5rem;
     margin: 0 1rem;
     color: #010080;
     font-size: 1rem;
@@ -21,6 +20,7 @@ const BottomNav = styled.nav`
     text-decoration: none;
     font-weight: 500;
     cursor: pointer;
+    
     &.active-link {
       border-bottom: 2px solid white;
       font-weight: 600;
@@ -33,12 +33,24 @@ export default function Navbar() {
 
   const handleNavClick = (section: string) => {
     setActiveSection(section);
-    document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
+    const element = document.getElementById(section);
+    if (element) {
+      const offset = 120; // Adjust this value based on your navbar height
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
   };
 
   return (
     <BottomNav>
-       <a
+      <a
         className={activeSection === "Overview" ? "active-link" : ""}
         onClick={() => handleNavClick("Overview")}
       >

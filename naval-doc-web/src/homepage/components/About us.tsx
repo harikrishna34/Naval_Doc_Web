@@ -7,7 +7,7 @@ import Header from "./Header";
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Makes the page take full height of the viewport */
+  height: 100vh; /* Full height of the viewport */
 `;
 
 // Main content container
@@ -17,8 +17,9 @@ const Container = styled.div`
   margin: auto;
   font-family: sans-serif;
   color: #333;
-//   margin-top: 30px;
-  flex: 1; /* Allows this to take up remaining space, pushing the footer down */
+  margin-top: 100px;
+  flex: 1; /* Allows this to take up remaining space */
+  overflow-y: auto; /* Makes the content scrollable */
 `;
 
 const Title = styled.h1`
@@ -26,35 +27,50 @@ const Title = styled.h1`
   margin-bottom: 20px;
 `;
 
-// Removed unused Paragraph styled component
+const Paragraph = styled.p`
+  margin-bottom: 15px;
+  line-height: 1.6;
+`;
 
-const About: React.FC = () => {
+const Terms: React.FC = () => {
   return (
     <PageWrapper>
       <Header />
       <Container>
         <Title>About Us</Title>
-        <h2>Naval Dockyard Canteen, Visakhapatnam
-        </h2><br/>
-        
-        <ul>
-          <li>
-            The Naval Dockyard Canteen, Visakhapatnam, is a dedicated welfare establishment committed to serving the needs of Indian Navy personnel, civilian defense staff, and their families. Located within the Eastern Naval Command’s prestigious Naval Dockyard premises in Vizag, the canteen plays a vital role in supporting the morale and well-being of the defense community through the provision of essential goods at subsidized rates.
-          </li><br/>
-          <li>
-            Established with the core objective of delivering quality and affordability, the canteen caters exclusively to serving and retired Navy personnel, offering a wide range of products—from groceries and daily essentials to select consumer goods. With strict access protocols, modernized billing systems, and a customer-centric approach, the canteen ensures a seamless and dignified shopping experience for all authorized users.
-          </li><br/>
-          <li>
-            Over the years, the Naval Dockyard Canteen has embraced innovation, adopting secure digital payment options, inventory management systems, and customer service enhancements to improve operational efficiency. It continues to operate under the governance and policies laid down by the Indian Navy and the Canteen Stores Department (CSD), ensuring compliance, transparency, and reliability.
-          </li><br/>
-          <li>
-            As one of the most prominent defense canteens on the east coast, the Vizag Naval Dockyard Canteen stands as a model of service, discipline, and care—reflecting the values and ethos of the Indian Navy.
-          </li>
-        </ul>
+        <h3>Naval Dockyard Canteen, Visakhapatnam</h3><br />
+        <Paragraph>
+          • The Naval Dockyard, Visakhapatnam provides canteen facilities to its workers in close proximity to their workplace. The Industrial Canteens—namely Annapoorna, Amruth, and Aahar—are located in building Nos. P-48, P-49, and P-17 of Naval Dockyard (V), as per the provisions of Section 46 of the Factory Act, 1948. These Industrial Canteens serve breakfast, tea, snacks, and lunch to yard employees daily.<br />
+
+          • Operating on a ‘No Loss, No Profit’ basis, these canteens play a crucial role in supporting the morale and well-being of the Defence community by offering hygienic and wholesome meals every day.
+
+        </Paragraph>
+        <h3>Core Objective and Commitment
+        </h3>
+        <br />
+        <Paragraph>
+          • Established with a mission to ensure quality and affordability, the canteens serve exclusively to all dockyard employees, offering a wide variety of meals and snacks. With strict access protocols, modernized billing systems, and a customer-centric approach, the canteens provide a dignified and seamless dining experience to every yard employee.
+        </Paragraph>
+        <h3>Innovation and Operational Excellence
+        </h3><br />
+        <h4>Over the years, the Naval Dockyard canteen system has embraced innovation by:
+        </h4><br />
+        <Paragraph>
+          • Implementing secure digital payment options<br />
+          • Introducing inventory management systems<br />
+          • Enhancing customer service for operational efficiency <br />
+          • The operations strictly adhere to the governance and policies of the Indian Navy and the Factories Act 1948, ensuring compliance, transparency, and reliability.<br />
+        </Paragraph>
+        <h3>A Model of Service and Discipline
+        </h3>
+        <br />
+        <Paragraph>
+          • Recognized as one of the most prominent defence canteens, the Industrial Wet Canteens of the Dockyard serve as a model of service, discipline, and care, embodying the values and ethos of the Indian Navy.
+        </Paragraph>
       </Container>
       <Footer />
     </PageWrapper>
   );
 };
 
-export default About ;
+export default Terms;

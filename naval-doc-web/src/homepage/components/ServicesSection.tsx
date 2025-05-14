@@ -39,6 +39,7 @@ const ServicesSection: React.FC = () => {
     <section
       id="services"
       style={{
+        marginTop: "-80px",
         padding: "5rem 2rem",
         background: "#fff",
         textAlign: "center",

@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import logo from "../images/Logo.png";
-// import { FaFacebookF, FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
-import { Link } from "react-router-dom";  
+import poweredByLogo from "../images/Worldtek.png";
 
 const FooterContainer = styled.footer`
   background-color: #010080;
   color: #fff;
-  padding: 40px 20px 10px;
+  padding: 40px 20px 20px;
   font-family: sans-serif;
+  width: 100%;
+  margin-top: auto; /* This helps push it to the bottom */
 `;
 
 const FooterContent = styled.div`
@@ -16,6 +17,8 @@ const FooterContent = styled.div`
   justify-content: space-around;
   align-items: flex-start;
   gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
 `;
 
 const Section = styled.div`
@@ -26,6 +29,28 @@ const Section = styled.div`
 const Logo = styled.img`
   width: 150px;
   margin-bottom: 10px;
+`;
+
+const PoweredByContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -1.8rem;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 100%;
+  text-align: center;
+
+  img {
+    width: 180px;
+    height: auto;
+    margin-left: 10px;
+  }
+
+  p {
+    font-size: 12px;
+    margin: 0;
+  }
 `;
 
 const SectionTitle = styled.h4`
@@ -52,64 +77,38 @@ const ListItem = styled.li`
   }
 `;
 
-// const SocialIcons = styled.div`
-//   a {
-//     margin-right: 10px;
-//     font-size: 18px;
-//     color: #fff;
-//     background-color: #010080;
-//     padding: 8px;
-//     border-radius: 50%;
-//     display: inline-block;
-
-//     &:hover {
-//       background-color: #0033cc;
-//     }
-//   }
-// `;
-
-
-
 export default function Footer() {
   return (
     <FooterContainer>
       <FooterContent>
-        {/* Logo Section */}
         <Section>
           <Logo src={logo} alt="Naval Logo" />
-          <p>
-            Naval Dockyard is known as one of the most reliable, efficient,
-            and excellent service providers in the field of catering and housekeeping services.
-          </p>
         </Section>
 
-        {/* Useful Links */}
         <Section>
           <SectionTitle>Browse</SectionTitle>
           <List>
-            <ListItem><Link to="/">HOME</Link></ListItem>   
-            <ListItem><Link to="#about">ABOUT</Link></ListItem> 
-            <ListItem><Link to="#services">SERVICES</Link></ListItem> 
-            <ListItem><Link to="#gallery">GALLERY</Link></ListItem> 
-            <ListItem><Link to="#contact">CONTACT US</Link></ListItem> 
+            <ListItem><a href="#home">HOME</a></ListItem>
+            <ListItem><a href="#about">ABOUT</a></ListItem>
+            <ListItem><a href="#services">SERVICES</a></ListItem>
+            <ListItem><a href="#gallery">GALLERY</a></ListItem>
+            <ListItem><a href="#contact">CONTACT US</a></ListItem>
           </List>
         </Section>
 
-        {/* Other Section with Terms and Privacy Links */}
         <Section>
           <SectionTitle>Other</SectionTitle>
-          {/* <SocialIcons>
-            <a href="#"><FaInstagram /></a>
-            <a href="#"><FaFacebookF /></a>
-            <a href="#"><FaLinkedinIn /></a>
-            <a href="#"><FaWhatsapp /></a>
-          </SocialIcons> */}
           <List style={{ marginTop: "15px" }}>
-            <ListItem><Link to="/terms">Terms and Conditions</Link></ListItem> 
-            <ListItem><Link to="/privacy">Privacy Policy</Link></ListItem> 
+            <ListItem><a href="/terms">Terms and Conditions</a></ListItem>
+            <ListItem><a href="/privacy">Privacy Policy</a></ListItem>
           </List>
         </Section>
       </FooterContent>
+
+      <PoweredByContainer>
+        <p>Powered and Maintained by</p>
+        <img src={poweredByLogo} alt="Powered By Logo" />
+      </PoweredByContainer>
     </FooterContainer>
   );
 }
