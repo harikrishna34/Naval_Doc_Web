@@ -19,8 +19,8 @@ const LoginScreen: React.FC = () => {
   // Create refs for each OTP input field
   const otpRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
-  const API_URL_SEND = "http://localhost:3002/api/login";
-  const API_URL_VERIFY = "http://localhost:3002/api/verifyOtp";
+  const API_URL_SEND = "https://server.welfarecanteen.in/api/login";
+  const API_URL_VERIFY = "https://server.welfarecanteen.in/api/verifyOtp";
 
   // Set language based on localStorage when the page first loads
   useEffect(() => {
