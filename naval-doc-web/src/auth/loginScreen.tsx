@@ -1,6 +1,6 @@
-import { Col, Row, Switch, Form, Input, Button, message } from "antd";
+import { Col, Row, Form, Input, Button, message } from "antd";
 import axios from "axios";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import WorldtekLogo from "../components/common/worldTekLogo";
 import { languageTexts } from "../utils/data";
@@ -30,24 +30,23 @@ const LoginScreen: React.FC = () => {
 
   const handleSendOtp = async () => {
     try {
-      // Validate form first
       await form.validateFields(["mobile"]);
+      const mobileValue = form.getFieldValue("mobile");
 
-      const mobileValue = form.getFieldValue("mobile", form);
-
-      // Double check validation
-      if (!validateMobile(mobileValue)) {
+      // Only allow login for specific numbers
+      const allowedNumbers = ["7093081518", "9392392143"];
+      if (!allowedNumbers.includes(mobileValue)) {
         form.setFields([
           {
             name: "mobile",
-            errors: [texts.invalidMobile],
+            errors: ["This mobile number is not allowed."],
           },
         ]);
         return;
       }
 
       setLoading(true);
-      setOtpButtonDisabled(true); // Disable the button when OTP is being sent
+      setOtpButtonDisabled(true);
 
       try {
         const response = await axios.post(API_URL_SEND, {
@@ -57,11 +56,7 @@ const LoginScreen: React.FC = () => {
         if (response.status === 200) {
           setOtpSent(true);
           message.success("OTP Sent Successfully");
-
-          // Reset OTP values
           setOtpValues(Array(6).fill(""));
-
-          // Focus on the first OTP input
           setTimeout(() => {
             if (otpRefs.current[0]) {
               otpRefs.current[0].focus();
@@ -69,19 +64,17 @@ const LoginScreen: React.FC = () => {
           }, 100);
         } else {
           message.error("Failed to send OTP");
-          setOtpButtonDisabled(false); // Re-enable if failed
+          setOtpButtonDisabled(false);
         }
       } catch (error) {
         console.error("Error sending OTP:", error);
         message.error("Error sending OTP");
-        setOtpButtonDisabled(false); // Re-enable if error
+        setOtpButtonDisabled(false);
       } finally {
         setLoading(false);
       }
     } catch (err) {
-      // Form validation error
-      console.log("Validation failed:", err);
-      setOtpButtonDisabled(false); // Re-enable if validation fails
+      setOtpButtonDisabled(false);
     }
   };
 
@@ -279,7 +272,9 @@ const LoginScreen: React.FC = () => {
                   onClick={handleSendOtp}
                   loading={loading}
                   disabled={
-                    otpButtonDisabled || !mobileValue || mobileValue.length !== 10
+                    otpButtonDisabled ||
+                    !mobileValue ||
+                    mobileValue.length !== 10
                   }
                   block
                   style={{
