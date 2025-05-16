@@ -101,7 +101,7 @@ const Contact: React.FC = () => {
         {/* Right Section */}
         <div style={rightStyle}>
           <img
-            src="/public/Naval1.jpg"
+            src="/public/Naval1.png"
             alt="Hello Illustration"
             style={imageStyle}
           />

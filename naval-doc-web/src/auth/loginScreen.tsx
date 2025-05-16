@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import WorldtekLogo from "../components/common/worldTekLogo";
 import { languageTexts } from "../utils/data";
 import { toastError, toastSuccess } from "../components/common/toasterMessage";
-import "/public/Naval1.jpg";
+import "/public/Naval1.png";
 
 const LoginScreen: React.FC = () => {
   const [form] = Form.useForm();
@@ -404,7 +404,7 @@ const LoginScreen: React.FC = () => {
         }}
       >
         <img
-          src="/public/Naval1.jpg"
+          src="/public/Naval1.png"
           alt="Logo"
           style={{ maxWidth: "120%", maxHeight: "120%" }}
         />
