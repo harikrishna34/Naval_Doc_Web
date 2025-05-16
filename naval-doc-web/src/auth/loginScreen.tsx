@@ -5,14 +5,13 @@ import { useNavigate } from "react-router-dom";
 import WorldtekLogo from "../components/common/worldTekLogo";
 import { languageTexts } from "../utils/data";
 import { toastError, toastSuccess } from "../components/common/toasterMessage";
-type Language = "en" | "te";
+import "/public/Naval1.jpg";
 
 const LoginScreen: React.FC = () => {
   const [form] = Form.useForm();
   const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = useState<Language>("en");
   const [otpButtonDisabled, setOtpButtonDisabled] = useState(false);
   const navigate = useNavigate();
 
@@ -22,17 +21,7 @@ const LoginScreen: React.FC = () => {
   const API_URL_SEND = "https://server.welfarecanteen.in/api/login";
   const API_URL_VERIFY = "https://server.welfarecanteen.in/api/verifyOtp";
 
-  // Set language based on localStorage when the page first loads
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem("language") as Language | null;
-    if (savedLanguage === "en" || savedLanguage === "te") {
-      setLanguage(savedLanguage);
-    } else {
-      setLanguage("en");
-    }
-  }, []);
-
-  const texts = languageTexts[language];
+  const mobileValue = Form.useWatch("mobile", form); // ✅ Watching mobile field
 
   const validateMobile = (mobile: string) => {
     const indianMobilePattern = /^[6-9]\d{9}$/;
@@ -44,7 +33,7 @@ const LoginScreen: React.FC = () => {
       // Validate form first
       await form.validateFields(["mobile"]);
 
-      const mobileValue = form.getFieldValue("mobile");
+      const mobileValue = form.getFieldValue("mobile", form);
 
       // Double check validation
       if (!validateMobile(mobileValue)) {
@@ -97,18 +86,12 @@ const LoginScreen: React.FC = () => {
   };
 
   const handleOtpChange = (index: number, value: string) => {
-    // Only allow digits
     const sanitizedValue = value.replace(/\D/g, "");
-
-    // Update the OTP value at the specified index
     const newOtpValues = [...otpValues];
     newOtpValues[index] = sanitizedValue;
     setOtpValues(newOtpValues);
-
-    // Update form field with combined OTP
     form.setFieldsValue({ otp: newOtpValues.join("") });
 
-    // Auto-focus to next input if current input is filled
     if (sanitizedValue && index < 5) {
       otpRefs.current[index + 1]?.focus();
     }
@@ -118,7 +101,6 @@ const LoginScreen: React.FC = () => {
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    // When backspace is pressed on an empty input, focus the previous input
     if (e.key === "Backspace" && !otpValues[index] && index > 0) {
       otpRefs.current[index - 1]?.focus();
     }
@@ -132,7 +114,6 @@ const LoginScreen: React.FC = () => {
       .substring(0, 6);
 
     if (pastedData) {
-      // Fill in OTP boxes with pasted data
       const newOtpValues = [...otpValues];
       for (let i = 0; i < pastedData.length; i++) {
         if (i < 6) {
@@ -140,11 +121,8 @@ const LoginScreen: React.FC = () => {
         }
       }
       setOtpValues(newOtpValues);
-
-      // Update form field
       form.setFieldsValue({ otp: newOtpValues.join("") });
 
-      // Focus the next empty input or the last one if all are filled
       const nextEmptyIndex = newOtpValues.findIndex((value) => !value);
       if (nextEmptyIndex !== -1 && nextEmptyIndex < 6) {
         otpRefs.current[nextEmptyIndex]?.focus();
@@ -156,7 +134,6 @@ const LoginScreen: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      // Validate form first
       await form.validateFields(["otp"]);
 
       setLoading(true);
@@ -172,12 +149,11 @@ const LoginScreen: React.FC = () => {
           response.data.message === "OTP verified successfully"
         ) {
           const token = response?.data?.token;
-          // Save token to localStorage
           localStorage.setItem("Token", token);
           toastSuccess("Login successful! Welcome back.");
           setTimeout(() => {
             navigate("/dashboard");
-          }, 1000); // Slightly longer timeout to ensure the message is visible
+          }, 1000);
         } else {
           toastError("Invalid OTP or verification failed.");
           form.setFields([
@@ -203,13 +179,8 @@ const LoginScreen: React.FC = () => {
     }
   };
 
-  const toggleLanguage = (checked: boolean) => {
-    const selectedLanguage = checked ? "te" : "en";
-    setLanguage(selectedLanguage);
-    localStorage.setItem("language", selectedLanguage);
-  };
+  const texts = languageTexts["en"];
 
-  // Custom validator for Indian mobile number
   const validateIndianMobile = (_: any, value: string) => {
     if (!value) {
       return Promise.reject(new Error("Please enter your mobile number"));
@@ -220,7 +191,6 @@ const LoginScreen: React.FC = () => {
     return Promise.resolve();
   };
 
-  // Custom validator for OTP
   const validateOtp = (_: any, value: string) => {
     if (!value) {
       return Promise.reject(new Error("Please enter the OTP"));
@@ -257,22 +227,6 @@ const LoginScreen: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: "20px",
-            }}
-          >
-            <Switch
-              checked={language === "te"}
-              onChange={toggleLanguage}
-              checkedChildren="తెలుగు"
-              unCheckedChildren="English"
-            />
-          </div>
-
           <div
             style={{
               width: "100%",
@@ -325,9 +279,7 @@ const LoginScreen: React.FC = () => {
                   onClick={handleSendOtp}
                   loading={loading}
                   disabled={
-                    otpButtonDisabled ||
-                    !form.getFieldValue("mobile") ||
-                    form.getFieldValue("mobile").length !== 10
+                    otpButtonDisabled || !mobileValue || mobileValue.length !== 10
                   }
                   block
                   style={{
@@ -350,12 +302,11 @@ const LoginScreen: React.FC = () => {
                     label={texts.enterOtp}
                     rules={[{ validator: validateOtp }]}
                     validateTrigger={["onBlur", "onChange"]}
-                    style={{ display: "none" }} // Hidden field to store the combined OTP value
+                    style={{ display: "none" }}
                   >
                     <Input type="hidden" />
                   </Form.Item>
 
-                  {/* OTP Input Boxes */}
                   <div style={{ marginBottom: "16px" }}>
                     <label style={{ display: "block", marginBottom: "8px" }}>
                       {texts.enterOtp}
@@ -458,9 +409,9 @@ const LoginScreen: React.FC = () => {
         }}
       >
         <img
-          src="https://www.joinindiannavy.gov.in/images/octaginal-crest.png"
+          src="/public/Naval1.jpg"
           alt="Logo"
-          style={{ maxWidth: "70%", maxHeight: "70%" }}
+          style={{ maxWidth: "120%", maxHeight: "120%" }}
         />
       </Col>
     </Row>
