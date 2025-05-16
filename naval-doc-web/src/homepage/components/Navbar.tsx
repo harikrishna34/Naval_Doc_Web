@@ -12,7 +12,7 @@ const BottomNav = styled.nav`
   z-index: 200;
 
   a {
-    padding-top: 0.5rem;
+    padding-top: 0.1rem;
     margin: 0 1rem;
     color: #010080;
     font-size: 1rem;
