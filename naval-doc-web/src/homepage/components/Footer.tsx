@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import logo from "../images/Logo.png";
+import logo from "/public/Naval.jpg";
 import poweredByLogo from "../images/Worldtek.png";
 
 const FooterContainer = styled.footer`
@@ -35,10 +35,8 @@ const PoweredByContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: -1.8rem;
-  padding-top: 10px;
+  margin-top: -0.8rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  max-width: 100%;
   text-align: center;
 
   img {
@@ -82,7 +80,7 @@ export default function Footer() {
     <FooterContainer>
       <FooterContent>
         <Section>
-          <Logo src={logo} alt="Naval Logo" />
+          <Logo src={logo} alt="Naval Logo" style={{ height: "150px", width: "250px" , marginTop: "-7px", marginBottom:"22px" }} />
         </Section>
 
         <Section>
@@ -107,7 +105,7 @@ export default function Footer() {
 
       <PoweredByContainer>
         <p>Powered and Maintained by</p>
-        <img src={poweredByLogo} alt="Powered By Logo" />
+        <img src={poweredByLogo} alt="Powered By Logo"  />
       </PoweredByContainer>
     </FooterContainer>
   );

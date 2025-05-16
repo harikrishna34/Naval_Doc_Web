@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Link,  useLocation } from "react-router-dom"; // Added useLocation
-import logo from "../images/Logo.png";
+import logo from "/public/Naval.jpg";
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -16,7 +16,7 @@ const HeaderWrapper = styled.header`
 
 const LogoImage = styled.img`
   text-align: center;
-  height: 60px;
+  height: 80px;
   width: auto;
   cursor: pointer;
 `;
