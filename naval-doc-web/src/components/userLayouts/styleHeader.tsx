@@ -20,7 +20,7 @@ import {
   ProfileOutlined,
 } from "@ant-design/icons";
 import NotificationsDropdown from "../../modules/notifications/notificationDropdown";
-import navyLogo from "../../assets/images/navy_image.png";
+import navyLogo from "/public/Naval.jpg";
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -195,7 +195,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
         style={{
           backgroundColor: "rgb(1, 0, 128)",
           padding: "0 18px",
-          height: "92px",
+          height: "100px",
           position: "sticky",
           top: 0,
           zIndex: 999,
@@ -212,7 +212,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
                 gap: "12px",
               }}
             >
-              <img src={navyLogo} style={{ height: "73px", width: "73px" }} />
+              <img src={navyLogo} style={{ height: "90px", width: "150px" , marginTop: "-5px" }} />
             </div>
           </Col>
 

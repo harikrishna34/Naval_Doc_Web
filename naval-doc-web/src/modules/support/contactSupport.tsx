@@ -101,7 +101,7 @@ const Contact: React.FC = () => {
         {/* Right Section */}
         <div style={rightStyle}>
           <img
-            src="https://www.joinindiannavy.gov.in/images/octaginal-crest.png"
+            src="/public/Naval1.png"
             alt="Hello Illustration"
             style={imageStyle}
           />
