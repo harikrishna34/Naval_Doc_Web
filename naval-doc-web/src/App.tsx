@@ -24,15 +24,18 @@ import LoginScreen from "./auth/loginScreen";
 import CanteenAdminDB from "./modules/admin/canteenAdminDB";
 import OrdersDashboard from "./modules/orders/ordersDB";
 import Contact from "./modules/support/contactSupport";
-
+import ExamplePaymentResponse from "./components/paymentmethods/paymentResponse";
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginScreen />} />
         <Route
-          element={<ProtectedRoute />}
-        >
+          path="/paymentResponse"
+          element={<ExamplePaymentResponse />}
+        />{" "}
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
           <Route element={<LayoutWrapper pageTitle="Naval Dashboard" />}>
             <Route path="/dashboard" element={<SuperAdminDashboard />} />
             <Route path="/finance-management" element={<FinanceDB />} />
@@ -45,7 +48,7 @@ const App = () => {
             <Route path="/admin" element={<AdminDB />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/canteens-list" element={<CanteenList />} />
-            <Route path="contact-support" element={<Contact/>} />
+            <Route path="contact-support" element={<Contact />} />
             <Route
               path="/canteens-list/canteen-dashboard/:canteenId/users-list"
               element={<UsersList />}
