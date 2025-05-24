@@ -24,17 +24,26 @@ import LoginScreen from "./auth/loginScreen";
 import CanteenAdminDB from "./modules/admin/canteenAdminDB";
 import OrdersDashboard from "./modules/orders/ordersDB";
 import Contact from "./modules/support/contactSupport";
-import ExamplePaymentResponse from "./components/paymentmethods/paymentResponse";
+import PaymentResponse from "./components/paymentmethods/PaymentResponse";
+import HomePage from "./homepage/homePage";
+import Terms from "./homepage/components/Terms";
+import Privacy from "./homepage/components/Privacy";
+import AboutUs from "./homepage/components/About us";
+import Overview from "./homepage/components/Overview";
+
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginScreen />} />
         <Route
-          path="/paymentResponse"
-          element={<ExamplePaymentResponse />}
-        />{" "}
+          path="/PaymentResponse"
+          element={<PaymentResponse />} 
+        />
         {/* Protected Routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/Login" element={<LoginScreen />} />
+
         <Route element={<ProtectedRoute />}>
           <Route element={<LayoutWrapper pageTitle="Naval Dashboard" />}>
             <Route path="/dashboard" element={<SuperAdminDashboard />} />
@@ -70,6 +79,14 @@ const App = () => {
             />
           </Route>
         </Route>
+
+        {/* Add routes for Terms and Privacy */}
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/about us" element={<AboutUs />} />
+        <Route path="/about us" element={<AboutUs />} />
+        <Route path="/Overview" element={<Overview />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
 

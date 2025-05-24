@@ -8,7 +8,7 @@ const paymentData = {
     date: "8/7/2017 12:00:00 AM",
 };
 
-const CompletePage = () => {
+const PaymentResponse  = () => {
     return (
         <div style={{ 
             minHeight: '100vh', 
@@ -267,4 +267,4 @@ const CompletePage = () => {
     );
 };
 
-export default CompletePage;
+export default PaymentResponse ;

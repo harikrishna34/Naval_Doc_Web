@@ -17,7 +17,7 @@ const WorldtekLogo: React.FC = () => {
               marginTop: "50px",
             }}
           >
-            powered by
+            Powered by
           </Typography.Text>
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
