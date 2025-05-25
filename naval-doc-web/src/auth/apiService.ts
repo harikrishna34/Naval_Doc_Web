@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Base URL for API requests
-const BASE_URL = "https://server.welfarecanteen.in/api";
+const BASE_URL = "http://localhost:3002/api";
 
 // Get token from localStorage or wherever you store it
 const getToken = () => {

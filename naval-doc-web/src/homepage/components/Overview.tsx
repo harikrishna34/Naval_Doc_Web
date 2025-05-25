@@ -55,18 +55,18 @@ const NavalDockyardCanteen: React.FC = () => {
         <PageWrapper>
             <Header />
             <Container>
-                <Title>Naval Dockyard Canteen Overview</Title>
+                <Title>Welfare Canteen Overview</Title>
                 <Paragraph>
-                    The Naval Dockyard Canteen is a dedicated welfare facility serving Indian Navy personnel and their families.
-                    Strategically located within the Naval Dockyard premises in Visakhapatnam, it provides easy access to both
-                    serving and retired naval staff. It plays a crucial role in improving quality of life by offering daily
+                    The Welfare Canteen is a dedicated welfare facility serving employees and their families.
+                    Strategically located within premises in Visakhapatnam, it provides easy access to both
+                    serving and retired staff. It plays a crucial role in improving quality of life by offering daily
                     essentials, groceries, and select luxury goods at subsidized rates.
                 </Paragraph>
 
                 <SubTitle>Mission and Purpose</SubTitle>
                 <List>
                     <li>Provide high-quality products at concessional rates</li>
-                    <li>Support the welfare and morale of the naval community</li>
+                    <li>Support the welfare and morale of the community</li>
                     <li>Ensure operational efficiency through inventory and vendor management</li>
                 </List>
 
@@ -96,14 +96,14 @@ const NavalDockyardCanteen: React.FC = () => {
 
                 <SubTitle>Support and Compliance</SubTitle>
                 <List>
-                    <li>Operates under Indian Navy welfare policies</li>
+                    <li>Operates under welfare policies</li>
                     <li>Works with the Canteen Stores Department (CSD)</li>
                     <li>Ensures transparency with internal audits and logistics partners</li>
                 </List>
 
                 <SubTitle>Conclusion</SubTitle>
                 <Paragraph>
-                    The Naval Dockyard Canteen is View More than a shopping center — it is a vital support system for those who serve the nation.
+                    The Welfare Canteen is View More than a shopping center — it is a vital support system for those who serve the nation.
                     With modern infrastructure, digital transformation, and a customer-first approach, it stands as a benchmark for defense canteen operations.
                 </Paragraph>
             </Container>

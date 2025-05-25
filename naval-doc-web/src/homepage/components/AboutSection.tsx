@@ -72,12 +72,20 @@ export default function AboutSection() {
               <h3>About Us</h3>
               <h2>No Profit – No Loss</h2>
               <p>
-                Industrial Wet Canteens of Naval Dockyard Visakhapatnam caters breakfast, snacks, lunch for all Dockyard employees on daily basis as per factories act 1948.
+                Welfare Canteens of Welfare Visakhapatnam caters
+                breakfast, snacks, lunch for all employees on daily
+                basis as per factories act 1948.
               </p>
               <p>
-                Operated on a No Profit – No Loss basis, these canteens are committed to serving wholesome, hygienic, and tasty food. With a team of experienced cooking staff and a focus on maintaining quality stock, the canteens consistently strive to ensure high standards of food and service.
+                Operated on a No Profit – No Loss basis, these canteens are
+                committed to serving wholesome, hygienic, and tasty food. With a
+                team of experienced cooking staff and a focus on maintaining
+                quality stock, the canteens consistently strive to ensure high
+                standards of food and service.
               </p>
-              <CtaButton onClick={() => navigate("/About us")}>View More</CtaButton>
+              <CtaButton onClick={() => navigate("/About us")}>
+                View More
+              </CtaButton>
             </AboutText>
             <div>
               <AboutImg src={image} alt="About Us" />

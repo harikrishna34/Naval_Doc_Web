@@ -96,7 +96,7 @@ const HeroSlider = () => {
   const slides = [
     {
       image: slide1,
-      title: "Welcome to the Naval Dockyard Canteen",
+      title: "Welcome to the Welfare Canteen",
       text: "Delicious, Healthy, Professional Canteen Services",
     },
     {

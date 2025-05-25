@@ -74,8 +74,7 @@ export default function OverviewSection() {
                             <h2>Mission and Purpose
                             </h2>
                             <p>
-                            The primary mission of the Naval Dockyard Canteen is to offer high-quality products at concessional rates, ensuring convenience, affordability, and timely access to household necessities for naval officers, sailors, civilian defense employees, and their dependents.
-
+                            The primary mission of the Welfare Canteen is to offer high-quality products at concessional rates, ensuring convenience, affordability, and timely access to household necessities for officers, employees, and their dependents.
                             </p>
                             <CtaButton onClick={() => navigate("/Overview")}>View More</CtaButton>
                         </OverviewText>

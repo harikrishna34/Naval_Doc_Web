@@ -54,17 +54,21 @@ export default function Header() {
     if (location.pathname === "/") {
       window.scrollTo({
         top: 0,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
   };
 
   return (
     <HeaderWrapper>
-      <Link to="/" onClick={handleLogoClick} style={{ display: "flex", alignItems: "center" }}>
+      <Link
+        to="/"
+        onClick={handleLogoClick}
+        style={{ display: "flex", alignItems: "center" }}
+      >
         <LogoImage src={logo} alt="Naval Logo" />
       </Link>
-      <CenterTitle>INDUSTRIAL NDY CANTEEN</CenterTitle>
+      <CenterTitle>WELFARE CANTEEN</CenterTitle>
     </HeaderWrapper>
   );
 }
