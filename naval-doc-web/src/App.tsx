@@ -24,7 +24,7 @@ import LoginScreen from "./auth/loginScreen";
 import CanteenAdminDB from "./modules/admin/canteenAdminDB";
 import OrdersDashboard from "./modules/orders/ordersDB";
 import Contact from "./modules/support/contactSupport";
-import PaymentResponse from "./components/paymentmethods/PaymentResponse";
+import PaymentResponse from "./components/paymentmethods/paymentResponse";
 import HomePage from "./homepage/homePage";
 import Terms from "./homepage/components/Terms";
 import Privacy from "./homepage/components/Privacy";
@@ -35,9 +35,8 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginScreen />} />
         <Route
-          path="/PaymentResponse"
+          path="/paymentResponse"
           element={<PaymentResponse />} 
         />
         {/* Protected Routes */}
