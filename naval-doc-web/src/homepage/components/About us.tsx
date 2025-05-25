@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Footer from "./Footer";
+// import Footer from "./Footer";
 import Header from "./Header";
 
 // Wrapper for the entire page
@@ -90,7 +90,7 @@ const Terms: React.FC = () => {
           excellence.
         </Paragraph>
       </Container>
-      <Footer />
+      {/* <Footer /> */}
     </PageWrapper>
   );
 };
