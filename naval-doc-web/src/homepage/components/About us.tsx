@@ -37,7 +37,7 @@ const Terms: React.FC = () => {
     <PageWrapper>
       <Header />
       <Container>
-        <Title>About Us</Title>
+        <Title>About Us </Title>
         <h3>Welfare Canteen Facility</h3>
         <br />
         <Paragraph>
